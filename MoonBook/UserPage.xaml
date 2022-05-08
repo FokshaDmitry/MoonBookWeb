@@ -1,0 +1,107 @@
+﻿<Page x:Class="MoonBook.UserPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="UserPage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+
+    <Grid Background="#FF1B1B22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="47*"/>
+            <RowDefinition Height="403*"/>
+            <RowDefinition Height="0*"/>
+        </Grid.RowDefinitions>
+
+        <Canvas Name="Panel" Background="#FF1B1B22" Grid.Row="0"/>
+        <Ellipse Stroke="Black" x:Name="minPhoto" HorizontalAlignment="Right" VerticalAlignment="Center" Height="40" Margin="720,0,40,0" Width="40"/>
+
+        <TabControl Canvas.Top="41" TabStripPlacement="Left" BorderBrush="Black" Grid.Row="1" OpacityMask="#FF212331" Background="#FF1B1B22">
+            <TabItem Width="40" Height="40" BorderBrush="Black" ForceCursor="True" Foreground="Black" >
+                <TabItem.Background>
+                    <ImageBrush ImageSource="/location_automation_FILL0_wght400_GRAD0_opsz48.png"/>
+                </TabItem.Background>
+                <Grid Grid.Row="1" Background="#FF212331" Margin="0,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="0*"/>
+                    </Grid.RowDefinitions>
+                    <Ellipse Height="150" Stroke="Black" Canvas.Top="10" Width="150" Canvas.Left="43" x:Name="Photo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,36,0,0"/>
+                    <TextBlock Canvas.Left="43" TextWrapping="Wrap" Canvas.Top="165" Foreground="Black" x:Name="Name" HorizontalAlignment="Left" Height="34" VerticalAlignment="Top" Width="150" FontSize="18" Margin="30,202,0,0"/>
+                    <Grid x:Name="BlogList" MinHeight="220" Background="#FF181825" MinWidth="450" Margin="281,36,10,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="95*"/>
+                            <RowDefinition Height="256*"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" MinHeight="80" Header="My Blog" MinWidth="440" BorderBrush="Black" OpacityMask="#FF0B0B0B" Foreground="White" Margin="11,4,10,11">
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="11*"/>
+                                    <RowDefinition Height="8*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Row="1" Foreground="{x:Null}" Height="25" Width="25" BorderBrush="{x:Null}" Click="Send_Click" Margin="400,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/send_FILL0_wght400_GRAD0_opsz48.png"/>
+                                    </Button.Background>
+                                </Button>
+                                <TextBox VerticalScrollBarVisibility="Auto"  SpellCheck.IsEnabled="True" Language="ru-ru" AcceptsTab="True"  x:Name="NewText"  TextWrapping="Wrap" MinWidth="410"  Background="{x:Null}" Foreground="White" BorderBrush="{x:Null}" SelectionBrush="#FFB1B4B7" AcceptsReturn="True" MinHeight="20"  Margin="4,6,4,6" SelectionTextBrush="{x:Null}" />
+                                <Button HorizontalAlignment="Right" Margin="0,0,30,0" Grid.Row="1" VerticalAlignment="Center" Width="22" Height="22" Click="Title_Click" x:Name="Title" BorderBrush="{x:Null}">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/title_FILL0_wght400_GRAD0_opsz48.png"/>
+                                    </Button.Background>
+                                </Button>
+                                <Button HorizontalAlignment="Right" Margin="0,0,50,0" Grid.Row="1" VerticalAlignment="Center" Width="25" Height="25" x:Name="Image" Click="Image_Click" BorderBrush="{x:Null}">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/image_FILL0_wght400_GRAD0_opsz48.png"/>
+                                    </Button.Background>
+                                </Button>
+                                <Rectangle HorizontalAlignment="Left" Height="25" Margin="238,1,0,0" Grid.Row="1" VerticalAlignment="Top" Width="25" x:Name="CheckImg"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="268,0,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" Width="80" Foreground="Black" x:Name="Path"/>
+                            </Grid>
+                        </GroupBox>
+                        <ListBox Grid.Row="1" x:Name="VewPost" Margin="11,10,10,10" Background="{x:Null}" BorderBrush="Black"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Width="40" Height="40" VerticalAlignment="Bottom" Foreground="#FF1B1B22"  BorderBrush="Black">
+                <TabItem.Background>
+                    <ImageBrush ImageSource="/import_contacts_FILL0_wght400_GRAD0_opsz48.png"/>
+                </TabItem.Background>
+                <Canvas Background="#FF24222E">
+
+                </Canvas>
+            </TabItem>
+            <TabItem Width="40" Height="40" VerticalAlignment="Bottom" Foreground="#FF1B1B22"  BorderBrush="Black">
+                <TabItem.Background>
+                    <ImageBrush ImageSource="/library_books_FILL0_wght400_GRAD0_opsz48.png"/>
+                </TabItem.Background>
+                <Canvas Background="#FF14131D">
+
+                </Canvas>
+            </TabItem>
+            <TabItem Width="40" Height="40" VerticalAlignment="Bottom" Foreground="#FF1B1B22"  BorderBrush="Black">
+                <TabItem.Background>
+                    <ImageBrush ImageSource="/android_contacts_FILL0_wght400_GRAD0_opsz48.png"/>
+                </TabItem.Background>
+                <Grid>
+                    <ListBox x:Name="ListUser" Margin="10,55,574,0" Background="{x:Null}" BorderBrush="Black" Width="170" Height="340" />
+                    <TextBox x:Name="SeachText" HorizontalAlignment="Left" Margin="10,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" BorderBrush="Black" Background="{x:Null}" Foreground="White" Height="20"/>
+                    <Button Click="Search_Click" Foreground="{x:Null}" Height="20" Width="20" BorderBrush="Black" Margin="160,14,572,363" >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/search_FILL0_wght400_GRAD0_opsz48.png"/>
+                        </Button.Background>
+                    </Button>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,39,0,0" TextWrapping="Wrap" Text="My Subscritions" VerticalAlignment="Top" Height="16" Width="170" Foreground="Black" Background="#FF363662" FontWeight="Bold"/>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+        <Ellipse x:Name="OnlineStatus" HorizontalAlignment="Right" Height="16" Margin="0,28,40,0" Stroke="Black" VerticalAlignment="Top" Width="15" />
+
+    </Grid>
+</Page>
