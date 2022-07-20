@@ -1,0 +1,53 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.UserMenu {
+    display: none;
+    position: absolute;
+    justify-content: right;
+    width: 180px;
+    list-style: none; 
+    margin-right: 20px; 
+    padding: 0; 
+    font-family: Arial, sans-serif;
+    font-size: 10pt;
+}
+.UserMenu a {
+    display: block; /* Ссылка как блочный элемент */
+    padding: 5px; /* Поля вокруг надписи */
+    text-decoration: none; /* Подчеркивание у ссылок убираем */
+    color: #666; /* Цвет текста */
+    border: 1px solid #ccc; /* Рамка вокруг пунктов меню */
+    background-color: #f0f0f0; /* Цвет фона */
+    border-bottom: none;
+}
+rName:hover {
+    cursor: pointer;
+}
+#UserImg:hover {
+    cursor: pointer;
+}
+#UserImg:hover .UserMenu {
+    display: block;
+    cursor: pointer;
+}
+
+#UserName:hover .UserMenu {
+    display: block;
+    cursor: pointer;
+}

@@ -1,0 +1,26 @@
+﻿@{
+    var err = ViewData["errlog"] as String[];
+    var user = ViewData["AuthUser"] as User;
+}
+@if(user == null)
+{
+    <div>
+        <form action="/Login/Login" method="post" enctype="application/x-www-form-urlencoded">
+        <p>Login:    <p/><input type="text"  name="Login"/>
+            @if(!String.IsNullOrEmpty(err?[9])) @err[9]
+            @if(!String.IsNullOrEmpty(err?[11])) @err[11]
+        <p>Password: <p/><input type="password" name="Password" />
+            @if(!String.IsNullOrEmpty(err?[10])) @err[10]
+            @if(!String.IsNullOrEmpty(err?[12])) @err[12] 
+            <br/>
+        <button>Login</button>
+        </form>
+        <button onclick="location='/Login/Registration'">Rigistration</button>
+
+    </div>
+}
+else
+{
+    <h1>@user.Name @user.Surname</h1>
+}
+
