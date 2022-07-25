@@ -10,8 +10,10 @@ namespace MoonBookWeb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ISessionLogin _sessionLogin;
-        public HomeController(ILogger<HomeController> logger, ISessionLogin sessionLogin)
+        private readonly AddDbContext _context;
+        public HomeController(ILogger<HomeController> logger, ISessionLogin sessionLogin, AddDbContext context)
         {
+            _context = context;
             _logger = logger;
             _sessionLogin = sessionLogin;
         }
@@ -27,8 +29,13 @@ namespace MoonBookWeb.Controllers
         }
         public IActionResult UserPage()
         {
-            ViewData["AuthUser"] = _sessionLogin?.user;
-            return View();
+            if(_sessionLogin != null)
+            {
+                ViewData["AuthUser"] = _sessionLogin?.user;
+                ViewData["PostUser"] = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).OrderByDescending(p => p.Date);
+                return View();
+            }
+            return Redirect("/Login/Index");
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

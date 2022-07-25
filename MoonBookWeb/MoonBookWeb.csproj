@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\img\" />
     <Folder Include="wwwroot\icons\" />
+    <Folder Include="wwwroot\img_post\" />
   </ItemGroup>
 
 </Project>

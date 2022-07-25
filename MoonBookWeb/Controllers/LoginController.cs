@@ -80,11 +80,9 @@ namespace MoonBookWeb.Controllers
             if(isValid)
             {
                 String AvatarName = "";
-                String AvatarType = "";
                 if (userModel?.Avatar != null)
                 {
-                    AvatarType = Path.GetExtension(userModel.Avatar.FileName);
-                    AvatarName = Guid.NewGuid().ToString() + AvatarType;
+                    AvatarName = Guid.NewGuid().ToString() + Path.GetExtension(userModel.Avatar.FileName);
                     userModel.Avatar.CopyToAsync(
                         new FileStream(
                             "./wwwroot/img/" + AvatarName,
@@ -107,6 +105,7 @@ namespace MoonBookWeb.Controllers
             HttpContext.Session.SetString("RegError", String.Join(";", err));
             return Redirect("/Login/Registration");
         }
+        //Edit data user
         public IActionResult EditUser(Models.RegUserModel userModel)
         {
             var user = _sessionLogin?.user;
