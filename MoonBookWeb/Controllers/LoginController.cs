@@ -179,7 +179,6 @@ namespace MoonBookWeb.Controllers
         }
         public IActionResult Update()
         {
-            ViewData["user"] = _sessionLogin?.user;
             String err = HttpContext.Session.GetString("RegError");
             if (err != null)
             {
@@ -187,7 +186,12 @@ namespace MoonBookWeb.Controllers
                 ViewData["err"] = err.Split(';');
                 HttpContext.Session.Remove("RegError");
             }
-            return View();
+            if(_sessionLogin.user != null)
+            {
+                ViewData["AuthUser"] = _sessionLogin?.user;
+                return View();
+            }
+            return Redirect("/Login/Index");
         }
         public IActionResult Registration()
         {

@@ -25,11 +25,12 @@ namespace MoonBookWeb.Controllers
 
         public IActionResult Privacy()
         {
+            ViewData["AuthUser"] = _sessionLogin?.user;
             return View();
         }
         public IActionResult UserPage()
         {
-            if(_sessionLogin != null)
+            if (_sessionLogin.user != null)
             {
                 ViewData["AuthUser"] = _sessionLogin?.user;
                 ViewData["PostUser"] = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).OrderByDescending(p => p.Date);

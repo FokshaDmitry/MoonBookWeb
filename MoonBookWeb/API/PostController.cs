@@ -22,7 +22,7 @@ namespace MoonBookWeb.API
             {
                 Posts posts = new Posts();
                 bool isValid = false;
-                postUser.TextPost?.Replace($">{postUser.TitlePost}<", "");
+                postUser.TextPost = postUser.TextPost?.Replace($">{postUser.TitlePost}<", "");
                 if (!String.IsNullOrEmpty(postUser.TextPost))
                 {
                     posts.Text = postUser.TextPost;
@@ -38,11 +38,7 @@ namespace MoonBookWeb.API
                     
                     isValid = true;
                     posts.Image = Guid.NewGuid().ToString() + Path.GetExtension(postUser.ImagePost.FileName);
-                    postUser.ImagePost.CopyToAsync(
-                        new FileStream(
-                            "./wwwroot/img_post/" + posts.Image,
-                            FileMode.Create));
-                    
+                    postUser.ImagePost.CopyToAsync(new FileStream("./wwwroot/img_post/" + posts.Image, FileMode.Create));        
                 }
                 if (isValid)
                 {
