@@ -1,0 +1,115 @@
+﻿@{
+    var user = ViewData["AuthUser"] as User;
+    var posts = ViewData["PostUser"] as IQueryable<Posts>;
+}
+
+<section style="background-color:brown; align-items:center; width: 100%; height: 100%; ">
+    <div style="margin: 2%; display: inline-block;">
+        @if(!String.IsNullOrEmpty(user?.PhotoName))
+        {
+            <img src="/img/@user.PhotoName" style="border: 2px double black;  margin: 2%;  border-radius: 150px; width: 300px; height: 300px;"/>
+        }
+        else
+        {
+            <img src="/icons/android_contacts_FILL0_wght400_GRAD0_opsz48.png" style="border: 2px double black;  margin: 2%;  border-radius: 150px; width: 300px; height: 300px;">
+        }
+    </div>
+    <div style="width:70%; float:right; margin: 1%; display: inline-block; vertical-align: top;">
+    <div style="display: block;">
+      <h1 style=" margin-top: 5%;">@user?.Name @user?.Surname</h1>
+    </div>
+       <div style="border: 2px double black; display: block; width: 100%; margin-bottom: 20px; height: auto;">
+           <textarea id="Text" aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" cols="4" wrap="soft" style="width: 100%; height: auto; border: 3px double gray; border-radius: 25px;"></textarea>
+           <input type="file" id="ImagePost" accept="image/*" style="display: none;" multiple>
+           <label for="ImagePost" style="margin-left: 75%;">
+             <img src="/icons/image_FILL0_wght400_GRAD0_opsz48.png" style="width: 30px; height: 30px;"/>
+           </label>
+           <button id="Post" style="float: right; background-color: transparent; width: 30px; height: 30px; border-color: transparent; margin-right: 5%;">
+               <img src="/icons/send_FILL0_wght400_GRAD0_opsz48.png" style="width: 30px; height: 30px; margin-right: 5%;"/>
+           </button>
+           <button type="button" id="Title" style="float: right; background-color: transparent; width: 30px; height: 30px; border-color: transparent; margin-right: 2%;">
+                <img src="/icons/title_FILL0_wght400_GRAD0_opsz48.png" style="width: 30px; height: 30px; margin-right: 5%;"/>
+           </button>
+       </div>
+       <div>
+       @if(posts?.Count() != 0){
+         @foreach (var post in posts){
+            <div style="float: right; display: block; margin-bottom: 20px; height: 100%; width: 100%; border: 2px double black;">
+                <div style="width: 100%; height: 60px;">
+                    @if(String.IsNullOrEmpty(user?.PhotoName))
+                    { 
+                        <img src="/icons/android_contacts_FILL0_wght400_GRAD0_opsz48.png" style="border: 2px double black;  margin: 1%;  border-radius: 150px; width: 35px; height: 35px;"> 
+                    } else
+                    { 
+                        <img src="/img/@user.PhotoName" style="border: 2px double black; vertical-align:top; margin: 1%; border-radius: 150px; width: 35px; height: 35px;"> 
+                    }
+                    <p style="display:inline-block; vertical-align: middle;">
+                        <b>@user?.Name @user?.Surname</b><br/>
+                            <i style="font-size: 8pt;">@post.Date</i></p>
+                </div>
+                <div>
+                    <p style="display:block;font-size:25px;"><b>@post.Title</b></p>
+                    <img src="/img_post/@post.Image" style="width:100%;"/><p>@post.Text</p>
+                </div>
+                <div style="width:100%; height:60px;">
+                       <button style="float:right; background-color:transparent; width:30px; height:30px; border-color: transparent; margin-right:3%;">
+                           <img src="/icons/send_FILL0_wght400_GRAD0_opsz48.png" style="width:30px;height:30px;margin-right:5%;"/>
+                           </button>
+                           <textarea aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" name="BlokMessege" cols="4" wrap="soft" style="width:90%;float:left;height:35px;border:3px double gray;border-radius:25px;"></textarea>
+                </div>
+                <div style="width:100%; height:40px;">
+                    <num id="@post.Id.ToString()_DisLike" style="float:right;margin-top:1%;">@post.Dislike</num>
+                    <button id="@post.Id.ToString()_Sad" style="float:right;background-color:transparent;width:30px;height:30px;border-color:transparent;margin-right:3%;">
+                        <img src="/icons/mood_bad_FILL0_wght400_GRAD0_opsz48.png" style="width:30px; height:30px; margin-right:5%;"/>
+                    </button>
+                        <num id="@post.Id.ToString()_Like" style="float:right;margin-top:1%;">@post.Like</num>
+                    <button id="@post.Id.ToString()_Smail" style="float:right;background-color:transparent;width:30px;height:30px;border-color:transparent; margin-right:3%;">
+                        <img src="/icons/mood_FILL0_wght400_GRAD0_opsz48.png" style="width:30px;height:30px;margin-right:5%;"/>
+                    </button>
+                </div>
+            </div>
+             <script>
+                 var sad = document.getElementById("@post.Id.ToString()_Sad");
+                 var smaile = document.getElementById("@post.Id.ToString()_Smail");
+                 const @post.Date.ToString("TyyyyMMddHHmmssfffffff")like = document.getElementById("@post.Id.ToString()_Like");
+                 const @post.Date.ToString("TyyyyMMddHHmmssfffffff")dislike = document.getElementById("@post.Id.ToString()_DisLike");
+                 smaile.addEventListener("click",() => 
+                 {
+                     const formData = new FormData();
+	                 formData.append("Reaction", 1);
+	                 formData.append("IdPost", "@post.Id");
+            
+                     fetch("/api/post", {
+                         method: "PUT",
+                         body: formData
+                     }).then(r => r.json()).then(j => {
+		                   if (j.status == "Error") {
+			                   alert(j.message)
+		                   } else {
+                               @post.Date.ToString("TyyyyMMddHHmmssfffffff")like.textContent = j.reactLike;
+                               @post.Date.ToString("TyyyyMMddHHmmssfffffff")dislike.textContent = j.reactDislike;
+                           }
+                     })
+                 })
+                 sad.addEventListener("click", () => 
+                 {
+                    const formData = new FormData();
+	                 formData.append("Reaction", 2);
+	                 formData.append("IdPost", "@post.Id");
+                     fetch("/api/post", {
+                         method: "PUT",
+                         body: formData
+                     }).then(r => r.json()).then(j => {
+		                   if (j.status == "Error") {
+			                   alert(j.message)
+		                   } else {
+                               @post.Date.ToString("TyyyyMMddHHmmssfffffff")dislike.textContent = j.reactDislike;
+                               @post.Date.ToString("TyyyyMMddHHmmssfffffff")like.textContent = j.reactLike;
+                           }
+                     })
+                 })
+             </script>
+         }
+       }</div>
+    </div>
+ </section>

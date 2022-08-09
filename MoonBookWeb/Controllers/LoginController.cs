@@ -167,7 +167,7 @@ namespace MoonBookWeb.Controllers
                 }
                 _context.Users.Update(user);
                 _context.SaveChanges();
-                return Redirect("/Home/Index");
+                return Redirect("/");
             }
             HttpContext.Session.SetString("RegError", String.Join(";", err));
             return Redirect("/Login/Update");

@@ -39,16 +39,19 @@
                             <li id="UserName">
                                @user.Name
                                 <img id="UserImg" src="/img/@user.PhotoName" style='max-width:40px;border-radius:50%'/>
-                               <ul class="UserMenu">
-                                 <li>
-                                     <a class="link-with-icon" asp-area="" asp-controller="Home" asp-action="UserPage">My Page</a>
-                                 </li> 
-                                 <li>
-                                     <a class="link-with-icon" asp-area="" asp-controller="Login" asp-action="Update">Change data</a>
-                                 </li>
-                                 <li>
-                                     <a class="link-with-icon" asp-area="" asp-controller="Login" asp-action="Exit">Exit</a>
-                                 </li>
+                                <ul class="UserMenu">
+                                    <li>
+                                        <a class="link-with-icon" asp-area="" asp-controller="User" asp-action="Index">My Page</a>
+                                    </li>
+                                    <li>
+                                        <a class="link-with-icon" asp-area="" asp-controller="User" asp-action="FreandPage">My Freands</a>
+                                    </li>
+                                    <li>
+                                        <a class="link-with-icon" asp-area="" asp-controller="Login" asp-action="Update">Change data</a>
+                                    </li>
+                                    <li>
+                                        <a class="link-with-icon" asp-area="" asp-controller="Login" asp-action="Exit">Exit</a>
+                                    </li>
                                 </ul>
                             </li>
                              

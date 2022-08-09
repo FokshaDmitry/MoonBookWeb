@@ -12,7 +12,7 @@ Title.addEventListener("click", () => {
 		Text.setSelectionRange(end, end);
 	}
 })
-Post.addEventListener("click", (e) => {
+Post.addEventListener("click", () => {
 	const formData = new FormData();
 	formData.append("TitlePost", valTitle);
 	formData.append("TextPost", Text.value);
