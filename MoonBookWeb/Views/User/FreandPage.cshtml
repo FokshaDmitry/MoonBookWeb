@@ -1,1 +1,15 @@
-﻿<h1>Freand Page</h1>
+﻿@{
+    var user = ViewData["AuthUser"] as User;
+    var freands = ViewData["Freands"] as List<User>;
+}
+<section style="align-items:center; width: auto; height: auto;">
+    <div style="display: inline;">
+        <p style="margin: 1%; background-color:brown; width: 250px; height:25px"><b>Freands</b></p>
+        <div style="margin: 1%; height: 800px; width: 250px; border: 2px double black;" >
+
+        </div>
+    </div>
+    <div style="display: inline; background-color:purple">
+
+    </div>
+</section>

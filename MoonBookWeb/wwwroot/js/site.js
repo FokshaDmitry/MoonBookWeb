@@ -1,30 +1,28 @@
-﻿var Title = document.getElementById("Title");
-var Text = document.getElementById("Text");
-var Post = document.getElementById("Post");
-var ImagePost = document.getElementById("ImagePost");
-var valTitle = "";
-Title.addEventListener("click", () => {
-	if (Text.selectionStart != Text.selectionEnd) {
-		var start = Text.selectionStart;
-		var end = Text.selectionEnd;
-		valTitle = Text.value.substring(start, end);
-		Text.value = Text.value.substr(0, start) + ">" + Text.value.substr(start, end) + "<" + Text.value.substr(end);
-		Text.setSelectionRange(end, end);
-	}
+﻿let search = document.getElementById("search_user");
+let searchText = document.getElementById("search_user_text");
+
+search.addEventListener("click", () => {
+    if (searchText.value != "") {
+        fetch("/api/freand", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `Name=${searchText.value}`
+        }).then(r => r.json()).then(j => {
+            if (j.status == "Ok") {
+                alert(j.message[0].name + " " + j.message[0].surname)
+            }
+            else if (j.status == "Undefinded") {
+                alert(j.message)
+            }
+            else {
+                alert(j.message);
+
+            }
+        })
+    }
+    else {
+        location.reload();
+    }
 })
-Post.addEventListener("click", () => {
-	const formData = new FormData();
-	formData.append("TitlePost", valTitle);
-	formData.append("TextPost", Text.value);
-	formData.append("ImagePost", ImagePost.files[0]);
-	fetch("/API/Post", {
-		method: "POST",
-		body: formData
-	}).then(r => r.json()).then(j => {
-		if (j.status == "Error") {
-			alert(j.message)
-		} else {
-			location.reload();
-        }
-    })
-});

@@ -1,5 +1,6 @@
 ﻿@{
     var user = ViewData["AuthUser"] as User;
+    var freands = ViewData["Freands"] as List<User>;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +30,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    @if(freands != null)
+                    {
+                          <input id="search_user_text" type="text">
+                          <button id="search_user">
+                              <img src="/icons/search_FILL0_wght400_GRAD0_opsz48.png" style=" display: flex; justify-content: center; width: 20px; height: 20px; margin-right: 5%;"/>
+                          </button>
+                    }
                     @if(user == null)
                     {
                         <a class="navbar-brand" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
@@ -79,5 +87,6 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
 
 
