@@ -1,15 +1,13 @@
-﻿@{
-    var user = ViewData["AuthUser"] as User;
-    var freands = ViewData["Freands"] as List<User>;
-}
-<section style="align-items:center; width: auto; height: auto;">
-    <div style="display: inline;">
-        <p style="margin: 1%; background-color:brown; width: 250px; height:25px"><b>Freands</b></p>
-        <div style="margin: 1%; height: 800px; width: 250px; border: 2px double black;" >
+﻿
+<section id="FreandPage">
+    <div id="FreandList">
+        <p id="TitleFreand"><b>Freands</b></p>
+        <freands id="Freand">
 
-        </div>
+        </freands>
     </div>
     <div style="display: inline; background-color:purple">
 
     </div>
 </section>
+ <script src="/js/freands.js"></script>

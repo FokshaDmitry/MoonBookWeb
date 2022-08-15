@@ -18,7 +18,7 @@ namespace MoonBookWeb.API
         [HttpGet]
         public object Get()
         {
-            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u });
+            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p =>p.post.Date);
             return post;
         }
         [HttpPost]

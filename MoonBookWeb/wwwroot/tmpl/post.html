@@ -1,5 +1,5 @@
 ﻿<div>
-    <div id="{{Id}}" style="float: right; display: block; margin-bottom: 20px; height: 100%; width: 100%; border: 2px double black;">
+    <div class="Post" id="{{Id}}">
         <div id="PostInfo">
             <img id="PostUserPhoto" src="/img/{{PhotoUser}}">
             <p id="PostUserName">
@@ -9,7 +9,8 @@
         </div>
         <div>
             <p id="PostTitle"><b>{{Title}}</b></p>
-            <img id="PostImg" src="/img_post/{{PostImg}}" /><p>{{Text}}</p>
+            {{PostImg}}
+            <p>{{Text}}</p>
         </div>
         <div id="PostComment">
             <button>
@@ -18,13 +19,13 @@
             <textarea aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" name="BlokMessege" cols="4" wrap="soft"></textarea>
         </div>
         <div id="PostReactions">
-            <num id="DisLike">{{Dislike}}</num>
             <button id="Sad">
-                <img src="/icons/mood_bad_FILL0_wght400_GRAD0_opsz48.png" />
+                <img id="SadImg" src="/icons/mood_bad_FILL0_wght400_GRAD0_opsz48.png" />
+                <num id="DisLike">{{Dislike}}</num>
             </button>
-            <num id="Like">{{Like}}</num>
             <button id="Smail">
-                <img src="/icons/mood_FILL0_wght400_GRAD0_opsz48.png" />
+                <img id="SmailImg" src="/icons/mood_FILL0_wght400_GRAD0_opsz48.png" />
+                <num id="Like">{{Like}}</num>
             </button>
         </div>
     </div>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MoonBookWeb.Services;
 
 namespace MoonBookWeb.API
 {
@@ -8,12 +9,31 @@ namespace MoonBookWeb.API
     public class FreandController : ControllerBase
     {
         private readonly AddDbContext _context;
+        private readonly ISessionLogin _sessionLogin;
 
-        public FreandController(AddDbContext context)
+        public FreandController(AddDbContext context, ISessionLogin sessionLogin)
         {
+            _sessionLogin = sessionLogin;
             _context = context;
         }
-
+        [HttpGet]
+        public object Get()
+        {
+            var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id);
+            if(freands.Any())
+            {
+                List<User> users = new List<User>();
+                foreach (var frend in freands)
+                {
+                    var user = _context.Users.Find(frend.IdFreand);
+                    user.PassSalt = "*";
+                    user.Password = "*";
+                    users.Add(user);
+                }
+                return new {status = "Ok", message = users };
+            }
+            return new {status = "Ok", message = "You don't have freands" };
+        }
         [HttpPut]
         public object Search([FromForm]string Name)
         {
@@ -21,7 +41,8 @@ namespace MoonBookWeb.API
             {
                 Name = Name.Replace(" ", "").ToLower();
                 var name = _context.Users.Where(s => s.Name.ToLower() + s.Surname.ToLower() == Name);
-                if (name.Any(u => u.Name != ""))
+                var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Select(s => s.IdFreand);
+                if (name.Any())
                 {
                     List<User> users = new List<User>();
                     foreach (var user in name)
@@ -30,7 +51,7 @@ namespace MoonBookWeb.API
                         user.PassSalt = "*";
                         users.Add(user);
                     }
-                    return new { status = "Ok", message = name };
+                    return new { status = "Ok", message = users, sub = sub};
                 }
                 else
                 {

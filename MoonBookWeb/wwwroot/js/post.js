@@ -47,10 +47,10 @@ function showTopics(elem, j) {
 				if (post.user.photoName != null) {
 					tmp = tmp.replace("{{PhotoUser}}", post.user.photoName)
 				} else {
-					tmp = tmp.replace("{{PhotoUser}}", "");
+					tmp = tmp.replace("{{PhotoUser}}", "android_contacts_FILL0_wght400_GRAD0_opsz48.png");
 				}
 				if (post.post.image != null) {
-					tmp = tmp.replace("{{PostImg}}", post.post.image)
+					tmp = tmp.replace("{{PostImg}}", `<img id="PostImg" src="/img_post/${post.post.image}" />`)
 				} else {
 					tmp = tmp.replace("{{PostImg}}", "");
 				}
@@ -67,7 +67,50 @@ function showTopics(elem, j) {
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
+			postLoaded();
 		});
+}
+async function postLoaded() {
+	for (let post of document.querySelectorAll(".Post")) {
+		post.onclick = Reactions;
+	}
+}
+function Reactions(e) {
+	let sad = e.currentTarget.childNodes[7].childNodes[1].firstElementChild;
+	let smile = e.currentTarget.childNodes[7].childNodes[3].firstElementChild;
+	let idPost = e.currentTarget.getAttribute("id")
+	let dislike = e.currentTarget.childNodes[7].childNodes[1].childNodes[3]
+	let like = e.currentTarget.childNodes[7].childNodes[3].childNodes[3]
+	if (e.target === sad) {
+		const formData = new FormData();
+		formData.append("Reaction", 2);
+		formData.append("IdPost", idPost);
+		fetch("/api/post", {
+			method: "PUT",
+			body: formData
+		}).then(r => r.json()).then(j => {
+			if (j.status == "Error") {
+				alert(j.message)
+			} else {
+				dislike.textContent = j.reactDislike;
+			}	like.textContent = j.reactLike;
+		})
+	}
+	if (e.target === smile) {
+		const formData = new FormData();
+		formData.append("Reaction", 1);
+		formData.append("IdPost", idPost);
+		fetch("/api/post", {
+			method: "PUT",
+			body: formData
+		}).then(r => r.json()).then(j => {
+			if (j.status == "Error") {
+				alert(j.message)
+			} else {
+				dislike.textContent = j.reactDislike;
+			} like.textContent = j.reactLike;
+		})
+	}
 }
 Title.addEventListener("click", () => {
 	if (Text.selectionStart != Text.selectionEnd) {
