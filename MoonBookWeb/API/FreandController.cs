@@ -22,11 +22,6 @@ namespace MoonBookWeb.API
             var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
             if (freands.Any())
             {
-                foreach(var freand in freands)
-                {
-                    freand.PassSalt = "*";
-                    freand.Password ="*";
-                }
                 return new {status = "Ok", message = freands };
             }
             return new {status = "Ok", message = "You don't have freands" };
@@ -34,10 +29,15 @@ namespace MoonBookWeb.API
         [HttpGet("{Posts}")]
         public object Posts()
         {
-            var postFreand = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Posts, s => s.IdFreand, p => p.IdUser, (s, p) => new { Sub = s, Post = p }).Select(p => p.Post).OrderByDescending(p => p.Date);
-            if(postFreand.Any())
+            
+            var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
+            if (freands.Any())
             {
-                return new { status = "Ok", message = postFreand };
+                var postFreand = _context.Posts.Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u });
+                if (postFreand.Any())
+                {
+                    return new { status = "Ok", message = postFreand };
+                }
             }
             return new { status = "Error", message = "Dont find Posts" };
         }
@@ -51,11 +51,6 @@ namespace MoonBookWeb.API
                 var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Select(s => s.IdFreand);
                 if (users.Any())
                 {
-                    foreach (var user in users)
-                    {
-                        user.Password = "*";
-                        user.PassSalt = "*";
-                    }
                     return new { status = "Ok", message = users, sub = sub};
                 }
                 else
@@ -68,6 +63,7 @@ namespace MoonBookWeb.API
         [HttpPut("{id}")]
         public object Follow(string id)
         {
+            bool b = true;
             if(String.IsNullOrEmpty(id))
             {
                 return new { status = "Error", message = "User is empty" };
@@ -77,13 +73,15 @@ namespace MoonBookWeb.API
             if(user == null)
             {
                 _context.Subscriptions.Add(new Subscriptions { Id = Guid.NewGuid(), IdFreand = Id, IdUser = _sessionLogin.user.Id });
+                b = true;
             }
             else
             {
                 _context.Subscriptions.Remove(user);
+                b = false;
             }
             _context.SaveChanges();
-            return new { status = "Ok" };
+            return new { status = "Ok", message = b };
         }
     }
 }

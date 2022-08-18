@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     freands.loadFreands();
     const post = document.querySelector("post");
     if (!post) throw "Forum  script: APP not found";
-    posts = Posts(post, "/api/freand");
-    posts.loadElement("Post")
+    posts = new Posts(post, "/api/freand");
+    posts.loadElements("Post")
 });
 let search = document.getElementById("search_user");
 
@@ -44,17 +44,11 @@ class Freands
                 var appHtml = "";
                 for (let freand of j) {
                     var tmp = trTemplate
-                    let b = false;
-                    tmp = tmp
-                        .replace("{{id}},", freand.id)
-                        .replace("{{Name}}", freand.name)
-                        .replace("{{Surname}}", freand.surname)
-                        .replace("{{SrcIcon}}", "person_remove_FILL0_wght400_GRAD0_opsz48.png")
-                    if (freand.photoName != null) {
-                        tmp = tmp.replace("{{PhotoName}}", freand.photoName)
-                    } else {
-                        tmp = tmp.replace("{{PhotoName}}", "android_contacts_FILL0_wght400_GRAD0_opsz48.png");
-                    }
+                    tmp = tmp.replace("{{id}}", freand.id)
+                             .replace("{{Name}}", freand.name)
+                             .replace("{{Surname}}", freand.surname)
+                             .replace("{{SrcIcon}}", "person_remove_FILL0_wght400_GRAD0_opsz48.png")
+                        .replace("{{PhotoName}}", (freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
                     appHtml += tmp;
                 }
                 elem.innerHTML = appHtml;
@@ -76,23 +70,24 @@ class Freands
             }).then(r => r.json()).then(j => {
                 if (j.status == "Error") {
                     alert(j.message)
-                } else {
-
+                } else if (j.status = "Ok") {
+                    if (j.message) {
+                        follow.src = "/icons/person_remove_FILL0_wght400_GRAD0_opsz48.png";
+                    } else {
+                        follow.src = "/icons/person_add_FILL0_wght400_GRAD0_opsz48.png";
+                    }
                 }
             })
         }
         if (e.target !== follow) {
-            const formData = new FormData();
-            formData.append("Reaction", 1);
-            formData.append("IdPost", idPost);
             fetch(`/api/freand/${idFreand}`, {
-                method: "PUT",
+                method: "GET",
                 body: null
             }).then(r => r.json()).then(j => {
                 if (j.status == "Error") {
                     alert(j.message)
                 } else {
-    
+                    
                 }
             })
         }

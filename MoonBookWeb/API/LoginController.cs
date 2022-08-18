@@ -45,8 +45,6 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = 401;
                 return "Unauthorized: credentials invalid";
             }
-            user.PassSalt = "*";
-            user.Password = "*";
             return user;
         }
     }

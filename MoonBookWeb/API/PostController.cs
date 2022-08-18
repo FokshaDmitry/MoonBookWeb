@@ -19,7 +19,7 @@ namespace MoonBookWeb.API
         public object Get()
         {
             var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p =>p.post.Date);
-            return post;
+            return new { status = "Ok", message = post };
         }
         [HttpPost]
         public object Post([FromForm]Models.PostUserModel postUser)
@@ -71,60 +71,47 @@ namespace MoonBookWeb.API
         [HttpPut]
         public object Reaction([FromForm]Reactions reactions)
         {
-            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p });
-            foreach (var reac in qerty)
-            {
-                if (reac.Ract.IdUser == _sessionLogin.user.Id)
-                {
-                    if (reac.Ract.Reaction == reactions.Reaction && reac.Ract.Reaction == 1)
-                    {
-                        reac.Ract.Reaction = 0;
-                        reac.Post.Like--;
-                        _context.Posts.Update(reac.Post);
-                        _context.Reactions.Update(reac.Ract);
-                    }
-                    else if (reac.Ract.Reaction == reactions.Reaction && reac.Ract.Reaction == 2)
-                    {
-                        reac.Ract.Reaction = 0;
-                        reac.Post.Dislike--;
-                        _context.Posts.Update(reac.Post);
-                        _context.Reactions.Update(reac.Ract);
-                    }
-                    
-                    else if (reac.Ract.Reaction != reactions.Reaction && reactions.Reaction == 1)
-                    {
-                        reac.Ract.Reaction = 1;
-                        reac.Post.Like++;
-                        if (reac.Post.Dislike != 0) reac.Post.Dislike--;
-                        _context.Posts.Update(reac.Post);
-                        _context.Reactions.Update(reac.Ract);
-                    }
-                    else if (reac.Ract.Reaction != reactions.Reaction && reactions.Reaction == 2)
-                    {
-                        reac.Ract.Reaction = 2;
-                        reac.Post.Dislike++;
-                        if (reac.Post.Like != 0) reac.Post.Like--;
-                        _context.Posts.Update(reac.Post);
-                        _context.Reactions.Update(reac.Ract);
-                    }
-                }
-                else
-                {
-                    if (reactions.Reaction == 1) reac.Post.Like++;
-                    else reac.Post.Dislike++;
+            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p }).FirstOrDefault();
 
-                    _context.Posts.Update(reac.Post);
-                    _context.Reactions.Add(new Reactions { Id = Guid.NewGuid(), IdPost = reactions.IdPost, IdUser = _sessionLogin.user.Id, Reaction = reactions.Reaction });
+            if (qerty != null)
+            {
+                if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 1)
+                {
+                    qerty.Post.Like--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Remove(qerty.Ract);
+                }
+                else if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 2)
+                {
+                    qerty.Post.Dislike--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Remove(qerty.Ract);
+                }
+                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 1)
+                {
+                    qerty.Ract.Reaction = 1;
+                    qerty.Post.Like++;
+                    if (qerty.Post.Dislike != 0) qerty.Post.Dislike--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Update(qerty.Ract);
+                }
+                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 2)
+                {
+                    qerty.Ract.Reaction = 2;
+                    qerty.Post.Dislike++;
+                    if (qerty.Post.Like != 0) qerty.Post.Like--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Update(qerty.Ract);
                 }
             }
-            if (qerty.Count() == 0)
+            else
             {
                 var q = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault();
                 if (reactions.Reaction == 1) q.Like++;
                 else q.Dislike++;
 
-                _context.Reactions.Add(new Reactions { Id = Guid.NewGuid(), IdPost = reactions.IdPost, IdUser = _sessionLogin.user.Id, Reaction = reactions.Reaction });
                 _context.Posts.Update(q);
+                _context.Reactions.Add(new Reactions { Id = Guid.NewGuid(), IdPost = reactions.IdPost, IdUser = _sessionLogin.user.Id, Reaction = reactions.Reaction });
             }
             _context.SaveChanges();
             return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Like, reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Dislike };
