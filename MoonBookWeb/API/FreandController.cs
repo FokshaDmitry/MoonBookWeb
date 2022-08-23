@@ -26,20 +26,36 @@ namespace MoonBookWeb.API
             }
             return new {status = "Ok", message = "You don't have freands" };
         }
-        [HttpGet("{Posts}")]
-        public object Posts()
+        [HttpGet("{Message}")]
+        public object Posts(string message)
         {
-            
-            var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
-            if (freands.Any())
+            if (String.IsNullOrEmpty(message))
             {
-                var postFreand = _context.Posts.Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u });
-                if (postFreand.Any())
-                {
-                    return new { status = "Ok", message = postFreand };
-                }
+                return new { status = "Error", message = "User is empty" };
             }
-            return new { status = "Error", message = "Dont find Posts" };
+            if (message == "Post")
+            {
+                var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
+                if (freands.Any())
+                {
+                    var postFreand = _context.Posts.Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u });
+                    if (postFreand.Any())
+                    {
+                        return new { status = "Ok", message = postFreand };
+                    }
+                }
+                return new { status = "Error", message = "Dont find Posts" };
+            }
+            else
+            {
+                Guid Id = Guid.Parse(message);
+                var freandsPost = _context.Posts.Where(p => p.IdUser == Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(_context.Comments, p => p.Post.Id, c => c.idPost, (p, c) => new { Post = p, Comment = c }); ;
+                if (freandsPost.Any())
+                {
+                    return new { status = "Ok", message = freandsPost };
+                }
+                return new { status = "Error", message = "Dont find Posts" };
+            }
         }
         [HttpPut]
         public object Search([FromForm]string Name)
@@ -47,11 +63,11 @@ namespace MoonBookWeb.API
             if (!String.IsNullOrEmpty(Name))
             {
                 Name = Name.Replace(" ", "").ToLower();
-                var users = _context.Users.Where(s => s.Name.ToLower() + s.Surname.ToLower() == Name);
-                var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Select(s => s.IdFreand);
-                if (users.Any())
+                var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id);
+                var users = _context.Users.Where(s => s.Name.ToLower() + s.Surname.ToLower() == Name).GroupJoin(sub, u => u.Id, s => s.IdFreand, (u, s) => new { User = u, Sub = s});
+                if (users.Select(u => u.User).Count() > 0)
                 {
-                    return new { status = "Ok", message = users, sub = sub};
+                    return new { status = "Ok", message = users};
                 }
                 else
                 {

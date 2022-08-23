@@ -6,12 +6,10 @@ namespace MoonBookWeb.Controllers
     public class UserController : Controller
     {
         private readonly ISessionLogin _sessionLogin;
-        private readonly AddDbContext _context;
 
-        public UserController(ISessionLogin sessionLogin, AddDbContext context)
+        public UserController(ISessionLogin sessionLogin)
         {
             _sessionLogin = sessionLogin;
-            _context = context;
         }
 
         public IActionResult Index()
@@ -27,16 +25,7 @@ namespace MoonBookWeb.Controllers
         {
             if (_sessionLogin.user != null)
             {
-                List<User> freands = new List<User>();
-
-                foreach (var user in _sessionLogin.userFreands)
-                {
-                    var q = _context.Users.Find(user);
-                    q.Password = "*";
-                    q.PassSalt = "*";
-                    freands.Add(q);
-                }
-                ViewData["Freands"] = freands;
+                ViewData["Freands"] = "Ok";
                 ViewData["AuthUser"] = _sessionLogin?.user;
                 return View();
             }

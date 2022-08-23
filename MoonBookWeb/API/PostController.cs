@@ -8,7 +8,7 @@ namespace MoonBookWeb.API
     [ApiController]
     public class PostController : ControllerBase
     {
-        private readonly ISessionLogin _sessionLogin; 
+        private readonly ISessionLogin _sessionLogin;
         private readonly AddDbContext _context;
         public PostController(ISessionLogin sessionLogin, AddDbContext context)
         {
@@ -18,13 +18,13 @@ namespace MoonBookWeb.API
         [HttpGet]
         public object Get()
         {
-            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p =>p.post.Date);
+            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(_context.Comments, p => p.post.Id, c => c.idPost, (p, c) => new { Post = p, Comment = c });
             return new { status = "Ok", message = post };
         }
         [HttpPost]
-        public object Post([FromForm]Models.PostUserModel postUser)
+        public object Post([FromForm] Models.PostUserModel postUser)
         {
-            if(_sessionLogin.user != null)
+            if (_sessionLogin.user != null)
             {
                 Posts posts = new Posts();
                 bool isValid = false;
@@ -41,10 +41,10 @@ namespace MoonBookWeb.API
                 }
                 if (postUser.ImagePost != null)
                 {
-                    
+
                     isValid = true;
                     posts.Image = Guid.NewGuid().ToString() + Path.GetExtension(postUser.ImagePost.FileName);
-                    postUser.ImagePost.CopyToAsync(new FileStream("./wwwroot/img_post/" + posts.Image, FileMode.Create));        
+                    postUser.ImagePost.CopyToAsync(new FileStream("./wwwroot/img_post/" + posts.Image, FileMode.Create));
                 }
                 if (isValid)
                 {
@@ -66,10 +66,11 @@ namespace MoonBookWeb.API
             {
                 return new { status = "Error", message = "User don't find" };
             }
-            
+
         }
+
         [HttpPut]
-        public object Reaction([FromForm]Reactions reactions)
+        public object Reaction([FromForm] Reactions reactions)
         {
             var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p }).FirstOrDefault();
 
@@ -115,6 +116,20 @@ namespace MoonBookWeb.API
             }
             _context.SaveChanges();
             return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Like, reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Dislike };
+        }
+        [HttpPut("{Comment}")]
+        public object Comment([FromForm] Comments comment)
+        {
+            if(comment != null)
+            {
+                comment.Id = Guid.NewGuid();
+                comment.idUser = _sessionLogin.user.Id;
+                comment.Date = DateTime.Now;
+                _context.Comments.Add(comment);
+                _context.SaveChanges();
+            }
+            var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
+            return new { status = "Ok", message = responce};
         }
     }
 }

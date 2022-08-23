@@ -1,6 +1,6 @@
 ﻿@{
     var user = ViewData["AuthUser"] as User;
-    var freands = ViewData["Freands"] as List<User>;
+    var freands = ViewData["Freands"] as String;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +30,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-                    @if(freands != null)
+                    @if(freands == "Ok")
                     {
                           <input id="search_user_text" type="text">
                           <button id="search_user">

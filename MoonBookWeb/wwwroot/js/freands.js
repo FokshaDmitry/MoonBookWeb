@@ -1,154 +1,125 @@
 ﻿
-let freands;
 let posts
+let post
 document.addEventListener("DOMContentLoaded", () => {
     const freand = document.querySelector("freands");
-    if (!freand) throw "Forum  script: APP not found";
-    freands = new Freands(freand, "/api/freand")
-    freands.loadFreands();
-    const post = document.querySelector("post");
-    if (!post) throw "Forum  script: APP not found";
-    posts = new Posts(post, "/api/freand");
-    posts.loadElements("Post")
+	if (!freand) throw "Forum  script: APP not found";
+	post = document.querySelector("post");
+	loadFreandElements(freand)
+	if (!post) throw "Forum  script: APP not found";
+	posts = new Posts("/api/freand/Post");
+	posts.loadElement(post);
 });
 let search = document.getElementById("search_user");
-
-class Freands
-{
-    constructor(elem, API) {
-        this.elem = elem;
-        this.API = API;
-    }
-    
-    loadFreands() {
-        fetch(this.API,
-        {
-            method: "GET",
-            body: null
-        })
-        .then(r => r.json())
-        .then(j => {
-            if (j.message instanceof Array) {
-                this.showUserFreands(this.elem, j.message);
-            }
-            else {
-                throw "showTopics: Backend data invalid";
-            }
-        });
-    }
-
-    showUserFreands(elem, j) {
-        fetch("/tmpl/freands.html")
-            .then(r => r.text())
-            .then(trTemplate => {
-                var appHtml = "";
-                for (let freand of j) {
-                    var tmp = trTemplate
-                    tmp = tmp.replace("{{id}}", freand.id)
-                             .replace("{{Name}}", freand.name)
-                             .replace("{{Surname}}", freand.surname)
-                             .replace("{{SrcIcon}}", "person_remove_FILL0_wght400_GRAD0_opsz48.png")
-                        .replace("{{PhotoName}}", (freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
-                    appHtml += tmp;
-                }
-                elem.innerHTML = appHtml;
-                this.freandLoaded();
-            });
-    }
-    async freandLoaded() {
-        for (let freand of document.querySelectorAll(".idFreand")) {
-            freand.onclick = this.Follow;
-        }
-    }
-    Follow(e) {
-        let follow = e.currentTarget.childNodes[5].childNodes[1];
-        let idFreand = e.currentTarget.getAttribute("id")
-        if (e.target === follow) {
-            fetch(`/api/freand/${idFreand}`, {
-                method: "PUT",
-                body: null
-            }).then(r => r.json()).then(j => {
-                if (j.status == "Error") {
-                    alert(j.message)
-                } else if (j.status = "Ok") {
-                    if (j.message) {
-                        follow.src = "/icons/person_remove_FILL0_wght400_GRAD0_opsz48.png";
-                    } else {
-                        follow.src = "/icons/person_add_FILL0_wght400_GRAD0_opsz48.png";
-                    }
-                }
-            })
-        }
-        if (e.target !== follow) {
-            fetch(`/api/freand/${idFreand}`, {
-                method: "GET",
-                body: null
-            }).then(r => r.json()).then(j => {
-                if (j.status == "Error") {
-                    alert(j.message)
-                } else {
-                    
-                }
-            })
-        }
-    }
-    searchFreands(searchText) {
-        if (searchText.value != "") {
-            fetch(this.API, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: `Name=${searchText.value}`
-            }).then(r => r.json())
-                .then(j => {
-                    if (j.status == "Ok") {
-                        this.showFreands(this.elem, j.message, j.sub)
-                    }
-                    else if (j.status == "Undefinded") {
-                        alert(j.message)
-                    }
-                    else {
-                        alert(j.message);
-    
-                    }
-                })
-        }
-        else {
-            location.reload();
-        }
-    }
-    showFreands(elem, j, sub) {
-        fetch("/tmpl/freands.html")
-            .then(r => r.text())
-            .then(trTemplate => {
-                var appHtml = "";
-                for (let freand of j) {
-                    var tmp = trTemplate
-                    let b = false;
-                    tmp = tmp
-                        .replace("{{id}}", freand.id)
-                        .replace("{{Name}}", freand.name)
-                        .replace("{{Surname}}", freand.surname)
-                    if (freand.photoName != null) {
-                        tmp = tmp.replace("{{PhotoName}}", freand.photoName)
-                    } else {
-                        tmp = tmp.replace("{{PhotoName}}", "android_contacts_FILL0_wght400_GRAD0_opsz48.png");
-                    }
-                    if (sub.indexOf(freand.id) != -1) {
-                        tmp = tmp.replace("{{SrcIcon}}", "person_remove_FILL0_wght400_GRAD0_opsz48.png")
-                    }
-                    else {
-                        tmp = tmp.replace("{{SrcIcon}}", "person_add_FILL0_wght400_GRAD0_opsz48.png")
-                    }
-                    appHtml += tmp;
-                }
-                elem.innerHTML = appHtml;
-                this.freandLoaded()
-            });
-    }
-}
-
 search.addEventListener("click", () => {
     freands.searchFreands(document.getElementById("search_user_text"))
 })
+
+function loadFreandElements(elem) {
+	fetch(`/api/freand`,
+		{
+			method: "GET",
+			headers: {
+				"User-Id": "",
+				"Culture": ""
+			},
+			body: null
+		})
+		.then(r => r.json())
+		.then(j => {
+			if (j.status === "Ok") {
+				showElement(elem, j.message);
+			}
+			else {
+				throw "showTopics: Backend data invalid";
+			}
+		});
+}
+function showElement(elem, j) {
+	fetch("/tmpl/freands.html")
+		.then(r => r.text())
+		.then(trTemplate => {
+			let appHtml = "";
+			for (let freand of j) {
+				var tmp = trTemplate
+				tmp = tmp.replaceAll("{{id}}", freand.id)
+					.replaceAll("{{Name}}", freand.name)
+					.replaceAll("{{Surname}}", freand.surname)
+					.replaceAll("{{SrcIcon}}", "person_remove_FILL0_wght400_GRAD0_opsz48.png")
+					.replaceAll("{{PhotoName}}", (freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
+				appHtml += tmp;
+			}
+			elem.innerHTML = appHtml;
+			this.freandLoaded();
+		});
+}
+function searchFreands(searchText) {
+	if (searchText.value != "") {
+		fetch(this.API, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			body: `Name=${searchText.value}`
+		}).then(r => r.json())
+			.then(j => {
+				if (j.status == "Ok") {
+					this.showUserFreands(this.elem, j.message)
+				}
+				else if (j.status == "Undefinded") {
+					alert(j.message)
+				}
+				else {
+					alert(j.message);
+
+				}
+			})
+	}
+	else {
+		location.reload();
+	}
+}
+async function freandLoaded() {
+	for (let freand of document.querySelectorAll(".idFreand")) {
+		freand.onclick = this.Follow;
+	}
+}
+function Follow(e) {
+	let follow = e.currentTarget.childNodes[5].childNodes[1];
+	let idFreand = e.currentTarget.getAttribute("id")
+	if (e.target === follow) {
+		fetch(`/api/freand/${idFreand}`, {
+			method: "PUT",
+			body: null
+		}).then(r => r.json()).then(j => {
+			if (j.status == "Error") {
+				alert(j.message)
+			} else if (j.status = "Ok") {
+				if (j.message) {
+					follow.src = "/icons/person_remove_FILL0_wght400_GRAD0_opsz48.png";
+				} else {
+					follow.src = "/icons/person_add_FILL0_wght400_GRAD0_opsz48.png";
+				}
+			}
+		})
+	}
+	if (e.target !== follow) {
+		fetch(`/api/freand/${idFreand}`, {
+			method: "GET",
+			body: null
+		}).then(r => r.json()).then(j => {
+			if (j.status == "Error") {
+				alert(j.message)
+			} else {
+				var appHtml = `<div id="FreandPageInfo"><img id="FreandPagePhoto" src = "/img/{{PhotoName}}"> <p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p></div>`;
+				for (let freand of j.message) {
+					appHtml = appHtml
+						.replace("{{Name}}", freand.user.name)
+						.replace("{{Surname}}", freand.user.surname)
+						.replace("{{PhotoName}}", (freand.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.user.photoName))
+				}
+				posts.showElement(post, j.message, appHtml);
+			}
+		})
+	}
+}

@@ -118,7 +118,10 @@ body {
     width: 30px;
     height: 30px;
     border-color: transparent;
-    margin-right: 5%;
+    margin-right: 2%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 }
 #SendPost button img {
     width: 30px;
@@ -208,6 +211,21 @@ body {
         margin-right: 1%;
     }
 /*=================== Freand ===============*/
+#FreandPagePhoto {
+    border: 2px double black;
+    margin: 2%;
+    border-radius: 150px;
+    width: 300px;
+    height: 300px;
+}
+#FreandPageNeme{
+    font-size: 26pt;
+
+}
+#FreandPageInfo {
+    display: grid;
+    justify-items: center;
+}
 #FreandPage {
     width: auto;
     height: auto;
@@ -216,7 +234,6 @@ body {
 #Freand {
     margin: 1%;
     display: block;
-    height: 800px;
     width: 250px;
     border: 2px double black;
 }
@@ -255,3 +272,21 @@ body {
         width: 25px;
         height: 25px;
     }
+/*=================== Comment ===============*/
+#UserComment {
+    display: flex;
+}
+#PhotoComment {
+    border: 2px double black;
+    vertical-align: top;
+    margin: 1%;
+    border-radius: 150px;
+    width: 35px;
+    height: 35px;
+}
+#CommentInfo {
+    font-size: 10pt;
+}
+#CommentInfo p {
+    margin: 0;
+}
