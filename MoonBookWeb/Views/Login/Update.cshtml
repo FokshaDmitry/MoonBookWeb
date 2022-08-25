@@ -13,6 +13,7 @@
        @if (!String.IsNullOrEmpty(err?[1])) @err[1]
    <p>Surname:          <p/> <input type="text" name="Surname" value="@user?.Surname" /> 
        @if (!String.IsNullOrEmpty(err?[2])) @err[2]
+   <p>Status:          <p/> <textarea name="Status" value="@user?.Status" style="width: 250px"></textarea>
    <p>Date of Bith:     <p/> <input type="date" name="DateOfBith" value="@user?.DateOfBith.Date.ToString("u")"/>
        @if (!String.IsNullOrEmpty(err?[3])) @err[3]
    <p>Login:            <p/> <input type="text" name="Login" value="@user?.Login"/> 

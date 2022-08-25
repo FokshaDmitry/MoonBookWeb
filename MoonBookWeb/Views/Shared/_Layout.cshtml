@@ -45,8 +45,10 @@
                     {
                         <ul style="list-style-type:none; margin-right: 2%" >
                             <li id="UserName">
+                               <div style="position:absolute; width: 60%;"> <div id="OnlineUser"></div></div>
+
                                @user.Name
-                                <img id="UserImg" src="/img/@user.PhotoName" style='max-width:40px;border-radius:50%'/>
+                                <img id="UserImg" src="/img/@user.PhotoName">
                                 <ul class="UserMenu">
                                     <li>
                                         <a class="link-with-icon" asp-area="" asp-controller="User" asp-action="Index">My Page</a>

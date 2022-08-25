@@ -1,8 +1,9 @@
 ﻿
 let posts
 let post
+let freand
 document.addEventListener("DOMContentLoaded", () => {
-    const freand = document.querySelector("freands");
+    freand = document.querySelector("freands");
 	if (!freand) throw "Forum  script: APP not found";
 	post = document.querySelector("post");
 	loadFreandElements(freand)
@@ -11,18 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	posts.loadElement(post);
 });
 let search = document.getElementById("search_user");
-search.addEventListener("click", () => {
-    freands.searchFreands(document.getElementById("search_user_text"))
-})
+
 
 function loadFreandElements(elem) {
 	fetch(`/api/freand`,
 		{
 			method: "GET",
-			headers: {
-				"User-Id": "",
-				"Culture": ""
-			},
 			body: null
 		})
 		.then(r => r.json())
@@ -42,11 +37,12 @@ function showElement(elem, j) {
 			let appHtml = "";
 			for (let freand of j) {
 				var tmp = trTemplate
-				tmp = tmp.replaceAll("{{id}}", freand.id)
-					.replaceAll("{{Name}}", freand.name)
-					.replaceAll("{{Surname}}", freand.surname)
-					.replaceAll("{{SrcIcon}}", "person_remove_FILL0_wght400_GRAD0_opsz48.png")
-					.replaceAll("{{PhotoName}}", (freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
+				tmp = tmp.replaceAll("{{id}}", freand.user.id)
+					.replaceAll("{{Name}}", freand.user.name)
+					.replaceAll("{{Surname}}", freand.user.surname)
+					.replaceAll("{{SrcIcon}}", (freand.sub.length == 0 ? "person_add_FILL0_wght400_GRAD0_opsz48.png" : "person_remove_FILL0_wght400_GRAD0_opsz48.png"))
+					.replaceAll("{{PhotoName}}", (freand.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.user.photoName))
+					.replaceAll("{{Online}}", (freand.user.online ? "" : "background-color: lightpink;"))
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
@@ -55,19 +51,12 @@ function showElement(elem, j) {
 }
 function searchFreands(searchText) {
 	if (searchText.value != "") {
-		fetch(this.API, {
+		fetch(`/api/freand/${searchText.value}`, {
 			method: "PUT",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
-			},
-			body: `Name=${searchText.value}`
-		}).then(r => r.json())
-			.then(j => {
+			body: null
+        }).then(r => r.json()).then(j => {
 				if (j.status == "Ok") {
-					this.showUserFreands(this.elem, j.message)
-				}
-				else if (j.status == "Undefinded") {
-					alert(j.message)
+					showElement(freand, j.message)
 				}
 				else {
 					alert(j.message);
@@ -85,11 +74,11 @@ async function freandLoaded() {
 	}
 }
 function Follow(e) {
-	let follow = e.currentTarget.childNodes[5].childNodes[1];
+	let follow = e.currentTarget.childNodes[7].childNodes[1];
 	let idFreand = e.currentTarget.getAttribute("id")
 	if (e.target === follow) {
 		fetch(`/api/freand/${idFreand}`, {
-			method: "PUT",
+			method: "POST",
 			body: null
 		}).then(r => r.json()).then(j => {
 			if (j.status == "Error") {
@@ -114,12 +103,15 @@ function Follow(e) {
 				var appHtml = `<div id="FreandPageInfo"><img id="FreandPagePhoto" src = "/img/{{PhotoName}}"> <p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p></div>`;
 				for (let freand of j.message) {
 					appHtml = appHtml
-						.replace("{{Name}}", freand.user.name)
-						.replace("{{Surname}}", freand.user.surname)
-						.replace("{{PhotoName}}", (freand.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.user.photoName))
+						.replace("{{Name}}", freand.post.user.name)
+						.replace("{{Surname}}", freand.post.user.surname)
+						.replace("{{PhotoName}}", (freand.post.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.post.user.photoName))
 				}
 				posts.showElement(post, j.message, appHtml);
 			}
 		})
 	}
 }
+search.addEventListener("click", () => {
+	searchFreands(document.getElementById("search_user_text"))
+})

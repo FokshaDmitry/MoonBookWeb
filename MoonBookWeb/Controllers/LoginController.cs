@@ -56,6 +56,8 @@ namespace MoonBookWeb.Controllers
             {
                 if (user.Password == _hesher.Hesh(Password + user.PassSalt))
                 {
+                    user.Online = true;
+                    _context.SaveChanges();
                     HttpContext.Session.SetString("UserId", user.Id.ToString());
                     return Redirect("/");
                 }
@@ -131,7 +133,11 @@ namespace MoonBookWeb.Controllers
                 {
                     user.Surname = userModel?.Surname;
                 }
-                if(user?.Email != userModel?.Email)
+                if (user?.Status != userModel?.Status)
+                {
+                    user.Status = userModel?.Status;
+                }
+                if (user?.Email != userModel?.Email)
                 {
                     user.Email = userModel?.Email;
                 }
@@ -174,6 +180,10 @@ namespace MoonBookWeb.Controllers
         }
         public IActionResult Exit()
         {
+            var user = _context.Users.Find(_sessionLogin.user.Id);
+            user.Online = false;
+            _context.Users.Update(user);
+            _context.SaveChanges();
             HttpContext.Session.Remove("UserId");
             return Redirect("/Login/Index");
         }

@@ -38,12 +38,12 @@
 					let appHtmlComment = "";
 					for (let comment of post.comment) {
 						var tmpCom = `<div id="UserComment"> <div > <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> </div>`;
-						tmpCom = tmpCom.replaceAll("{{Name}}", post.post.user.name)
-							.replaceAll("{{Surname}}", post.post.user.surname)
-							.replaceAll("{{Date}}", comment.date)
-							.replaceAll("{{Id}}", comment.id)
-							.replaceAll("{{PhotoName}}", (post.post.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : post.post.user.photoName))
-							.replaceAll("{{Text}}", (comment.text == null ? "" : comment.text))
+						tmpCom = tmpCom.replaceAll("{{Name}}", comment.user.name)
+							.replaceAll("{{Surname}}", comment.user.surname)
+							.replaceAll("{{Date}}", comment.comment.date)
+							.replaceAll("{{Id}}", comment.comment.id)
+							.replaceAll("{{PhotoName}}", (comment.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.user.photoName))
+							.replaceAll("{{Text}}", (comment.comment.text == null ? "" : comment.comment.text))
 						appHtmlComment += tmpCom;
 					}
 					tmp = tmp.replace("{{Comments}}", appHtmlComment);

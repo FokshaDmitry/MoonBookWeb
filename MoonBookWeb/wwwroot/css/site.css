@@ -48,8 +48,22 @@ body {
     align-items:center;
     justify-content:center;
 }
+#OnlineUser {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px double black;
+    margin-left: 5%;
+    margin-top: 2.5%;
+    background-color: limegreen;
+}
 #Name:hover {
     cursor: pointer;
+}
+#UserImg {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
 }
 #UserImg:hover {
     cursor: pointer;
@@ -127,6 +141,12 @@ body {
     width: 30px;
     height: 30px;
     margin-right: 2%;
+}
+#OnlineFreands {
+    width: 250px;
+    min-height: 75px;
+    border: 2px double black;
+    margin: 1%;
 }
 /*=================== Post ===============*/
 .Post {
