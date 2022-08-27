@@ -50,13 +50,10 @@ namespace MoonBookWeb.API
             else
             {
                 Guid Id = Guid.Parse(message);
+                var user = _context.Users.Find(Id);
                 var comment = _context.Comments.Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u });
                 var freandsPost = _context.Posts.Where(p => p.IdUser == Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comment, p => p.Post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
-                if (freandsPost.Any())
-                {
-                    return new { status = "Ok", message = freandsPost };
-                }
-                return new { status = "Error", message = "Dont find Posts" };
+                return new { status = "Ok", freandsPost = freandsPost, user = user };
             }
         }
         [HttpPut("{Name}")]

@@ -86,6 +86,16 @@ body {
     display: flex;
     align-items: flex-start;
 }
+#OnlineFreandsPhoto {
+    border: 2px double black;
+    border-radius: 150px;
+    width: 37px;
+    height: 37px;
+    cursor:pointer;
+}
+.idOnlineFreand {
+    margin: 2%;
+}
 #UserPhoto {
     border: 2px double black;
     margin: 2%;
@@ -144,9 +154,10 @@ body {
 }
 #OnlineFreands {
     width: 250px;
-    min-height: 75px;
     border: 2px double black;
     margin: 1%;
+    display: flex;
+    flex-wrap: wrap;
 }
 /*=================== Post ===============*/
 .Post {

@@ -9,7 +9,7 @@ namespace MoonBookWeb.API
     public class LoginController : ControllerBase
     {
         private readonly AddDbContext _context;
-        private readonly Services.Hesher _hesher;
+        private readonly Hesher _hesher;
 
         public LoginController(AddDbContext context, Hesher hesher)
         {

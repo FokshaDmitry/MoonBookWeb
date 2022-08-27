@@ -1,7 +1,7 @@
-﻿
-let posts
+﻿let posts
 let post
 let freand
+var link
 document.addEventListener("DOMContentLoaded", () => {
     freand = document.querySelector("freands");
 	if (!freand) throw "Forum  script: APP not found";
@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (!post) throw "Forum  script: APP not found";
 	posts = new Posts("/api/freand/Post");
 	posts.loadElement(post);
+	link = new URL(window.location.href);
+	
 });
 let search = document.getElementById("search_user");
 
@@ -70,7 +72,25 @@ function searchFreands(searchText) {
 }
 async function freandLoaded() {
 	for (let freand of document.querySelectorAll(".idFreand")) {
-		freand.onclick = this.Follow;
+		freand.onclick = Follow;
+	}
+	link = link.search.replace('?', "");
+	if (link != '') {
+		fetch(`/api/freand/${link}`, {
+			method: "GET",
+			body: null
+		}).then(r => r.json()).then(j => {
+			if (j.status == "Error") {
+				alert(j.message)
+			} else {
+				var appHtml = `<div id="FreandPageInfo"><img id="FreandPagePhoto" src = "/img/{{PhotoName}}"> <p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p></div>`;
+				appHtml = appHtml
+					.replace("{{Name}}", j.user.name)
+					.replace("{{Surname}}", j.user.surname)
+					.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
+				posts.showElement(post, j.freandsPost, appHtml);
+			}
+		})
 	}
 }
 function Follow(e) {
@@ -101,13 +121,11 @@ function Follow(e) {
 				alert(j.message)
 			} else {
 				var appHtml = `<div id="FreandPageInfo"><img id="FreandPagePhoto" src = "/img/{{PhotoName}}"> <p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p></div>`;
-				for (let freand of j.message) {
-					appHtml = appHtml
-						.replace("{{Name}}", freand.post.user.name)
-						.replace("{{Surname}}", freand.post.user.surname)
-						.replace("{{PhotoName}}", (freand.post.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.post.user.photoName))
-				}
-				posts.showElement(post, j.message, appHtml);
+				appHtml = appHtml
+					.replace("{{Name}}", j.user.name)
+					.replace("{{Surname}}", j.user.surname)
+					.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
+				posts.showElement(post, j.freandsPost, appHtml);
 			}
 		})
 	}
