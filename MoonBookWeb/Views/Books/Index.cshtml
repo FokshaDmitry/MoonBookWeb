@@ -1,20 +1,54 @@
-﻿<h1> Add Book</h1>
-<form action="/Login/RegUser" method="post" enctype="multipart/form-data">
-   <p>Tiyle:             <p/> <input type="text" name="Name" />
+﻿@{
+    var err = ViewData["ErrorBook"] as String[];
+}
+<h1> Add Book</h1>
+<form action="/Books/AddBook" method="post" enctype="multipart/form-data">
+   <input type="file" id="Cover" name="CoverImage" style="display: none;" accept="img/*" multiple/>       
+    <label for="Cover">
+             <img id="CoverImg" src="/icons/add_FILL0_wght500_GRAD0_opsz48.png" style="border: 2px double black; cursor:pointer; width: 120px; height: 250px;"/>
+    </label>
+   <p>Tiyle:             <p/> <input id="Title" type="text" name="Title" />
        @if (!String.IsNullOrEmpty(err?[1])) @err[1]
-   <p>Author:          <p/> <input type="text" name="Surname" /> 
+   <p>Author:          <p/> <input id="Author" type="text" name="Author" /> 
        @if (!String.IsNullOrEmpty(err?[2])) @err[2]
-   <p>Date of Bith:     <p/> <input type="date" name="DateOfBith"/>
+   <p>Genry:     <p/> <select multiple name="Genry">
+                        <option disabled>Choose Genry</option>
+                        <option value="Prose">Prose</option>
+                        <option value="Poetry">Poetry</option>
+                        <option value="Lyrics">Lyrics</option>
+                        <option value="Memoirs">Memoirs</option>
+                        <option value="History">History</option>
+                        <option value="Detective">Detective</option>
+                        <option value="Adventures">Adventures</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Cyberpunk">Cyberpunk</option>
+                        <option value="Publicism">Publicism</option>
+                        <option value="Events">Events</option>
+                        <option value="Review">Review</option>
+                        <option value="Criticism">Criticism</option>
+                        <option value="Philosophy">Philosophy</option>
+                        <option value="Religion">Religion</option>
+                        <option value="Esoterics">Esoterics</option>
+                        <option value="Occultism">Occultism</option>
+                        <option value="Mystic">Mystic</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Politics">Politics</option>
+                        <option value="Erotica">Erotica</option>
+                        <option value="Love story">Love story</option>
+                        <option value="Natural science">Natural science</option>
+                        <option value="Humor">Humor</option>
+                        <option value="Parodies">Parodies</option>
+                        <option value="Translations">Translations</option>
+                        <option value="Fairy tales">Fairy tales</option>
+                        <option value="Dramaturgy">Dramaturgy</option>
+                        <option value="Postmodernism">Postmodernism</option>
+                        <option value="Metamodernism">Metamodernism</option>
+                      </select>
        @if (!String.IsNullOrEmpty(err?[3])) @err[3]
-   <p>Login:            <p/> <input type="text" name="Login" /> 
+   <p>Annotation:            <p/> <textarea name="Annotation" ></textarea> 
        @if (!String.IsNullOrEmpty(err?[4])) @err[4]
-   <p>Email:            <p/> <input type="email" name="Email" /> 
-       @if (!String.IsNullOrEmpty(err?[5])) @err[5]
-   <p>Password:         <p/> <input type="password" name="Password" /> 
-       @if (!String.IsNullOrEmpty(err?[6])) @err[6]
-   <p>Confirm password: <p/> <input type="password" name="ConfirmPass" /> 
-       @if (!String.IsNullOrEmpty(err?[7])) @err[7]
-   <p>Avatar:           <p/> <input type="file" name="Avatar"/> <br /> 
-       @if (!String.IsNullOrEmpty(err?[8])) @err[8]
-   <button>Registration </button>
+   <p>Text:            <p/> <textarea id="ContentText" name="TextContent" ></textarea> 
+   <button>Add Book </button>
 </form>
+<input type="file" id="EpubFile" accept="epub/*"/>
+<script src="/js/book.js" ></script>

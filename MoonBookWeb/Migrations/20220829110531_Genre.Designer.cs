@@ -12,8 +12,8 @@ using MoonBookWeb;
 namespace MoonBookWeb.Migrations
 {
     [DbContext(typeof(AddDbContext))]
-    [Migration("20220710125836_UserDb")]
-    partial class UserDb
+    [Migration("20220829110531_Genre")]
+    partial class Genre
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,6 +35,12 @@ namespace MoonBookWeb.Migrations
 
                     b.Property<byte[]>("CoverImage")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Genre")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TextContent")
                         .HasColumnType("nvarchar(max)");
@@ -88,8 +94,8 @@ namespace MoonBookWeb.Migrations
                     b.Property<Guid>("IdUser")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Like")
                         .HasColumnType("int");

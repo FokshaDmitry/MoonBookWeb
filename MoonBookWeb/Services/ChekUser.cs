@@ -3,7 +3,6 @@
     public class ChekUser
     {
         private AddDbContext _context;
-
         public ChekUser(AddDbContext context)
         {
             _context = context;
@@ -46,6 +45,31 @@
             if (_context.Users.Select(u => u.Login).Contains(user?.Login))
             {
                 err[8] = "Login already exists";
+            }
+            return err;
+        }
+        public string[] ChekAddBook(Models.AddBookModel book)
+        {
+            var err = new String[4];
+            if (book == null)
+            {
+                err[0] = "Error querty";
+            }
+            if (!String.IsNullOrEmpty(book.Author))
+            {
+                err[1] = "Write Author";
+            }
+            if (!String.IsNullOrEmpty(book.Title))
+            {
+                err[2] = "Write Title";
+            }
+            if (!String.IsNullOrEmpty(book.Genry))
+            {
+                err[3] = "Choose Genre";
+            }
+            if (!String.IsNullOrEmpty(book.TextContent))
+            {
+                err[4] = "Write Anotation";
             }
             return err;
         }
