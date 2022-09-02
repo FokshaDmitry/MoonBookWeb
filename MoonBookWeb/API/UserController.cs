@@ -22,5 +22,11 @@ namespace MoonBookWeb.API
             var freand = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User).Where(u => u.Online == true);
             return new { status = "Ok", message = freand };
         }
+        [HttpGet("{Book}")]
+        public object Boooks()
+        {
+            var books = _context.Books.Where(b => b.idUser == _sessionLogin.user.Id);
+            return new { status = "Ok", message = books };
+        }
     }
 }

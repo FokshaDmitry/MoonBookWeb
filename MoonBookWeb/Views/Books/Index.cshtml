@@ -3,7 +3,7 @@
 }
 <h1> Add Book</h1>
 <form action="/Books/AddBook" method="post" enctype="multipart/form-data">
-   <input type="file" id="Cover" name="CoverImage" style="display: none;" accept="img/*" multiple/>       
+   <input type="file" id="Cover" style="display: none;" accept="img/*" multiple/>       
     <label for="Cover">
              <img id="CoverImg" src="/icons/add_FILL0_wght500_GRAD0_opsz48.png" style="border: 2px double black; cursor:pointer; width: 120px; height: 250px;"/>
     </label>
@@ -48,7 +48,7 @@
    <p>Annotation:            <p/> <textarea name="Annotation" ></textarea> 
        @if (!String.IsNullOrEmpty(err?[4])) @err[4]
    <p>Text:            <p/> <textarea id="ContentText" name="TextContent" ></textarea> 
-   <button>Add Book </button>
+   <button id="AddBook">Add Book </button>
 </form>
 <input type="file" id="EpubFile" accept="epub/*"/>
 <script src="/js/book.js" ></script>

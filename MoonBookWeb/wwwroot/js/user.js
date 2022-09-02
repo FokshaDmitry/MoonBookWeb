@@ -2,7 +2,26 @@
 	const online = document.querySelector("online");
 	if (!online) throw "Forum  script: APP not found";
 	loadElement(online);
+	const books = document.querySelector("books");
+	if (!books) throw "Forum  script: APP not found";
+	loadElementBook(books);
 });
+function loadElementBook(elem) {
+	fetch(`/api/user/Books`,
+		{
+			method: "GET",
+			body: null
+		})
+		.then(r => r.json())
+		.then(j => {
+			if (j.status === "Ok") {
+				showElementBooks(elem, j.message);
+			}
+			else {
+				throw "showTopics: Backend data invalid";
+			}
+		});
+}
 function loadElement(elem) {
 	fetch(`/api/user`,
 		{
@@ -19,6 +38,20 @@ function loadElement(elem) {
 			}
 		});
 }
+function showElementBooks(elem, j) {
+	fetch("/tmpl/userbooks.html")
+		.then(r => r.text())
+		.then(trTemplate => {
+			let appHtml = "";
+			for (let book of j) {
+				var tmp = trTemplate
+				tmp = tmp.replaceAll("{{id}}", book.id)
+					.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
+				appHtml += tmp;
+			}
+			elem.innerHTML = appHtml;
+		});
+}
 function showElement(elem, j) {
 	fetch("/tmpl/onlineFrands.html")
 		.then(r => r.text())
@@ -31,7 +64,7 @@ function showElement(elem, j) {
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
-			this.freandLoaded();
+			freandLoaded();
 		});
 }
 async function freandLoaded() {

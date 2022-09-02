@@ -1,6 +1,7 @@
 ﻿var cover = document.getElementById("Cover");
 var efile = document.getElementById("EpubFile");
 var coverImg = document.getElementById("CoverImg")
+let tmpb;
 cover.addEventListener("change", () => {
     let f = cover.files[0];
     if (f) {
@@ -23,9 +24,14 @@ efile.addEventListener("change", () => {
                 document.getElementById("ContentText").value = j.info.textContent;
                 if (j.cover) {
                     coverImg.src = `data:image/png;base64,` + j.cover;
-
+                    tmpb = j.cover;
                 }
             }
         })
+    }
+})
+document.getElementById("AddBook").addEventListener("click", () => {
+    if (tmpb) {
+        cover.value = tmpb;
     }
 })

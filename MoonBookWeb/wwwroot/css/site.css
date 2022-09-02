@@ -86,12 +86,22 @@ body {
     display: flex;
     align-items: flex-start;
 }
+#UserBooks {
+    border: 2px double black;
+    display: inline-flex;
+    width: 100%;
+    margin-bottom: 20px;
+    height: 100px;
+}
+#UserBookImg {
+    height: 95px;
+}
 #OnlineFreandsPhoto {
     border: 2px double black;
     border-radius: 150px;
     width: 37px;
     height: 37px;
-    cursor:pointer;
+    cursor: pointer;
 }
 .idOnlineFreand {
     margin: 2%;
