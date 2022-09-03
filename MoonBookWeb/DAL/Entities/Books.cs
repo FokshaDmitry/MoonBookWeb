@@ -17,5 +17,7 @@ namespace MoonBookWeb
         public DateTime? Date { get; set; }
         public String? Genry { get; set; }
         public Guid? idUser { get; set; }
+        public Guid Delete { get; set; }
+
     }
 }

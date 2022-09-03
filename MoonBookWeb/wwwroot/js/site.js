@@ -37,7 +37,7 @@
 						.replaceAll("{{Title}}", (post.post.post.title == null ? "" : post.post.post.title))
 					let appHtmlComment = "";
 					for (let comment of post.comment) {
-						var tmpCom = `<div id="UserComment"> <div > <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> </div>`;
+						var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> <img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/> </div>`;
 						tmpCom = tmpCom.replaceAll("{{Name}}", comment.user.name)
 							.replaceAll("{{Surname}}", comment.user.surname)
 							.replaceAll("{{Date}}", comment.comment.date)
@@ -108,7 +108,7 @@
 						throw "Post.Reactions: comment invalid";
 					} else {
 						let comment = e.target.parentElement.parentElement.previousElementSibling;
-						var tmpCom = `<div id="UserComment"> <div > <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> </div>`;
+						var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div > <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> </div>`;
 						tmpCom = tmpCom.replaceAll("{{Name}}", j.message.user.name)
 							.replaceAll("{{Surname}}", j.message.user.surname)
 							.replaceAll("{{Date}}", j.message.comment.date)
@@ -120,6 +120,33 @@
 					}
 				})
             }
-        }
+		}
+		if (e.target.id === "PostDelete") {
+			let idPost = e.currentTarget.getAttribute("id")
+			fetch(`/api/post/${idPost}`, {
+				method: "DELETE",
+				body: null
+			}).then(r => r.json()).then(j => {
+				if (j.status == "Error") {
+					throw `Post.Delete: ${j.status}`;
+				} else {
+					location.reload();
+				}
+			})
+		}
+		if (e.target.id === "CommentDelete") {
+			let Comment = e.target.closest(".CommentUser");
+			let idComment = Comment.getAttribute('id');
+			fetch(`/api/user/${idComment}`, {
+				method: "DELETE",
+				body: null
+			}).then(r => r.json()).then(j => {
+				if (j.status == "Error") {
+					throw `Post.Delete: ${j.status}`;
+				} else {
+					Comment.style.display = `none`;
+				}
+			})
+		}
 	}
 }

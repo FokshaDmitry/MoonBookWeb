@@ -17,6 +17,8 @@ namespace MoonBookWeb
         public int Like { get; set; }
         public int Dislike { get; set; }
         public Guid IdUser { get; set; }
+        public Guid Delete { get; set; }
+
 
     }
 }

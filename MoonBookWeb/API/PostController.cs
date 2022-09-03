@@ -18,8 +18,8 @@ namespace MoonBookWeb.API
         [HttpGet]
         public object Get()
         {
-            var comment = _context.Comments.Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new {Comment = c, User = u});
-            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comment, p => p.post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
+            var comment = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new {Comment = c, User = u});
+            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Where(p => p.Delete == Guid.Empty).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comment, p => p.post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
             return new { status = "Ok", message = post };
         }
         [HttpPost]
@@ -54,6 +54,7 @@ namespace MoonBookWeb.API
                     posts.IdUser = _sessionLogin.user.Id;
                     posts.Like = 0;
                     posts.Dislike = 0;
+                    posts.Delete = Guid.Empty;
                     _context.Posts.Add(posts);
                     _context.SaveChanges();
                     return new { status = "Ok", message = postUser.TextPost };
@@ -126,11 +127,36 @@ namespace MoonBookWeb.API
                 comment.Id = Guid.NewGuid();
                 comment.idUser = _sessionLogin.user.Id;
                 comment.Date = DateTime.Now;
+                comment.Delete = Guid.Empty;
                 _context.Comments.Add(comment);
                 _context.SaveChanges();
             }
             var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
             return new { status = "Ok", message = responce};
+        }
+        [HttpDelete("{id}")]
+        public object Delete(string id)
+        {
+            if(!String.IsNullOrEmpty(id))
+            {
+                var Id = Guid.Parse(id);
+                var post = _context.Posts.Find(Id);
+                if(post != null)
+                {
+                    var delete = new DeleteList();
+                    delete.Id = Guid.NewGuid();
+                    delete.idUser = _sessionLogin.user.Id;
+                    delete.Date = DateTime.Now;
+                    delete.idElement = post.Id;
+                    post.Delete = delete.Id;
+                    _context.Posts.Update(post);
+                    _context.DeleteList.Add(delete);
+                    _context.SaveChanges();
+                    return new { status = "Ok", message = "Ok" };
+                }
+                return new { status = "Error", message = "Post dont found" };
+            }
+            return new { status = "Error", message = "Id is empty" };
         }
     }
 }

@@ -178,6 +178,12 @@ body {
     width: 100%;
     border: 2px double black;
 }
+#PostDelete {
+    float: right;
+    width: 17px;
+    margin: 5px;
+    cursor:pointer;
+}
 #PostInfo {
     width: 100%;
     height: 60px;
@@ -314,8 +320,15 @@ body {
         height: 25px;
     }
 /*=================== Comment ===============*/
-#UserComment {
+.CommentUser {
     display: flex;
+}
+#CommentDelete {
+    float: right;
+    width: 14px;
+    margin: 5px;
+    height: 14px;
+    cursor: pointer;
 }
 #PhotoComment {
     border: 2px double black;

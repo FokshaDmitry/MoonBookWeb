@@ -21,7 +21,7 @@ namespace MoonBookWeb.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Library()
         {
             ViewData["AuthUser"] = _sessionLogin?.user;
             return View();

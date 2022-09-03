@@ -28,5 +28,29 @@ namespace MoonBookWeb.API
             var books = _context.Books.Where(b => b.idUser == _sessionLogin.user.Id);
             return new { status = "Ok", message = books };
         }
+        [HttpDelete("{id}")]
+        public object Delete(string id)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                var Id = Guid.Parse(id);
+                var comment = _context.Comments.Find(Id);
+                if (comment != null)
+                {
+                    var delete = new DeleteList();
+                    delete.Id = Guid.NewGuid();
+                    delete.idUser = _sessionLogin.user.Id;
+                    delete.Date = DateTime.Now;
+                    delete.idElement = comment.Id;
+                    comment.Delete = delete.Id;
+                    _context.Comments.Update(comment);
+                    _context.DeleteList.Add(delete);
+                    _context.SaveChanges();
+                    return new { status = "Ok", message = "Ok" };
+                }
+                return new { status = "Error", message = "Post dont found" };
+            }
+            return new { status = "Error", message = "Id is empty" };
+        }
     }
 }
