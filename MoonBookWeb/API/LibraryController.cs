@@ -20,7 +20,7 @@ namespace MoonBookWeb.API
         [HttpGet]
         public object Get()
         {
-            var books =  _context.Books.Join(_context.Users, b => b.idUser, u => u.Id, (b, u) => new { Book = b, User = u });
+            var books =  _context.Books.Where(b => b.Delete == Guid.Empty).OrderByDescending(b => b.Date);
             return new { status = "Ok", message = books };
         }
     }

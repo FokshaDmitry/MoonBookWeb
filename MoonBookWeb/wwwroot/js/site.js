@@ -1,4 +1,11 @@
-﻿class Posts {
+﻿document.addEventListener("DOMContentLoaded", () => {
+	let post = document.querySelector("post");
+	if (!post) throw "Forum  script: APP not found";
+	let posts = new Posts("/api/freand/Post");
+	posts.loadElement(post);
+
+});
+class Posts {
 	constructor(API) {
 		this.API = API;
 	}

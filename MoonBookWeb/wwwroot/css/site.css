@@ -1,7 +1,9 @@
 html {
   font-size: 14px;
 }
-
+body {
+    background-color: #171a4e;
+}
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -79,7 +81,7 @@ body {
 }
 /*=================== User ===============*/
 #UserPage {
-    background-color: rebeccapurple;
+    background-color: #313574;
     align-items: center;
     width: 100%;
     height: auto;
@@ -93,8 +95,12 @@ body {
     margin-bottom: 20px;
     height: 100px;
 }
+.Book {
+    margin-left: 2px;
+}
 #UserBookImg {
     height: 95px;
+    width: 60px;
 }
 #OnlineFreandsPhoto {
     border: 2px double black;
@@ -342,5 +348,29 @@ body {
     font-size: 10pt;
 }
 #CommentInfo p {
+    margin: 0;
+}
+/*=================== Books ===============*/
+#Library {
+    display: flex;
+    flex-wrap: wrap;
+}
+.Books {
+    margin: 2%;
+    width: 150px
+}
+#CoverName{
+    width: 150px;
+    height: 250px;
+}
+#Author {
+    display: flex;
+    justify-content: center;
+}
+#Title {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14pt;
     margin: 0;
 }

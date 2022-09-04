@@ -18,7 +18,6 @@ namespace MoonBookWeb.Controllers
             _sessionLogin = sessionLogin;
             _chekUser = chekUser;
             _context = context;
-            //covertmp = null;
         }
 
         public IActionResult Index()
@@ -80,7 +79,7 @@ namespace MoonBookWeb.Controllers
                 var books = new Books();
                 books.Id = Guid.NewGuid();
                 books.Title = book?.Title;
-                books.Author = books.Author;
+                books.Author = book?.Author;
                 books.CoverName = CoverName;
                 books.idUser = _sessionLogin.user.Id;
                 books.TextContent = $"{book?.Genry}\n {book?.Author}\n {book?.Title}\n {book?.Annotation}\n\n {book?.TextContent}";

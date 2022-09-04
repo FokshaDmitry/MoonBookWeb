@@ -48,7 +48,7 @@ function showElement(elem, j) {
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
-			this.freandLoaded();
+			freandLoaded();
 		});
 }
 function searchFreands(searchText) {
