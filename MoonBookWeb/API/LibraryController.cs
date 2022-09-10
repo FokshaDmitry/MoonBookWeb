@@ -9,14 +9,12 @@ namespace MoonBookWeb.API
     public class LibraryController : ControllerBase
     {
         private readonly AddDbContext _context;
-        private readonly ISessionLogin _sessionLogin;
 
-        public LibraryController(AddDbContext context, ISessionLogin sessionLogin)
+        public LibraryController(AddDbContext context)
         {
             _context = context;
-            _sessionLogin = sessionLogin;
         }
-
+        //Get All books
         [HttpGet]
         public object Get()
         {

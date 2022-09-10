@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+//include Database
 builder.Services.AddDbContext<MoonBookWeb.AddDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MoonBookDb")));
 builder.Services.AddSingleton<Hesher>();
 builder.Services.AddScoped<ISessionLogin, SessionLoginServices>();
@@ -39,7 +40,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseSession();
-
+//Include Middelwere session login
 app.UseSessionLogin();
 
 app.MapControllerRoute(

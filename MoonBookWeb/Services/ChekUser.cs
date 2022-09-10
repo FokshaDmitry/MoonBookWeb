@@ -9,6 +9,7 @@
         }
         public string[] Chek(Models.RegUserModel user)
         {
+            //Validation User
             var err = new String[13];
             if (user == null)
             {
@@ -50,6 +51,7 @@
         }
         public string[] ChekAddBook(Models.AddBookModel book)
         {
+            //Vallidation Book
             var err = new String[5];
             if (book == null)
             {

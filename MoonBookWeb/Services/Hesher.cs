@@ -2,6 +2,7 @@
 {
     public class Hesher
     {
+        //MD5 Hesher
         public String Hesh(string message)
         {
             using (var algo = System.Security.Cryptography.MD5.Create())

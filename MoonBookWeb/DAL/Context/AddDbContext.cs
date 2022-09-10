@@ -9,6 +9,7 @@ namespace MoonBookWeb
 {
     public class AddDbContext : DbContext
     {
+        //Database Context
         IConfiguration configuration;
         public DbSet<User> Users { get; set; }
         public DbSet<Posts> Posts { get; set; }
@@ -20,6 +21,7 @@ namespace MoonBookWeb
         public DbSet<DeleteList> DeleteList { get; set; }
         public AddDbContext(DbContextOptions<AddDbContext> options) : base(options)
         {
+            //include or create
             Database.EnsureCreated();  
         }
     }

@@ -15,6 +15,8 @@ namespace MoonBookWeb.API
             _sessionLogin = sessionLogin;
             _context = context;
         }
+        #region Get
+        //Find post current User
         [HttpGet]
         public object Get()
         {
@@ -22,6 +24,77 @@ namespace MoonBookWeb.API
             var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Where(p => p.Delete == Guid.Empty).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comment, p => p.post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
             return new { status = "Ok", message = post };
         }
+        #endregion
+
+        #region Put
+        //Add/Delete/Change reaction
+        [HttpPut]
+        public object Reaction([FromForm] Reactions reactions)
+        {
+            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p }).FirstOrDefault();
+            if (qerty != null)
+            {
+                if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 1)
+                {
+                    qerty.Post.Like--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Remove(qerty.Ract);
+                }
+                else if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 2)
+                {
+                    qerty.Post.Dislike--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Remove(qerty.Ract);
+                }
+                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 1)
+                {
+                    qerty.Ract.Reaction = 1;
+                    qerty.Post.Like++;
+                    if (qerty.Post.Dislike != 0) qerty.Post.Dislike--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Update(qerty.Ract);
+                }
+                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 2)
+                {
+                    qerty.Ract.Reaction = 2;
+                    qerty.Post.Dislike++;
+                    if (qerty.Post.Like != 0) qerty.Post.Like--;
+                    _context.Posts.Update(qerty.Post);
+                    _context.Reactions.Update(qerty.Ract);
+                }
+            }
+            else
+            {
+                var q = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault();
+                if (reactions.Reaction == 1) q.Like++;
+                else q.Dislike++;
+
+                _context.Posts.Update(q);
+                _context.Reactions.Add(new Reactions { Id = Guid.NewGuid(), IdPost = reactions.IdPost, IdUser = _sessionLogin.user.Id, Reaction = reactions.Reaction });
+            }
+            _context.SaveChanges();
+            return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Like, reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Dislike };
+        }
+        //Add comment
+        [HttpPut("{Comment}")]
+        public object Comment([FromForm] Comments comment)
+        {
+            if (comment != null)
+            {
+                comment.Id = Guid.NewGuid();
+                comment.idUser = _sessionLogin.user.Id;
+                comment.Date = DateTime.Now;
+                comment.Delete = Guid.Empty;
+                _context.Comments.Add(comment);
+                _context.SaveChanges();
+            }
+            var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
+            return new { status = "Ok", message = responce };
+        }
+        #endregion
+
+        #region Post
+        //Vallidation and add current user
         [HttpPost]
         public object Post([FromForm] Models.PostUserModel postUser)
         {
@@ -70,70 +143,10 @@ namespace MoonBookWeb.API
             }
 
         }
+        #endregion
 
-        [HttpPut]
-        public object Reaction([FromForm] Reactions reactions)
-        {
-            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p }).FirstOrDefault();
-
-            if (qerty != null)
-            {
-                if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 1)
-                {
-                    qerty.Post.Like--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Remove(qerty.Ract);
-                }
-                else if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 2)
-                {
-                    qerty.Post.Dislike--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Remove(qerty.Ract);
-                }
-                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 1)
-                {
-                    qerty.Ract.Reaction = 1;
-                    qerty.Post.Like++;
-                    if (qerty.Post.Dislike != 0) qerty.Post.Dislike--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Update(qerty.Ract);
-                }
-                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 2)
-                {
-                    qerty.Ract.Reaction = 2;
-                    qerty.Post.Dislike++;
-                    if (qerty.Post.Like != 0) qerty.Post.Like--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Update(qerty.Ract);
-                }
-            }
-            else
-            {
-                var q = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault();
-                if (reactions.Reaction == 1) q.Like++;
-                else q.Dislike++;
-
-                _context.Posts.Update(q);
-                _context.Reactions.Add(new Reactions { Id = Guid.NewGuid(), IdPost = reactions.IdPost, IdUser = _sessionLogin.user.Id, Reaction = reactions.Reaction });
-            }
-            _context.SaveChanges();
-            return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Like, reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Dislike };
-        }
-        [HttpPut("{Comment}")]
-        public object Comment([FromForm] Comments comment)
-        {
-            if(comment != null)
-            {
-                comment.Id = Guid.NewGuid();
-                comment.idUser = _sessionLogin.user.Id;
-                comment.Date = DateTime.Now;
-                comment.Delete = Guid.Empty;
-                _context.Comments.Add(comment);
-                _context.SaveChanges();
-            }
-            var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
-            return new { status = "Ok", message = responce};
-        }
+        #region Delete
+        //Delete Post
         [HttpDelete("{id}")]
         public object Delete(string id)
         {
@@ -141,15 +154,17 @@ namespace MoonBookWeb.API
             {
                 var Id = Guid.Parse(id);
                 var post = _context.Posts.Find(Id);
-                if(post != null)
+                if(post != null && post.IdUser == _sessionLogin.user.Id)
                 {
                     var delete = new DeleteList();
                     delete.Id = Guid.NewGuid();
                     delete.idUser = _sessionLogin.user.Id;
                     delete.Date = DateTime.Now;
                     delete.idElement = post.Id;
+                    //Add id on deletelist
                     post.Delete = delete.Id;
                     _context.Posts.Update(post);
+                    //Add delete post into DeleteList
                     _context.DeleteList.Add(delete);
                     _context.SaveChanges();
                     return new { status = "Ok", message = "Ok" };
@@ -158,5 +173,6 @@ namespace MoonBookWeb.API
             }
             return new { status = "Error", message = "Id is empty" };
         }
+        #endregion
     }
 }

@@ -11,7 +11,7 @@ namespace MoonBookWeb.Controllers
         {
             _sessionLogin = sessionLogin;
         }
-
+        //User Page
         public IActionResult Index()
         {
             if (_sessionLogin.user != null)

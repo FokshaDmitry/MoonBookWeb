@@ -1,15 +1,10 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
-	let post = document.querySelector("post");
-	if (!post) throw "Forum  script: APP not found";
-	let posts = new Posts("/api/freand/Post");
-	posts.loadElement(post);
-
-});
-class Posts {
+﻿class Posts {
 	constructor(API) {
 		this.API = API;
 	}
+
 	loadElement(elem) {
+		//posts request
 		fetch(this.API,
 			{
 				method: "GET",
@@ -18,6 +13,7 @@ class Posts {
 			.then(r => r.json())
 			.then(j => {
 				if (j.status === "Ok") {
+					//show element
 					this.showElement(elem, j.message, "")
 				}
 				else {
@@ -26,10 +22,10 @@ class Posts {
 			});
 	}
 	showElement(elem, j, appHtml) {
-
 		fetch("/tmpl/post.html")
 			.then(r => r.text())
 			.then(trTemplate => {
+				//replace data posts
 				for (let post of j) {
 					var tmp = trTemplate;
 					tmp = tmp.replaceAll("{{Name}}", post.post.user.name)
@@ -44,7 +40,7 @@ class Posts {
 						.replaceAll("{{Title}}", (post.post.post.title == null ? "" : post.post.post.title))
 					let appHtmlComment = "";
 					for (let comment of post.comment) {
-						var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> <img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/> </div>`;
+						var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p style="color: black;">{{Text}}</p> </div> </div> <img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/> </div>`;
 						tmpCom = tmpCom.replaceAll("{{Name}}", comment.user.name)
 							.replaceAll("{{Surname}}", comment.user.surname)
 							.replaceAll("{{Date}}", comment.comment.date)
@@ -56,10 +52,12 @@ class Posts {
 					tmp = tmp.replace("{{Comments}}", appHtmlComment);
 					appHtml += tmp;
 				}
+				//add in element: <post><post/>
 				elem.innerHTML = appHtml;
 				this.postLoaded();
 			});
 	}
+	//Add event
 	async postLoaded() {
 		for (let post of document.querySelectorAll(".Post")) {
 			post.onclick = this.Reactions;
@@ -69,6 +67,7 @@ class Posts {
 		let idPost = e.currentTarget.getAttribute("id")
 		let dislike = e.currentTarget.lastElementChild.firstElementChild.lastElementChild;
 		let like = e.currentTarget.lastElementChild.lastElementChild.lastElementChild;
+		// Add Sad Reactions
 		if (e.target.id === "SadImg") {
 			const formData = new FormData();
 			formData.append("Reaction", 2);
@@ -85,6 +84,7 @@ class Posts {
 				}
 			})
 		}
+		//Add Smail Reactions
 		if (e.target.id === "SmailImg") {
 			const formData = new FormData();
 			formData.append("Reaction", 1);
@@ -101,6 +101,7 @@ class Posts {
 				}
 			})
 		}
+		//Add Comment current Post
 		if (e.target.id === "SendCommentImg") {
 			let TextComment = e.target.parentElement.nextElementSibling;
 			if (TextComment.value !== "") {
@@ -128,6 +129,7 @@ class Posts {
 				})
             }
 		}
+		//Delete current post
 		if (e.target.id === "PostDelete") {
 			let idPost = e.currentTarget.getAttribute("id")
 			fetch(`/api/post/${idPost}`, {
@@ -141,6 +143,7 @@ class Posts {
 				}
 			})
 		}
+		//Delete coment current post
 		if (e.target.id === "CommentDelete") {
 			let Comment = e.target.closest(".CommentUser");
 			let idComment = Comment.getAttribute('id');

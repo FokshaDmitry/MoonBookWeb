@@ -25,6 +25,7 @@ namespace MoonBookWeb
         public String? PhotoName { get; set; }
         public DateTime RegMoment { get; set; }
         public bool Online { get; set; }
+        //key for delete list
         public Guid Delete { get; set; }
         [NotMapped]
         public byte[]? Phpto { get; set; }

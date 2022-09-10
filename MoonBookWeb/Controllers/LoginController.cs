@@ -58,6 +58,7 @@ namespace MoonBookWeb.Controllers
                 {
                     user.Online = true;
                     _context.SaveChanges();
+                    //Add user session and include middelwere
                     HttpContext.Session.SetString("UserId", user.Id.ToString());
                     return Redirect("/");
                 }
@@ -66,6 +67,7 @@ namespace MoonBookWeb.Controllers
                     err[12] = "Password wrong";
                 }
             }
+            //Add Error Session
             HttpContext.Session.SetString("RegError", String.Join(";", err));
             return Redirect("/Login/Index");
         }
@@ -84,6 +86,7 @@ namespace MoonBookWeb.Controllers
                 String AvatarName = "";
                 if (userModel?.Avatar != null)
                 {
+                    //create avatar neme, path and save in folder
                     AvatarName = Guid.NewGuid().ToString() + Path.GetExtension(userModel.Avatar.FileName);
                     userModel.Avatar.CopyToAsync(
                         new FileStream(
@@ -91,14 +94,15 @@ namespace MoonBookWeb.Controllers
                             FileMode.Create));
                 }
                 var user = new User();
-                user.PassSalt = _hesher.Hesh(DateTime.Now.ToString());
-                user.Password = _hesher.Hesh(userModel?.Password + user.PassSalt);
-                user.PhotoName = AvatarName;
+                user.PassSalt = _hesher.Hesh(DateTime.Now.ToString());                  //Create and hesh PassSalt
+                user.Password = _hesher.Hesh(userModel?.Password + user.PassSalt);      //Hesh password and pastsalt
+                user.PhotoName = AvatarName;                                            //Save in database only avatar
                 user.Email = userModel?.Email;
                 user.Name = userModel?.Name;
                 user.Surname = userModel?.Surname;
                 user.Login = userModel?.Login;
                 user.RegMoment = DateTime.Now;
+                //Add User
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return Redirect("/Login/Index");
@@ -147,6 +151,7 @@ namespace MoonBookWeb.Controllers
                 }
                 if (userModel?.Avatar != null)
                 {
+                    //Change Avatar
                     String AvatarName = Guid.NewGuid().ToString() + Path.GetExtension(userModel.Avatar.FileName);
                     userModel.Avatar.CopyToAsync(
                         new FileStream(
@@ -178,6 +183,7 @@ namespace MoonBookWeb.Controllers
             HttpContext.Session.SetString("RegError", String.Join(";", err));
             return Redirect("/Login/Update");
         }
+        //Exit and change online
         public IActionResult Exit()
         {
             var user = _context.Users.Find(_sessionLogin.user.Id);
@@ -187,6 +193,7 @@ namespace MoonBookWeb.Controllers
             HttpContext.Session.Remove("UserId");
             return Redirect("/Login/Index");
         }
+        //Update User
         public IActionResult Update()
         {
             String err = HttpContext.Session.GetString("RegError");
@@ -203,6 +210,7 @@ namespace MoonBookWeb.Controllers
             }
             return Redirect("/Login/Index");
         }
+        //Fegistration page
         public IActionResult Registration()
         {
             String err = HttpContext.Session.GetString("RegError");

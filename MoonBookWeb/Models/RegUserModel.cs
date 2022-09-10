@@ -2,6 +2,7 @@
 {
     public class RegUserModel
     {
+        //tmp reg model
         public String? Name { get; set; }
         public String? Surname { get; set; }
         public String? Status { get; set; }

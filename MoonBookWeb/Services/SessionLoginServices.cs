@@ -2,6 +2,7 @@
 {
     public class SessionLoginServices : ISessionLogin
     {
+        //Find user in database after validation
         private readonly AddDbContext _context;
         public User user { get; set; }
 

@@ -2,6 +2,7 @@
 {
     public class AddBookModel
     {
+        //tmp model Book
         public String? Title { get; set; }
         public IFormFile? CoverImage { get; set; }
         public String? Author { get; set; }

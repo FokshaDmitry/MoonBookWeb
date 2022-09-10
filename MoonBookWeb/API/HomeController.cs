@@ -12,7 +12,7 @@ namespace MoonBookWeb.API
         {
             _context = context;
         }
-
+        //Get All Post
         [HttpGet]
         public object Get()
         {

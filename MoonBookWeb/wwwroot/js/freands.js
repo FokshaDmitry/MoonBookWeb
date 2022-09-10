@@ -3,19 +3,20 @@ let post
 let freand
 var link
 document.addEventListener("DOMContentLoaded", () => {
+	//element <freands><freands/>
     freand = document.querySelector("freands");
 	if (!freand) throw "Forum  script: APP not found";
-	post = document.querySelector("post");
 	loadFreandElements(freand)
+	//element <post><post/>
+	post = document.querySelector("post");
 	if (!post) throw "Forum  script: APP not found";
 	posts = new Posts("/api/freand/Post");
 	posts.loadElement(post);
+	//get path
 	link = new URL(window.location.href);
-	
 });
 let search = document.getElementById("search_user");
-
-
+//load user freands
 function loadFreandElements(elem) {
 	fetch(`/api/freand`,
 		{
@@ -25,14 +26,14 @@ function loadFreandElements(elem) {
 		.then(r => r.json())
 		.then(j => {
 			if (j.status === "Ok") {
-				showElement(elem, j.message);
+				showElementFreand(elem, j.message);
 			}
 			else {
 				throw "showTopics: Backend data invalid";
 			}
 		});
 }
-function showElement(elem, j) {
+function showElementFreand(elem, j) {
 	fetch("/tmpl/freands.html")
 		.then(r => r.text())
 		.then(trTemplate => {
@@ -51,6 +52,7 @@ function showElement(elem, j) {
 			freandLoaded();
 		});
 }
+//Serch freands for name
 function searchFreands(searchText) {
 	if (searchText.value != "") {
 		fetch(`/api/freand/${searchText.value}`, {
@@ -70,11 +72,14 @@ function searchFreands(searchText) {
 		location.reload();
 	}
 }
+// add event
 async function freandLoaded() {
 	for (let freand of document.querySelectorAll(".idFreand")) {
 		freand.onclick = Follow;
 	}
+	//parse link
 	link = link.search.replace('?', "");
+	//if link not empty, show choose user
 	if (link != '') {
 		fetch(`/api/freand/${link}`, {
 			method: "GET",
@@ -96,6 +101,7 @@ async function freandLoaded() {
 function Follow(e) {
 	let follow = e.currentTarget.childNodes[7].childNodes[1];
 	let idFreand = e.currentTarget.getAttribute("id")
+	//follow/unfollow
 	if (e.target === follow) {
 		fetch(`/api/freand/${idFreand}`, {
 			method: "POST",
@@ -112,6 +118,7 @@ function Follow(e) {
 			}
 		})
 	}
+	//Show freand page
 	if (e.target !== follow) {
 		fetch(`/api/freand/${idFreand}`, {
 			method: "GET",
@@ -120,16 +127,38 @@ function Follow(e) {
 			if (j.status == "Error") {
 				alert(j.message)
 			} else {
-				var appHtml = `<div id="FreandPageInfo"><img id="FreandPagePhoto" src = "/img/{{PhotoName}}"> <p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p></div>`;
+				//freand book
+				var bookHtml = `<div class="Book" title="{{Author}} &ldquo;{{Title}}&rdquo;" id="{{id}}">
+									<img id="UserBookImg" src="/img_post/{{CoverName}}"/>
+								</div>`;
+				//Freand info
+				var appHtml = `<div id="FreandPageInfo">
+									<img id="FreandPagePhoto" src = "/img/{{PhotoName}}">
+									<p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p>
+									<books id="UserBooks">{{Books}}</books>
+							   </div>`;
+				
+				var tmp = "";
+				for (let book of j.book) {
+					tmp += bookHtml
+						.replaceAll("{{Id}}", book.id)
+						.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
+						.replaceAll("{{Author}}", book.author)
+						.replaceAll("{{Title}}", book.title)
+				}
 				appHtml = appHtml
 					.replace("{{Name}}", j.user.name)
 					.replace("{{Surname}}", j.user.surname)
 					.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
+					.replace("{{Books}}", tmp)
+				//Freand posts
 				posts.showElement(post, j.freandsPost, appHtml);
 			}
 		})
 	}
 }
+//search fread
 search.addEventListener("click", () => {
+						//Name freand
 	searchFreands(document.getElementById("search_user_text"))
 })

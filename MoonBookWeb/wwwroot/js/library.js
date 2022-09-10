@@ -1,7 +1,8 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
+	//Element <library><library/>
 	let library = document.querySelector("library");
 	if (!library) throw "Forum  script: APP not found";
-	library = document.querySelector("library");
+	//Load All books
 	loadElement(library)
 });
 

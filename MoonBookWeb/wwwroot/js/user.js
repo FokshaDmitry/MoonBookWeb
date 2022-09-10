@@ -7,16 +7,19 @@ var valTitle = "";
 document.addEventListener("DOMContentLoaded", () => {
 	const post = document.querySelector("post");
 	if (!post) throw "Forum  script: APP not found";
+	//Add current user post
 	var posts = new Posts("/api/post");
 	posts.loadElement(post);
+	//online Freands
 	const online = document.querySelector("online");
 	if (!online) throw "Forum  script: APP not found";
-	loadElement(online);
+	loadElementFreand(online);
+	//User Books
 	const books = document.querySelector("books");
 	if (!books) throw "Forum  script: APP not found";
 	loadElementBook(books);
 });
-
+//Title selecton
 Title.addEventListener("click", () => {
 	var start = Text.selectionStart;
 	var end = Text.selectionEnd;
@@ -24,6 +27,7 @@ Title.addEventListener("click", () => {
 	Text.value = Text.value.substr(0, start) + ">" + Text.value.substr(start, end) + "<" + Text.value.substr(end);
 	Text.setSelectionRange(end, end);
 })
+// Add new post current User
 Post.addEventListener("click", () => {
 	const formData = new FormData();
 	formData.append("TitlePost", valTitle);
@@ -40,7 +44,7 @@ Post.addEventListener("click", () => {
 		}
 	})
 });
-
+//Load books  elem: <books><books/>
 function loadElementBook(elem) {
 	fetch(`/api/user/Books`,
 		{
@@ -57,7 +61,8 @@ function loadElementBook(elem) {
 			}
 		});
 }
-function loadElement(elem) {
+//Load online freands elem: <freand><freand/>
+function loadElementFreand(elem) {
 	fetch(`/api/user`,
 		{
 			method: "GET",
@@ -66,13 +71,14 @@ function loadElement(elem) {
 		.then(r => r.json())
 		.then(j => {
 			if (j.status === "Ok") {
-				showElement(elem, j.message);
+				showElementFreand(elem, j.message);
 			}
 			else {
 				throw "showTopics: Backend data invalid";
 			}
 		});
 }
+//Show User Books
 function showElementBooks(elem, j) {
 	fetch("/tmpl/userbooks.html")
 		.then(r => r.text())
@@ -82,12 +88,15 @@ function showElementBooks(elem, j) {
 				var tmp = trTemplate
 				tmp = tmp.replaceAll("{{id}}", book.id)
 					.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
+					.replaceAll("{{Author}}", book.author)
+					.replaceAll("{{Title}}", book.title)
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
 		});
 }
-function showElement(elem, j) {
+//Show Online freands
+function showElementFreand(elem, j) {
 	fetch("/tmpl/onlineFrands.html")
 		.then(r => r.text())
 		.then(trTemplate => {
@@ -102,11 +111,13 @@ function showElement(elem, j) {
 			freandLoaded();
 		});
 }
+//Add event
 async function freandLoaded() {
 	for (let freand of document.querySelectorAll(".idOnlineFreand")) {
 		freand.onclick = View;
 	}
 }
+//Redirect on frend page
 function View(e) {
 	let idFreand = e.currentTarget.getAttribute("id")
 	window.location.href = `/User/FreandPage?${idFreand}`;

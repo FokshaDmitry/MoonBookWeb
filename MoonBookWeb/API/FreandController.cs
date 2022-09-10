@@ -15,6 +15,8 @@ namespace MoonBookWeb.API
             _sessionLogin = sessionLogin;
             _context = context;
         }
+        #region Get
+        //Get current user Freands
         [HttpGet]
         public object Get()
         {
@@ -26,6 +28,7 @@ namespace MoonBookWeb.API
             }
             return new {status = "Ok", message = "You don't have freands" };
         }
+        //Get freands posts
         [HttpGet("{Message}")]
         public object Posts(string message)
         {
@@ -33,6 +36,7 @@ namespace MoonBookWeb.API
             {
                 return new { status = "Error", message = "User is empty" };
             }
+            //Get all post of all freands
             if (message == "Post")
             {
                 var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
@@ -47,15 +51,21 @@ namespace MoonBookWeb.API
                 }
                 return new { status = "Error", message = "Dont find Posts" };
             }
+            //Get choose frend post
             else
             {
                 Guid Id = Guid.Parse(message);
                 var user = _context.Users.Find(Id);
                 var comment = _context.Comments.Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u });
                 var freandsPost = _context.Posts.Where(p => p.IdUser == Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comment, p => p.Post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
-                return new { status = "Ok", freandsPost = freandsPost, user = user };
+                var book = _context.Books.Where(b => b.idUser == Id);
+                return new { status = "Ok", freandsPost = freandsPost, user = user, book = book };
             }
         }
+        #endregion
+
+        #region Put
+        //Search freand of full name
         [HttpPut("{Name}")]
         public object Search(string Name)
         {
@@ -75,6 +85,10 @@ namespace MoonBookWeb.API
             }
             return new { status = "Error", message = "No data to request" };
         }
+        #endregion
+
+        #region Post
+        //Add or delete freand
         [HttpPost("{id}")]
         public object Follow(string id)
         {
@@ -87,9 +101,11 @@ namespace MoonBookWeb.API
             var user = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Where(s => s.IdFreand == Id).FirstOrDefault();
             if (user == null)
             {
+                //Add new sud current user
                 _context.Subscriptions.Add(new Subscriptions { Id = Guid.NewGuid(), IdFreand = Id, IdUser = _sessionLogin.user.Id });
                 b = true;
             }
+            //Delete freand
             else
             {
                 _context.Subscriptions.Remove(user);
@@ -98,5 +114,6 @@ namespace MoonBookWeb.API
             _context.SaveChanges();
             return new { status = "Ok", message = b };
         }
+        #endregion
     }
 }

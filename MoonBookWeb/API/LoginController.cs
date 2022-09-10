@@ -16,7 +16,7 @@ namespace MoonBookWeb.API
             _context = context;
             _hesher = hesher;
         }
-
+        //Login and return user
         [HttpGet]
         public object Get(string login, string password)
         {

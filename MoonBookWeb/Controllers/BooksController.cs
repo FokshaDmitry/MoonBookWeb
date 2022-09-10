@@ -32,6 +32,16 @@ namespace MoonBookWeb.Controllers
             }
             return Redirect("/Login/Index");
         }
+        public IActionResult UserLibrary()
+        {
+            if (_sessionLogin.user != null)
+            {
+                ViewData["AuthUser"] = _sessionLogin?.user;
+                return View();
+            }
+            return Redirect("/Login/Index");
+        }
+        //Add book with ebub file. Parse file and return info
         [HttpPut]
         public IActionResult eBook(IFormFile efaile)
         {
@@ -42,9 +52,12 @@ namespace MoonBookWeb.Controllers
             model.Author = epubBook.Authors.FirstOrDefault();
             model.Title = epubBook.Title;
             model.TextContent = epubBook.ToPlainText();
+            //tmp session for the cover to seve it in database 
             HttpContext.Session.SetString("CoverImg", JsonSerializer.Serialize(epubBook.CoverImage));
+            //return book info and cover
             return Json(new {status = "Ok", info = model, cover = epubBook.CoverImage });
         }
+        //Add Book Page
         [HttpPost]
         public IActionResult AddBook([FromForm]AddBookModel book)
         {
@@ -58,9 +71,12 @@ namespace MoonBookWeb.Controllers
             if(isValid)
             {
                 String CoverName = "";
+                
                 byte[] covertmp = JsonSerializer.Deserialize<byte[]>(HttpContext.Session.GetString("CoverImg"));
+
                 if (covertmp != null)
                 {
+                    //Create cover name
                     CoverName = Guid.NewGuid().ToString() + ".png";
                     System.IO.File.WriteAllBytes("./wwwroot/img_post/" + CoverName, covertmp);
                 }
@@ -85,6 +101,7 @@ namespace MoonBookWeb.Controllers
                 books.TextContent = $"{book?.Genry}\n {book?.Author}\n {book?.Title}\n {book?.Annotation}\n\n {book?.TextContent}";
                 books.Date = DateTime.Now;
                 books.Genry = book?.Genry;
+                //Create post about add book
                 _context.Posts.Add(new Posts { Id = Guid.NewGuid(), Date = DateTime.Now, Title = books.Title, Image = CoverName, IdUser = _sessionLogin.user.Id });
                 _context.Books.Add(books);
                 _context.SaveChanges();
