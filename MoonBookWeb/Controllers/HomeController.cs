@@ -20,9 +20,10 @@ namespace MoonBookWeb.Controllers
             ViewData["AuthUser"] = _sessionLogin?.user;
             return View();
         }
-
+        //Library page
         public IActionResult Library()
         {
+            ViewData["Library"] = "Ok";
             ViewData["AuthUser"] = _sessionLogin?.user;
             return View();
         }

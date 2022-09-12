@@ -1,18 +1,33 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿let library;
+document.addEventListener("DOMContentLoaded", () => {
 	//Element <library><library/>
-	let library = document.querySelector("library");
+	library = document.querySelector("library");
 	if (!library) throw "Forum  script: APP not found";
 	//Load All books
 	loadElement(library)
 });
 
+let Genry = document.getElementById("Genry");
+let Date = document.getElementById("DateBook");
+let Alphabet = document.getElementById("AlpBook");
+Genry.addEventListener("change", () => {
+	loadElement(library);
+})
+Date.addEventListener("change", () => {
+	loadElement(library);
+})
+Alphabet.addEventListener("change", () => {
+	loadElement(library);
+})
 function loadElement(elem) {
-	fetch(`/api/library`,
-		{
-			method: "GET",
-			body: null
-		})
-		.then(r => r.json())
+	const formData = new FormData();
+	formData.append("Genry", (document.getElementById("Genry").value == "Choose Genry" ? "" : document.getElementById("Genry").value))
+	formData.append("Date", document.getElementById("DateBook").checked)
+	formData.append("Alphabet", document.getElementById("AlpBook").checked)
+	fetch(`/api/library`,{
+			method: "POST",
+			body: formData
+		}).then(r => r.json())
 		.then(j => {
 			if (j.status === "Ok") {
 				showElement(elem, j.message);

@@ -2,7 +2,6 @@
 var efile = document.getElementById("EpubFile");
 var coverImg = document.getElementById("CoverImg")
 let tmpb;
-
 // Add cover img
 cover.addEventListener("change", () => {
     let f = cover.files[0];

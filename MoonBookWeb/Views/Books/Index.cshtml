@@ -7,12 +7,12 @@
     <label for="Cover">
              <img id="CoverImg" src="/icons/add_FILL0_wght500_GRAD0_opsz48.png" style="border: 2px double black; cursor:pointer; width: 120px; height: 250px;"/>
     </label>
-   <p>Tiyle:             <p/> <input id="Title" type="text" name="Title" />
+   <p>Tiyle:           <p/> <input id="Title" type="text" name="Title" />
        @if (!String.IsNullOrEmpty(err?[1])) @err[1]
    <p>Author:          <p/> <input id="Author" type="text" name="Author" /> 
        @if (!String.IsNullOrEmpty(err?[2])) @err[2]
-   <p>Genry:     <p/> <select multiple name="Genry">
-                        <option disabled>Choose Genry</option>
+   <p>Genry:     <p/> <select name="Genry">
+                        <option selected="selected">Choose Genry</option>
                         <option value="Prose">Prose</option>
                         <option value="Poetry">Poetry</option>
                         <option value="Lyrics">Lyrics</option>

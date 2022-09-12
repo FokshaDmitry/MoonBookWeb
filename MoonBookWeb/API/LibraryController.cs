@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MoonBookWeb.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace MoonBookWeb.API
 {
@@ -15,10 +13,22 @@ namespace MoonBookWeb.API
             _context = context;
         }
         //Get All books
-        [HttpGet]
-        public object Get()
+        [HttpPost]
+        public object Put([FromForm]Models.FilterBookModel filterBook)
         {
-            var books =  _context.Books.Where(b => b.Delete == Guid.Empty).OrderByDescending(b => b.Date);
+            var books = _context.Books.Where(b => b.Delete == Guid.Empty);
+            if (!String.IsNullOrEmpty(filterBook.Genry)) 
+            {
+                books = books.Where(b => b.Genry == filterBook.Genry);
+            }
+            if(filterBook.Date)
+            {
+                books = books.OrderByDescending(b => b.Date);
+            }
+            if(filterBook.Alphabet)
+            {
+                books = books.OrderByDescending(b => b.Title);
+            }
             return new { status = "Ok", message = books };
         }
     }

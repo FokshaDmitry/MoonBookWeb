@@ -40,11 +40,11 @@ namespace MoonBookWeb.API
             if (message == "Post")
             {
                 var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
-                if (freands.Any())
+                if (freands != null)
                 {
                     var comment = _context.Comments.Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u });
                     var postFreand = _context.Posts.ToList().Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u }).OrderByDescending(u => u.Post.Date).GroupJoin(comment, p => p.Post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
-                    if (postFreand.Any())
+                    if (postFreand != null)
                     {
                         return new { status = "Ok", message = postFreand };
                     }
