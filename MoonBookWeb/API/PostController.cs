@@ -143,6 +143,32 @@ namespace MoonBookWeb.API
             }
 
         }
+        [HttpPost("{Id}")]
+        public object Update(string Id, [FromBody] string text)
+        {
+            if(string.IsNullOrEmpty(Id))
+            {
+                return new { status = "Error", message = "Post dont found" };
+            }
+            Guid id = new Guid();
+            try
+            {
+                 id = Guid.Parse(Id);
+            }
+            catch
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new { Status = "Error", message = "Invalid id format (GUID required)" };
+            }
+            var post = _context.Posts.Find(id);
+            if (post == null)
+            {
+                return new { status = "Error", message = "Post dont found" };
+            }
+            post.Text = text;
+            _context.SaveChanges();
+            return new { status = "Ok" };
+        }
         #endregion
 
         #region Delete
@@ -152,7 +178,16 @@ namespace MoonBookWeb.API
         {
             if(!String.IsNullOrEmpty(id))
             {
-                var Id = Guid.Parse(id);
+                Guid Id = new Guid();
+                try
+                {
+                    Id = Guid.Parse(id);
+                }
+                catch
+                {
+                    HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    return new { Status = "Error", message = "Invalid id format (GUID required)" };
+                }
                 var post = _context.Posts.Find(Id);
                 if(post != null && post.IdUser == _sessionLogin.user.Id)
                 {

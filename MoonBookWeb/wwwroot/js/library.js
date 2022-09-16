@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	//Load All books
 	loadElement(library)
 });
-
+let Search = document.getElementById("SearchBook");
 let Genry = document.getElementById("Genry");
 let Date = document.getElementById("DateBook");
 let Alphabet = document.getElementById("AlpBook");
@@ -19,12 +19,34 @@ Date.addEventListener("change", () => {
 Alphabet.addEventListener("change", () => {
 	loadElement(library);
 })
+Search.addEventListener("click", () => {
+	let text = document.getElementById("SearchAllBook").value;
+	if (text !== "") {
+		fetch(`/api/library/${text}`, {
+			method: "GET",
+			body: null
+		}).then(r => r.json())
+			.then(j => {
+				if (j.status === "Error") {
+					alert(j.message)
+				}
+				else {
+					showElement(library, j.message);
+				}
+			});
+	}
+	else {
+		location.reload();
+    }
+})
+
 function loadElement(elem) {
 	const formData = new FormData();
+	//Filter
 	formData.append("Genry", (document.getElementById("Genry").value == "Choose Genry" ? "" : document.getElementById("Genry").value))
 	formData.append("Date", document.getElementById("DateBook").checked)
 	formData.append("Alphabet", document.getElementById("AlpBook").checked)
-	fetch(`/api/library`,{
+	fetch(`/api/library/books`,{
 			method: "POST",
 			body: formData
 		}).then(r => r.json())
@@ -37,7 +59,6 @@ function loadElement(elem) {
 			}
 		});
 }
-
 function showElement(elem, j) {
 	fetch("/tmpl/book.html")
 		.then(r => r.text())

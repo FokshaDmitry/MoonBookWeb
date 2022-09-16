@@ -158,5 +158,44 @@
 				}
 			})
 		}
+		if (e.target.id === "PostUpdate") {
+			const post = e.target.closest(".Post");
+			let text = post.querySelector(".PostText");
+			if (text.getAttribute("contenteditable")) {  // уже редактируется
+				e.target.style.color = "orange";
+				e.target.style.border = "none";
+				text.removeAttribute("contenteditable");
+				// проверить, были ли изменения контента
+				if (text.innerText != text.savedContent) {
+					// если были, то запросить "Сохранить изменения?"
+					if (confirm("Save change?")) {
+						// если Да, то отправить на бэкенд
+
+						fetch(`/api/post/${idPost}`, {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json"
+							},
+							body: JSON.stringify(text.innerText)
+						}).then(r => r.json())
+							.then(j => {
+								console.log(j);
+								if (j.status == "Error") {
+									alert(j.message);
+									p.innerText = p.savedContent;
+								}
+							});
+
+					}
+				}
+			}
+			else {  // начало редактирования
+				e.target.style.color = "lime";
+				e.target.style.border = "1px solid yellow";
+				text.setAttribute("contenteditable", "true");
+				text.savedContent = text.innerText;
+				text.focus();
+			}
+		}
 	}
 }

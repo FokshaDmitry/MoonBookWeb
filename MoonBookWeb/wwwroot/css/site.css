@@ -196,6 +196,12 @@ body {
     margin: 5px;
     cursor: pointer;
 }
+#PostUpdate {
+    float: right;
+    width: 17px;
+    margin: 5px;
+    cursor: pointer;
+}
 #PostInfo {
     width: 100%;
     height: 60px;
@@ -411,4 +417,26 @@ body {
     height: auto;
     display: flex;
     justify-content: center;
+}
+/*=================== User Library===============*/
+#TitleBook {
+    margin: 1%;
+    background-color: brown;
+    width: 250px;
+    height: 25px
+}
+#UserLibrary book {
+    margin: 1%;
+    display: block;
+    width: 250px;
+    border: 2px double black;
+}
+.BookItem {
+    height: 75px;
+    align-items: center;
+    border: 2px double black;
+    display: flex;
+}
+.BookItem img{
+    width: 50px;
 }
