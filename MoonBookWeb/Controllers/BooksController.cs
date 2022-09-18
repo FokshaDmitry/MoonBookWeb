@@ -36,6 +36,7 @@ namespace MoonBookWeb.Controllers
         {
             if (_sessionLogin.user != null)
             {
+                ViewData["UserLibrary"] = "Ok"; 
                 ViewData["AuthUser"] = _sessionLogin?.user;
                 return View();
             }

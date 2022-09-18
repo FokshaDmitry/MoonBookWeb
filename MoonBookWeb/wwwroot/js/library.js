@@ -73,5 +73,15 @@ function showElement(elem, j) {
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
+			bookLoaded();
 		});
+}
+async function bookLoaded() {
+	for (let book of document.querySelectorAll(".Books")) {
+		book.onclick = Read;
+	}
+}
+function Read(e) {
+	let idBook = e.currentTarget.getAttribute("id")
+	window.location.href = `/Books/UserLibrary?${idBook}`;
 }

@@ -1,11 +1,18 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿let link;
+document.addEventListener("DOMContentLoaded", () => {
 	const userbook = document.getElementById("UserBook");
 	if (!userbook) throw "Forum  script: APP not found";
 	loadElement(userbook)
-});
+	link = new URL(window.location.href);
 
+});
+let idReadBook;
+let addbook = document.querySelector("#AddBookLibrary");
+addbook.addEventListener("click", () => {
+
+})
 function loadElement(elem) {
-	fetch(`/api/book/Book`,
+	fetch(`/api/book`,
 		{
 			method: "GET",
 			body: null
@@ -34,6 +41,47 @@ function showElementBooks(elem, j) {
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
-			freandLoaded();
+			bookLoaded();
 		});
+}
+async function bookLoaded() {
+	for (let book of document.querySelectorAll(".BookItem")) {
+		book.onclick = Read;
+	}
+	link = link.search.replace('?', "");
+	//if link not empty, show choose user
+	if (link != '') {
+		ReadBook(link);
+	}
+}
+function Read(e) {
+	let idBook = e.currentTarget.getAttribute("id");
+	ReadBook(idBook)
+}
+function ReadBook(idBook) {
+	fetch(`/api/book/${idBook}`, {
+		method: "GET",
+		body: null
+	}).then(r => r.json()).then(j => {
+		if (j.status == "Error") {
+			throw `Book.ReadBook: ${j.status}`;
+		} else {
+			idReadBook = j.message.id;
+			let TextContent = document.getElementById("TextContent");
+			let appHtml = "";
+			addbook.removeAttribute('hidden')
+			let addbookimg = document.getElementById("AddBookLibraryImg")
+			for (let p of j.message.textContent.split("\n")) {
+
+				appHtml += `<p>${p}</p>`;
+			}
+			TextContent.innerHTML = appHtml
+			if (j.follow) {
+				addbookimg.src = "../icons/bookmark_remove_FILL0_wght400_GRAD0_opsz48.png"
+			}
+			else {
+				addbookimg.src = "../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"
+            }
+		}
+	})
 }

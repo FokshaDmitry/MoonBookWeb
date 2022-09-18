@@ -64,7 +64,6 @@ function searchFreands(searchText) {
 				}
 				else {
 					alert(j.message);
-
 				}
 			})
 	}
@@ -81,21 +80,7 @@ async function freandLoaded() {
 	link = link.search.replace('?', "");
 	//if link not empty, show choose user
 	if (link != '') {
-		fetch(`/api/freand/${link}`, {
-			method: "GET",
-			body: null
-		}).then(r => r.json()).then(j => {
-			if (j.status == "Error") {
-				alert(j.message)
-			} else {
-				var appHtml = `<div id="FreandPageInfo"><img id="FreandPagePhoto" src = "/img/{{PhotoName}}"> <p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p></div>`;
-				appHtml = appHtml
-					.replace("{{Name}}", j.user.name)
-					.replace("{{Surname}}", j.user.surname)
-					.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
-				posts.showElement(post, j.freandsPost, appHtml);
-			}
-		})
+		PageFreand(link);
 	}
 }
 function Follow(e) {
@@ -120,42 +105,45 @@ function Follow(e) {
 	}
 	//Show freand page
 	if (e.target !== follow) {
-		fetch(`/api/freand/${idFreand}`, {
-			method: "GET",
-			body: null
-		}).then(r => r.json()).then(j => {
-			if (j.status == "Error") {
-				alert(j.message)
-			} else {
-				//freand book
-				var bookHtml = `<div class="Book" title="{{Author}} &ldquo;{{Title}}&rdquo;" id="{{id}}">
+		PageFreand(idFreand)
+	}
+}
+function PageFreand(idFreand) {
+	fetch(`/api/freand/${idFreand}`, {
+		method: "GET",
+		body: null
+	}).then(r => r.json()).then(j => {
+		if (j.status == "Error") {
+			alert(j.message)
+		} else {
+			//freand book
+			var bookHtml = `<div class="Book" title="{{Author}} &ldquo;{{Title}}&rdquo;" id="{{id}}">
 									<img id="UserBookImg" src="/img_post/{{CoverName}}"/>
 								</div>`;
-				//Freand info
-				var appHtml = `<div id="FreandPageInfo">
+			//Freand info
+			var appHtml = `<div id="FreandPageInfo">
 									<img id="FreandPagePhoto" src = "/img/{{PhotoName}}">
 									<p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p>
 									<books id="UserBooks">{{Books}}</books>
 							   </div>`;
-				
-				var tmp = "";
-				for (let book of j.book) {
-					tmp += bookHtml
-						.replaceAll("{{Id}}", book.id)
-						.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
-						.replaceAll("{{Author}}", book.author)
-						.replaceAll("{{Title}}", book.title)
-				}
-				appHtml = appHtml
-					.replace("{{Name}}", j.user.name)
-					.replace("{{Surname}}", j.user.surname)
-					.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
-					.replace("{{Books}}", tmp)
-				//Freand posts
-				posts.showElement(post, j.freandsPost, appHtml);
+
+			var tmp = "";
+			for (let book of j.book) {
+				tmp += bookHtml
+					.replaceAll("{{Id}}", book.id)
+					.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
+					.replaceAll("{{Author}}", book.author)
+					.replaceAll("{{Title}}", book.title)
 			}
-		})
-	}
+			appHtml = appHtml
+				.replace("{{Name}}", j.user.name)
+				.replace("{{Surname}}", j.user.surname)
+				.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
+				.replace("{{Books}}", tmp)
+			//Freand posts
+			posts.showElement(post, j.freandsPost, appHtml);
+		}
+	})
 }
 //search fread
 search.addEventListener("click", () => {

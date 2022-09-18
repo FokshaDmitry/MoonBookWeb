@@ -29,10 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\icons\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\js\library.js" />
   </ItemGroup>
 

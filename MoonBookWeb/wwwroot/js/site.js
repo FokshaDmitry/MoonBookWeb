@@ -161,15 +161,15 @@
 		if (e.target.id === "PostUpdate") {
 			const post = e.target.closest(".Post");
 			let text = post.querySelector(".PostText");
-			if (text.getAttribute("contenteditable")) {  // уже редактируется
+			if (text.getAttribute("contenteditable")) {  // alredy begin edit
 				e.target.style.color = "orange";
 				e.target.style.border = "none";
 				text.removeAttribute("contenteditable");
-				// проверить, были ли изменения контента
+				// check, if content was changet
 				if (text.innerText != text.savedContent) {
-					// если были, то запросить "Сохранить изменения?"
+					// if change
 					if (confirm("Save change?")) {
-						// если Да, то отправить на бэкенд
+						// if yes, send for server
 
 						fetch(`/api/post/${idPost}`, {
 							method: "POST",
@@ -189,7 +189,7 @@
 					}
 				}
 			}
-			else {  // начало редактирования
+			else {  // start change
 				e.target.style.color = "lime";
 				e.target.style.border = "1px solid yellow";
 				text.setAttribute("contenteditable", "true");

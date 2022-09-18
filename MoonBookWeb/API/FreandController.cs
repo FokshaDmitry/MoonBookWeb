@@ -97,7 +97,16 @@ namespace MoonBookWeb.API
             {
                 return new { status = "Error", message = "User is empty" };
             }
-            Guid Id = Guid.Parse(id);
+            Guid Id = new Guid();
+            try
+            {
+                Id = Guid.Parse(id);
+            }
+            catch
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new { Status = "Error", message = "Invalid id format (GUID required)" };
+            }
             var user = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Where(s => s.IdFreand == Id).FirstOrDefault();
             if (user == null)
             {
