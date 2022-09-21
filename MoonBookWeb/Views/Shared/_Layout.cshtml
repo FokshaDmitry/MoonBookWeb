@@ -82,6 +82,34 @@
                     }
                     @if(userlibrary == "Ok")
                     {
+                        <div id="RadioButtonGroup">
+                            <div class="RadioBotton">
+                                <input id="center" type="radio" name="position" value="1">
+                                <label for="center">
+                                    <img src="/icons/format_align_center_FILL0_wght400_GRAD0_opsz48.png" />
+                                </label>
+                            </div>
+                            <div class="RadioBotton">
+                                <input id="right" type="radio" name="position" value="2">
+                                <label for="right">
+                                    <img src="/icons/format_align_right_FILL0_wght400_GRAD0_opsz48.png" />
+                                </label>
+                            </div>
+                            <div class="RadioBotton">
+                                <input id="left" type="radio" name="position" value="3" checked>
+                                <label for="left">
+                                    <img src="/icons/format_align_left_FILL0_wght400_GRAD0_opsz48.png" />
+                                </label>
+                            </div>
+                            <div class="RadioBotton">
+                                <input id="justify" type="radio" name="position" value="4">
+                                <label for="justify">
+                                    <img src="/icons/format_align_justify_FILL0_wght400_GRAD0_opsz48.png" />
+                                </label>
+                            </div>
+                        </div>
+                        <input type="range" id="size" min="8" max="28" value="16"/>
+                        <label for="size">Size</label>
                         <button id="AddBookLibrary" hidden>
                             <img id="AddBookLibraryImg"/>
                         </button>

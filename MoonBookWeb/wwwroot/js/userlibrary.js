@@ -2,19 +2,74 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const userbook = document.getElementById("UserBook");
 	if (!userbook) throw "Forum  script: APP not found";
-	loadElement(userbook)
+	loadElement(userbook, "GET")
+	const librarybook = document.getElementById("LibraryUser");
+	if (!librarybook) throw "Forum  script: APP not found";
+	loadElement(librarybook, "PUT")
 	link = new URL(window.location.href);
+	loadPosition();
 
 });
 let idReadBook;
 let addbook = document.querySelector("#AddBookLibrary");
-addbook.addEventListener("click", () => {
-
+let size = document.getElementById("size");
+let position = document.getElementById("");
+size.addEventListener("change", () => {
+	let textContent = document.querySelectorAll("#TextContent p")
+	for (let text of textContent) {
+		text.style.fontSize = `${size.value}px`;
+	}
 })
-function loadElement(elem) {
+async function loadPosition() {
+	for (let radio of document.querySelectorAll("#RadioButtonGroup input[type=radio]")) {
+		radio.onclick = Position;
+	}
+}
+
+function Position(e) {
+	let textContent = document.querySelectorAll("#TextContent p")
+	if (e.target.value == 1) {
+		for (let text of textContent) {
+			text.style.textAlign = `center`;
+		}
+	}
+	if (e.target.value == 2) {
+		for (let text of textContent) {
+			text.style.textAlign = `right`;
+		}
+	}
+	if (e.target.value == 3) {
+		for (let text of textContent) {
+			text.style.textAlign = `left`;
+		}
+	}
+	if (e.target.value == 4) {
+		for (let text of textContent) {
+			text.style.textAlign = `justify`;
+		}
+    }
+}
+
+addbook.addEventListener("click", () => {
+	fetch(`/api/book/${idReadBook}`,
+		{
+			method: "POST",
+			body: null
+		})
+		.then(r => r.json())
+		.then(j => {
+			if (j.status === "Error") {
+				throw `addBook: ${j.status}`;
+			}
+			else {
+				location.reload();
+			}
+		});
+})
+function loadElement(elem, Query) {
 	fetch(`/api/book`,
 		{
-			method: "GET",
+			method: Query,
 			body: null
 		})
 		.then(r => r.json())
@@ -44,15 +99,18 @@ function showElementBooks(elem, j) {
 			bookLoaded();
 		});
 }
-async function bookLoaded() {
+function bookLoaded() {
 	for (let book of document.querySelectorAll(".BookItem")) {
 		book.onclick = Read;
 	}
-	link = link.search.replace('?', "");
-	//if link not empty, show choose user
-	if (link != '') {
-		ReadBook(link);
-	}
+	if (link !== "") {
+		link = link.search.replace('?', "");
+		//if link not empty, show choose user
+		if (link !== '') {
+			ReadBook(link);
+			link = "";
+		}
+    }
 }
 function Read(e) {
 	let idBook = e.currentTarget.getAttribute("id");
