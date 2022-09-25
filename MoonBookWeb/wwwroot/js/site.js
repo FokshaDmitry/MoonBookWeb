@@ -21,7 +21,7 @@
 				}
 			});
 	}
-	showElement(elem, j, appHtml) {
+	showElement(elem, j, appHtml, callback) {
 		fetch("/tmpl/post.html")
 			.then(r => r.text())
 			.then(trTemplate => {
@@ -55,6 +55,7 @@
 				//add in element: <post><post/>
 				elem.innerHTML = appHtml;
 				this.postLoaded();
+				callback();
 			});
 	}
 	//Add event

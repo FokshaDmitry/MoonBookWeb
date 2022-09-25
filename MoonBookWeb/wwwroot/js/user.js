@@ -93,6 +93,7 @@ function showElementBooks(elem, j) {
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;
+			bookLoaded();
 		});
 }
 //Show Online freands
@@ -110,6 +111,17 @@ function showElementFreand(elem, j) {
 			elem.innerHTML = appHtml;
 			freandLoaded();
 		});
+}
+// Add event book 
+async function bookLoaded() {
+	for (let book of document.querySelectorAll(".Book")) {
+		book.onclick = Read;
+	}
+}
+//Redirect on My Library 
+function Read(e) {
+	let idBook = e.currentTarget.getAttribute("id")
+	window.location.href = `/Books/UserLibrary?${idBook}`;
 }
 //Add event
 async function freandLoaded() {

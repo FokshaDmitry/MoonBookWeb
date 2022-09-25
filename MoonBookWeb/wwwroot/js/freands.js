@@ -130,7 +130,7 @@ function PageFreand(idFreand) {
 			var tmp = "";
 			for (let book of j.book) {
 				tmp += bookHtml
-					.replaceAll("{{Id}}", book.id)
+					.replaceAll("{{id}}", book.id)
 					.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
 					.replaceAll("{{Author}}", book.author)
 					.replaceAll("{{Title}}", book.title)
@@ -141,9 +141,20 @@ function PageFreand(idFreand) {
 				.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
 				.replace("{{Books}}", tmp)
 			//Freand posts
-			posts.showElement(post, j.freandsPost, appHtml);
+			posts.showElement(post, j.freandsPost, appHtml, bookLoaded);
 		}
 	})
+}
+// Add event book 
+async function bookLoaded() {
+	for (let book of document.querySelectorAll(".Book")) {
+		book.onclick = Read;
+	}
+}
+//Redirect on My Library 
+function Read(e) {
+	let idBook = e.currentTarget.getAttribute("id")
+	window.location.href = `/Books/UserLibrary?${idBook}`;
 }
 //search fread
 search.addEventListener("click", () => {

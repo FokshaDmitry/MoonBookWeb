@@ -9,6 +9,10 @@ body {
     font-size: 16px;
   }
 }
+header {
+    background-color: #3a3d74;
+    color: black;
+}
 body p {
     color: black;
 }
@@ -52,15 +56,7 @@ body {
     align-items:center;
     justify-content:center;
 }
-#OnlineUser {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px double black;
-    margin-left: 5%;
-    margin-top: 2.5%;
-    background-color: limegreen;
-}
+
 #Name:hover {
     cursor: pointer;
 }
@@ -76,350 +72,33 @@ body {
     display: block;
     cursor: pointer;
 }
-
-#UserName:hover .UserMenu {
+#UserList {
+    display: block;
+}
+#OnlineUser {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px double black;
+    background-color: limegreen;
+    position: absolute;
+}
+#UserList:hover .UserMenu {
     display: block;
     cursor: pointer;
-}
-/*=================== User ===============*/
-#UserPage {
-    background-color: #313574;
-    align-items: center;
-    width: 100%;
-    height: auto;
-    display: flex;
-    align-items: flex-start;
-}
-#ImagePostFile {
-    float: right;
-    margin-right: 1%;
-    margin-top: -0.4%;
-}
-    #ImagePostFile img {
-        width: 30px;
-        height: 30px;
-    }
-#UserBooks {
-    border: 2px double black;
-    display: inline-flex;
-    width: 100%;
-    margin-bottom: 20px;
-    height: 100px;
-}
-.Book {
-    margin-left: 2px;
-}
-#UserBookImg {
-    height: 95px;
-    width: 60px;
-}
-#OnlineFreandsPhoto {
-    border: 2px double black;
-    border-radius: 150px;
-    width: 37px;
-    height: 37px;
-    cursor: pointer;
-}
-.idOnlineFreand {
-    margin: 2%;
-}
-#UserPhoto {
-    border: 2px double black;
-    margin: 2%;
-    border-radius: 150px;
-    width: 300px;
-    height: 300px;
-}
-#UserAvatar {
-    margin: 2%;
-    display: inline-block;
-}
-#UserInformations {
-    width: 70%;
-    float: right;
-    margin: 1%;
-    display: inline-block;
-    vertical-align: top;
 }
 #UserName {
-    display: block;
-}
-#UName {
-    color:black;
-    margin-top: 5%;
-}
-#SendPost {
-    border: 2px double black;
-    display: flow-root;
-    width: 100%;
-    margin-bottom: 20px;
-    height: auto;
-}
-#Text {
-    width: 100%;
-    height: auto;
-    border: 3px double gray;
-    border-radius: 25px;
-}
-#ImagePost {
-    display: none;
-}
-#SendPost button {
-    float: right;
-    background-color: transparent;
-    width: 30px;
-    height: 30px;
-    border-color: transparent;
-    margin-right: 2%;
     display: flex;
+    justify-content: flex-end;
     align-items: flex-end;
-    justify-content: center;
 }
-#SendPost button img {
-    width: 30px;
-    height: 30px;
-    margin-right: 2%;
-}
-#OnlineFreands {
-    width: 250px;
-    border: 2px double black;
-    margin: 1%;
-    display: flex;
-    flex-wrap: wrap;
-}
-/*=================== Post ===============*/
-.Post {
-    float: right;
-    display: block;
-    margin-bottom: 20px;
-    height: 100%;
-    width: 100%;
-    border: 2px double black;
-}
-#PostText {
-    color: black;
-}
-#PostDelete {
-    float: right;
-    width: 17px;
-    margin: 5px;
-    cursor: pointer;
-}
-#PostUpdate {
-    float: right;
-    width: 17px;
-    margin: 5px;
-    cursor: pointer;
-}
-#PostInfo {
-    width: 100%;
-    height: 60px;
-}
-#PostUserPhoto {
-    border: 2px double black;
-    vertical-align: top;
-    margin: 1%;
-    border-radius: 150px;
-    width: 35px;
-    height: 35px;
-}
-#PostUserName {
-    color: black;
-    display: inline-block;
-    vertical-align: middle;
-}
-    #PostUserName i {
-        color: black;
-        font-size: 8pt;
+
+    #UserName p {
+        margin-bottom: 6.5%;
+        margin-right: 10%;
     }
-#PostTitle {
-    color: black;
-    display: block;
-    font-size: 25px;
-}
-#PostImg {
-    width: 100%;
-}
-#PostComment {
-    width: 100%;
-    height: 60px;
-}
-#PostComment textarea {
-    width: 90%;
-    float: left;
-    height: 35px;
-    border: 3px double gray;
-    border-radius: 25px;
-}
-#PostComment button {
-    float: right;
-    background-color: transparent;
-    width: 30px;
-    height: 30px;
-    border-color: transparent;
-    margin-right: 3%;
-}
-#PostComment button img {
-    width: 30px;
-    height: 30px;
-    margin-right: 5%;
-}
-#PostReactions {
-    width: 100%;
-    height: 40px;
-}
-    #PostReactions button {
-        float: right;
-        background-color: transparent;
-        width: 30px;
-        height: 30px;
-        border-color: transparent;
-        margin-right: 3%;
-        display: flex;
-    }
-        #PostReactions button img {
-            width: 30px;
-            height: 30px;
-            margin-right: 5%;
-        }
-    #PostReactions num {
-        float: right;
-        margin-top: 1%;
-        margin-right: 1%;
-    }
-/*=================== Freand ===============*/
-#FreandPagePhoto {
-    border: 2px double black;
-    margin: 2%;
-    border-radius: 150px;
-    width: 300px;
-    height: 300px;
-}
-#FreandPageNeme {
-    color: black;
-    font-size: 26pt;
-}
-#FreandPageInfo {
-    display: grid;
-    justify-items: center;
-}
-#FreandPage {
-    width: auto;
-    height: auto;
-    display: flex;
-}
-#Freand {
-    margin: 1%;
-    display: block;
-    width: 250px;
-    border: 2px double black;
-}
-#FreandList {
-    display: inline;
-}
-#TitleFreand {
-    margin: 1%;
-    background-color: brown;
-    width: 250px;
-    height: 25px
-}
-.idFreand {
-    cursor: pointer;
-    display: flex;
-    width: 100%;
-    height: 45px;
-    border: 1px double black;
-}
-#FreandPhoto {
-    border: 2px double black;
-    vertical-align: top;
-    margin: 1%;
-    border-radius: 150px;
-    width: 35px;
-    height: 35px;
-}
-#FreandName {
-    color: black;
-    display: inline-block;
-    vertical-align: middle;
-}
-#AddFreand {
-    background-color: transparent;
-    border-color: transparent;
-}
-    #AddFreand img {
-        width: 25px;
-        height: 25px;
-    }
-/*=================== Comment ===============*/
-.CommentUser {
-    display: flex;
-}
-#CommentDelete {
-    float: right;
-    width: 14px;
-    margin: 5px;
-    height: 14px;
-    cursor: pointer;
-}
-#PhotoComment {
-    border: 2px double black;
-    vertical-align: top;
-    margin: 1%;
-    border-radius: 150px;
-    width: 35px;
-    height: 35px;
-}
-#CommentInfo {
-    color: black;
-    font-size: 10pt;
-}
-    #CommentInfo p {
-        color: black;
-        margin: 0;
-    }
-/*=================== Library ===============*/
-#Library {
-    display: flex;
-    flex-wrap: wrap;
-}
-.Books {
-    cursor: pointer;
-    margin: 2%;
-    width: 150px
-}
-#Genry{
-    margin-right: 1%;
-}
-#CoverName {
-    width: 150px;
-    height: 250px;
-}
-#Author {
-    color: black;
-    display: flex;
-    justify-content: center;
-}
-#Title {
-    color: black;
-    display: flex;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14pt;
-    margin: 0;
-}
-#SearchAllBook {
-    height: 25px;
-}
-#SearchBook {
-    background-color: transparent;
-    width: 30px;
-    border-color: transparent;
-    margin-right: 2%;
-    height: 25px;
-    align-items: center;
-    justify-content: center;
-}
+
+
 /*=================== Blog ===============*/
 #BlogPage {
     background-color: #313574;
@@ -428,75 +107,4 @@ body {
     height: auto;
     display: flex;
     justify-content: center;
-}
-/*=================== User Library===============*/
-#UserBook {
-    max-height: 215px;
-    overflow: overlay;
-}
-#AddBookLibrary {
-    background-color: transparent;
-    border: none;
-}
-    #AddBookLibrary img {
-        width: 30px;
-    }
-#TitleBook {
-    margin: 1%;
-    background-color: brown;
-    width: 250px;
-    height: 25px
-}
-#UserLibrary book {
-    margin: 1%;
-    display: block;
-    width: 250px;
-    border: 2px double black;
-}
-.BookItem {
-    cursor:pointer;
-    margin-top: 1%;
-    height: 75px;
-    align-items: center;
-    border: 2px double black;
-    display: flex;
-}
-    .BookItem img {
-        width: 45px;
-    }
-#TextContent {
-    background-color: antiquewhite;
-    width: 100%;
-    color: black;
-    white-space: pre-line;
-}
-#TextContent p{
-    text-indent: 20px;
-    margin: 2%;
-}
-#RadioButtonGroup {
-    display: inline-block;
-    overflow: hidden;
-}
-#RadioButton {
-    display: inline-block;
-    float: left;
-}
-#RadioButtonGroup input[type=radio] {
-    display: none;
-}
-#RadioButtonGroup {
-    display: flex;
-    
-    padding: 0px 15px;
-    line-height: 34px;
-    border-right: none;
-    user-select: none;
-}
-#RadioButtonGroup img {
-    cursor: pointer;
-    width: 25px;
-}
-#RadioButtonGroup input[type=radio]:checked + label {
-    border: 1px double black;
 }

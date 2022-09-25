@@ -1,0 +1,84 @@
+﻿/*=================== User Library===============*/
+#UserBook {
+    max-height: 215px;
+    overflow: overlay;
+}
+
+#AddBookLibrary {
+    background-color: transparent;
+    border: none;
+}
+
+    #AddBookLibrary img {
+        width: 30px;
+    }
+
+#TitleBook {
+    margin: 1%;
+    background-color: brown;
+    width: 250px;
+    height: 25px
+}
+
+#UserLibrary book {
+    margin: 1%;
+    display: block;
+    width: 250px;
+    border: 2px double black;
+}
+
+.BookItem {
+    cursor: pointer;
+    margin-top: 1%;
+    height: 75px;
+    align-items: center;
+    border: 2px double black;
+    display: flex;
+}
+
+    .BookItem img {
+        width: 45px;
+    }
+
+#TextContent {
+    background-color: antiquewhite;
+    width: 100%;
+    color: black;
+    white-space: pre-line;
+}
+
+    #TextContent p {
+        text-indent: 20px;
+        margin: 2%;
+    }
+
+#RadioButtonGroup {
+    display: inline-block;
+    overflow: hidden;
+}
+
+#RadioButton {
+    display: inline-block;
+    float: left;
+}
+
+#RadioButtonGroup input[type=radio] {
+    display: none;
+}
+
+#RadioButtonGroup {
+    display: flex;
+    padding: 0px 15px;
+    line-height: 34px;
+    border-right: none;
+    user-select: none;
+}
+
+    #RadioButtonGroup img {
+        cursor: pointer;
+        width: 25px;
+    }
+
+    #RadioButtonGroup input[type=radio]:checked + label {
+        border: 1px double black;
+    }

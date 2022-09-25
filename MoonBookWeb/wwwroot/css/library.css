@@ -1,0 +1,49 @@
+﻿/*=================== Library ===============*/
+#Library {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Books {
+    cursor: pointer;
+    margin: 2%;
+    width: 150px
+}
+
+#Genry {
+    margin-right: 1%;
+}
+
+#CoverName {
+    width: 150px;
+    height: 250px;
+}
+
+#Author {
+    color: black;
+    display: flex;
+    justify-content: center;
+}
+
+#Title {
+    color: black;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14pt;
+    margin: 0;
+}
+
+#SearchAllBook {
+    height: 25px;
+}
+
+#SearchBook {
+    background-color: transparent;
+    width: 30px;
+    border-color: transparent;
+    margin-right: 2%;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+}

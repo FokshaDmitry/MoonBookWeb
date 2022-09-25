@@ -1,0 +1,86 @@
+﻿/*=================== Freand ===============*/
+#FreandPagePhoto {
+    border: 2px double black;
+    margin: 2%;
+    border-radius: 150px;
+    width: 300px;
+    height: 300px;
+}
+#UserBooks {
+    border: 2px double black;
+    display: inline-flex;
+    width: 100%;
+    margin-bottom: 20px;
+    height: 100px;
+}
+#UserBookImg {
+    height: 95px;
+    width: 60px;
+    cursor: pointer;
+}
+#FreandPageNeme {
+    color: black;
+    font-size: 26pt;
+}
+
+#FreandPageInfo {
+    display: grid;
+    justify-items: center;
+}
+
+#FreandPage {
+    width: auto;
+    height: auto;
+    display: flex;
+}
+
+#Freand {
+    margin: 1%;
+    display: block;
+    width: 250px;
+    border: 2px double black;
+}
+
+#FreandList {
+    display: inline;
+}
+
+#TitleFreand {
+    margin: 1%;
+    background-color: brown;
+    width: 250px;
+    height: 25px
+}
+
+.idFreand {
+    cursor: pointer;
+    display: flex;
+    width: 100%;
+    height: 45px;
+    border: 1px double black;
+}
+
+#FreandPhoto {
+    border: 2px double black;
+    vertical-align: top;
+    margin: 1%;
+    border-radius: 150px;
+    width: 35px;
+    height: 35px;
+}
+
+#FreandName {
+    color: black;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#AddFreand {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+    #AddFreand img {
+        width: 25px;
+        height: 25px;
+    }

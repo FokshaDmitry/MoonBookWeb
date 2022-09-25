@@ -15,8 +15,8 @@
     <link rel="stylesheet" href="~/MoonBookWeb.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header style="background-color: #313574;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MoonBook</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -26,7 +26,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Library">Library</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Library">Library</a>
                         </li>
                     </ul>
                     @if(freands == "Ok")
@@ -82,6 +82,10 @@
                     }
                     @if(userlibrary == "Ok")
                     {
+                        <input id="TextColor" type="color"/>
+                        <label for="TextColor">Text Color</label>
+                        <input id="BackgrountColor" type="color" value="antiquewhite" />
+                        <label for="BackgrountColor">Backgrount Color</label>
                         <div id="RadioButtonGroup">
                             <div class="RadioBotton">
                                 <input id="center" type="radio" name="position" value="1">
@@ -120,11 +124,12 @@
                     }
                     else
                     {
-                        <ul style="list-style-type:none; margin-right: 2%" >
-                            <li id="UserName">
-                               <div style="position:absolute; width: 60%;"> <div id="OnlineUser"></div></div>
-                               @user.Name
-                                <img id="UserImg" src="/img/@user.PhotoName">
+                        <ul style="list-style-type:none; margin-right: 2%; margin-right: 1%; margin-bottom: 0%;">
+                            <li id="UserList">
+                                <div id="UserName">
+                                    <p>@user.Name</p>
+                                    <img id="UserImg" src="/img/@user.PhotoName">
+                                    <div id="OnlineUser"></div> </div>
                                 <ul class="UserMenu">
                                     <li>
                                         <a class="link-with-icon" asp-area="" asp-controller="User" asp-action="Index">My Page</a>

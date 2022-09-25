@@ -1,8 +1,10 @@
 ﻿let link;
 document.addEventListener("DOMContentLoaded", () => {
+	//User Books
 	const userbook = document.getElementById("UserBook");
 	if (!userbook) throw "Forum  script: APP not found";
 	loadElement(userbook, "GET")
+	//Books in User Library
 	const librarybook = document.getElementById("LibraryUser");
 	if (!librarybook) throw "Forum  script: APP not found";
 	loadElement(librarybook, "PUT")
@@ -13,7 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
 let idReadBook;
 let addbook = document.querySelector("#AddBookLibrary");
 let size = document.getElementById("size");
-let position = document.getElementById("");
+let BackgrountColor = document.getElementById("BackgrountColor");
+let TextColor = document.getElementById("TextColor");
+BackgrountColor.addEventListener("change", () => {
+	let textContent = document.querySelector("#TextContent")
+	textContent.style.backgroundColor = BackgrountColor.value;
+})
+TextColor.addEventListener("change", () => {
+	let textContent = document.querySelectorAll("#TextContent p")
+	for (let text of textContent) {
+		text.style.color = TextColor.value;
+	}
+})
 size.addEventListener("change", () => {
 	let textContent = document.querySelectorAll("#TextContent p")
 	for (let text of textContent) {
@@ -25,7 +38,7 @@ async function loadPosition() {
 		radio.onclick = Position;
 	}
 }
-
+//Text Orintations
 function Position(e) {
 	let textContent = document.querySelectorAll("#TextContent p")
 	if (e.target.value == 1) {
