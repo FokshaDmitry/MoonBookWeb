@@ -1,5 +1,5 @@
 # MoonBookWeb
-User Page. Available after registration.
+<b>User Page. Available after registration.</b>
 
 ![image](https://user-images.githubusercontent.com/99391531/192140605-d28d67b4-80b0-41d0-bd23-9504760bd90f.png)
 
