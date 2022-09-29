@@ -1,6 +1,7 @@
 ﻿class Posts {
 	constructor(API) {
 		this.API = API;
+		this.Reactions = this.Reactions.bind(this);
 	}
 
 	loadElement(elem) {
@@ -14,7 +15,7 @@
 			.then(j => {
 				if (j.status === "Ok") {
 					//show element
-					this.showElement(elem, j.message, "")
+					this.showElement(elem, j, "", null)
 				}
 				else {
 					throw "showTopics: Backend data invalid";
@@ -26,7 +27,7 @@
 			.then(r => r.text())
 			.then(trTemplate => {
 				//replace data posts
-				for (let post of j) {
+				for (let post of j.message) {
 					var tmp = trTemplate;
 					tmp = tmp.replaceAll("{{Name}}", post.post.user.name)
 						.replaceAll("{{Surname}}", post.post.user.surname)
@@ -38,24 +39,33 @@
 						.replaceAll("{{PostImg}}", (post.post.post.image == null ? "" : `<img id="PostImg" src="/img_post/${post.post.post.image}" />`))
 						.replaceAll("{{Text}}", (post.post.post.text == null ? "" : post.post.post.text))
 						.replaceAll("{{Title}}", (post.post.post.title == null ? "" : post.post.post.title))
+						.replaceAll("{{PostDelete}}", (post.post.user.id !== j.user ? "" : `<img id="PostDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`))
+						.replaceAll("{{PostUpdate}}", (post.post.user.id !== j.user ? "" : `<img id="PostUpdate" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>`))
 					let appHtmlComment = "";
-					for (let comment of post.comment) {
-						var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p style="color: black;">{{Text}}</p> </div> </div> <img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/> </div>`;
-						tmpCom = tmpCom.replaceAll("{{Name}}", comment.user.name)
-							.replaceAll("{{Surname}}", comment.user.surname)
-							.replaceAll("{{Date}}", comment.comment.date)
-							.replaceAll("{{Id}}", comment.comment.id)
-							.replaceAll("{{PhotoName}}", (comment.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.user.photoName))
-							.replaceAll("{{Text}}", (comment.comment.text == null ? "" : comment.comment.text))
-						appHtmlComment += tmpCom;
+					if (j.user !== null && j.user !== "" && j.user !== undefined) {
+						for (let comment of post.comment) {
+							var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p style="color: black;">{{Text}}</p> </div> </div> {{DeleteComment}} </div>`;
+							tmpCom = tmpCom.replaceAll("{{Name}}", comment.user.name)
+								.replaceAll("{{Surname}}", comment.user.surname)
+								.replaceAll("{{Date}}", comment.comment.date)
+								.replaceAll("{{Id}}", comment.comment.id)
+								.replaceAll("{{PhotoName}}", (comment.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.user.photoName))
+								.replaceAll("{{Text}}", (comment.comment.text == null ? "" : comment.comment.text))
+								.replaceAll("{{DeleteComment}}", (comment.comment.idUser !== j.user ? "" : `<img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`))
+							appHtmlComment += tmpCom;
+						}
+						tmp = tmp.replace("{{Comments}}", appHtmlComment);
 					}
-					tmp = tmp.replace("{{Comments}}", appHtmlComment);
+					else {
+						tmp = tmp.replace("{{Comments}}", `<p style="margin-left: 1%;"><b>You need login.</b></p>`);
+
+                    }
 					appHtml += tmp;
 				}
 				//add in element: <post><post/>
 				elem.innerHTML = appHtml;
+				if (callback !== null) callback();
 				this.postLoaded();
-				callback();
 			});
 	}
 	//Add event
@@ -117,7 +127,7 @@
 						throw "Post.Reactions: comment invalid";
 					} else {
 						let comment = e.target.parentElement.parentElement.previousElementSibling;
-						var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div > <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> </div>`;
+						var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div > <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p>{{Text}}</p> </div> </div> <img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/> </div>`;
 						tmpCom = tmpCom.replaceAll("{{Name}}", j.message.user.name)
 							.replaceAll("{{Surname}}", j.message.user.surname)
 							.replaceAll("{{Date}}", j.message.comment.date)

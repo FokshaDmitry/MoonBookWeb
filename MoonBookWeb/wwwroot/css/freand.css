@@ -47,11 +47,26 @@
 
 #TitleFreand {
     margin: 1%;
-    background-color: brown;
+    background-color: #08206c;
     width: 250px;
     height: 25px
 }
-
+#FreandFreands {
+    margin: 1%;
+    width: 250px;
+    border: 2px double black;
+    display: flex;
+    flex-wrap: wrap;
+}
+#FreandFreandsPhoto {
+    border: 2px double black;
+    vertical-align: top;
+    margin: 1%;
+    border-radius: 150px;
+    width: 35px;
+    height: 35px;
+    cursor:pointer;
+}
 .idFreand {
     cursor: pointer;
     display: flex;
@@ -84,3 +99,9 @@
         width: 25px;
         height: 25px;
     }
+#BackFreandsBlog {
+    position: absolute;
+    margin-left: -45%;
+    width: 35px;
+    cursor: pointer;
+}

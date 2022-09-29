@@ -57,6 +57,7 @@ namespace MoonBookWeb.Controllers
                 if (user.Password == _hesher.Hesh(Password + user.PassSalt))
                 {
                     user.Online = true;
+                    _context.Users.Update(user);
                     _context.SaveChanges();
                     //Add user session and include middelwere
                     HttpContext.Session.SetString("UserId", user.Id.ToString());

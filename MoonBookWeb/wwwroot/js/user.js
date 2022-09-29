@@ -7,6 +7,7 @@ var valTitle = "";
 document.addEventListener("DOMContentLoaded", () => {
 	const post = document.querySelector("post");
 	if (!post) throw "Forum  script: APP not found";
+	post.innerHTML = `<img style="width: 150px; position: absolute; margin-left: 20%;" src ="../icons/oie_L36bLHLNsDH2.gif"/>`
 	//Add current user post
 	var posts = new Posts("/api/post");
 	posts.loadElement(post);

@@ -46,7 +46,7 @@ namespace MoonBookWeb.API
                     var postFreand = _context.Posts.ToList().Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u }).OrderByDescending(u => u.Post.Date).GroupJoin(comment, p => p.Post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
                     if (postFreand != null)
                     {
-                        return new { status = "Ok", message = postFreand };
+                        return new { status = "Ok", message = postFreand, user = _sessionLogin.user.Id };
                     }
                 }
                 return new { status = "Error", message = "Dont find Posts" };
@@ -54,12 +54,22 @@ namespace MoonBookWeb.API
             //Get choose frend post
             else
             {
-                Guid Id = Guid.Parse(message);
+                Guid Id = new Guid();
+                try
+                {
+                    Id = Guid.Parse(message);
+                }
+                catch
+                {
+                    HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    return new { Status = "Error", message = "Invalid id format (GUID required)" };
+                }
                 var user = _context.Users.Find(Id);
                 var comment = _context.Comments.Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u });
                 var freandsPost = _context.Posts.Where(p => p.IdUser == Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comment, p => p.Post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
                 var book = _context.Books.Where(b => b.idUser == Id);
-                return new { status = "Ok", freandsPost = freandsPost, user = user, book = book };
+                var freandFreands = _context.Subscriptions.Where(s => s.IdUser == Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User);
+                return new { status = "Ok", message = freandsPost, user = _sessionLogin.user.Id, freand = user, book = book, freandFreands = freandFreands };
             }
         }
         #endregion

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	//element <post><post/>
 	post = document.querySelector("post");
 	if (!post) throw "Forum  script: APP not found";
+	post.innerHTML = `<img style="width: 150px; position: absolute; margin-left: 20%;" src ="../icons/oie_L36bLHLNsDH2.gif"/>`
 	posts = new Posts("/api/freand/Post");
 	posts.loadElement(post);
 	//get path
@@ -116,32 +117,53 @@ function PageFreand(idFreand) {
 		if (j.status == "Error") {
 			alert(j.message)
 		} else {
+			//Fread freands
+			var freandsHtml = `<div class="Freand" style="display: flex; margin: 1%; justify-content: flex-end; align-items: flex-end;" title="{{Name}} {{Surname}}" id="{{id}}">
+									<img id="FreandFreandsPhoto" src="/img/{{UserPhoto}}"/>
+									<div id="OnlineUser" style="position: absolute; {{Online}}"></div>
+								</div>`
 			//freand book
 			var bookHtml = `<div class="Book" title="{{Author}} &ldquo;{{Title}}&rdquo;" id="{{id}}">
 									<img id="UserBookImg" src="/img_post/{{CoverName}}"/>
-								</div>`;
+							</div>`;
 			//Freand info
-			var appHtml = `<div id="FreandPageInfo">
+			var appHtml = `<div id="FreandPageInfo"> 
+									<img id="BackFreandsBlog" src = "/icons/arrow_back_FILL0_wght400_GRAD0_opsz48.png">
 									<img id="FreandPagePhoto" src = "/img/{{PhotoName}}">
 									<p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p>
-									<books id="UserBooks">{{Books}}</books>
+									{{Freands}}
+									{{Books}}
 							   </div>`;
-
-			var tmp = "";
-			for (let book of j.book) {
-				tmp += bookHtml
-					.replaceAll("{{id}}", book.id)
-					.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
-					.replaceAll("{{Author}}", book.author)
-					.replaceAll("{{Title}}", book.title)
-			}
+			var tmpfreand = "";
+			if (j.freandFreands !== null && j.freandFreands !== undefined && j.freandFreands !== "" && j.freandFreands.length > 0) {
+				for (let freand of j.freandFreands) {
+					tmpfreand += freandsHtml
+						.replaceAll("{{id}}", freand.id)
+						.replaceAll("{{UserPhoto}}", (freand.photoName == null || freand.photoName == "" ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
+						.replaceAll("{{Name}}", freand.name)
+						.replaceAll("{{Surname}}", freand.surname)
+						.replaceAll("{{Online}}", (freand.online ? "" : "background-color: lightpink;"))
+				}
+            }
+			var tmpbook = "";
+			if (j.book !== null && j.book !== undefined && j.book !== "" && j.book.length > 0) {
+				for (let book of j.book) {
+					tmpbook += bookHtml
+						.replaceAll("{{id}}", book.id)
+						.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "local_library_FILL0_wght500_GRAD0_opsz48.png" : book.coverName))
+						.replaceAll("{{Author}}", book.author)
+						.replaceAll("{{Title}}", book.title)
+				}
+            }
+			
 			appHtml = appHtml
-				.replace("{{Name}}", j.user.name)
-				.replace("{{Surname}}", j.user.surname)
-				.replace("{{PhotoName}}", (j.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.user.photoName))
-				.replace("{{Books}}", tmp)
+				.replace("{{Name}}", j.freand.name)
+				.replace("{{Surname}}", j.freand.surname)
+				.replace("{{PhotoName}}", (j.freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.freand.photoName))
+				.replace("{{Freands}}", (tmpfreand == "" ? "" : `<div> <p id="TitleFreand"><b>Freands</b></p> <freand id= "FreandFreands"> ${tmpfreand} </freand></div>`))
+				.replace("{{Books}}", (tmpbook == "" ? "" : `<books id="UserBooks"> ${tmpbook} </books>`))
 			//Freand posts
-			posts.showElement(post, j.freandsPost, appHtml, bookLoaded);
+			posts.showElement(post, j, appHtml, bookLoaded);
 		}
 	})
 }
@@ -150,6 +172,25 @@ async function bookLoaded() {
 	for (let book of document.querySelectorAll(".Book")) {
 		book.onclick = Read;
 	}
+	freabdsLoaded();
+	backLoaded();
+}
+async function backLoaded() {
+	document.querySelector("#BackFreandsBlog").onclick = function () {
+		window.location.href = `/User/FreandPage`;
+    };
+}
+
+// Add event Freand freands 
+async function freabdsLoaded() {
+	for (let freand of document.querySelectorAll(".Freand")) {
+		freand.onclick = FreandFreands;
+	}
+}
+//Redirect on My Library 
+function FreandFreands(e) {
+	let idFreand = e.currentTarget.getAttribute("id")
+	window.location.href = `/User/FreandPage?${idFreand}`;
 }
 //Redirect on My Library 
 function Read(e) {

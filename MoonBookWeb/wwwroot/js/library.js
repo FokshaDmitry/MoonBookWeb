@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	//Element <library><library/>
 	library = document.querySelector("library");
 	if (!library) throw "Forum  script: APP not found";
+	library.innerHTML = `<img style="width: 150px; margin-left: 30%; position: absolute; margin-top: 15%;" src ="../icons/oie_L36bLHLNsDH2.gif"/>`
 	//Load All books
 	loadElement(library)
 });

@@ -117,3 +117,9 @@
     display: flex;
     flex-wrap: wrap;
 }
+#TitleFreand {
+    margin: 1%;
+    background-color: #08206c;
+    width: 250px;
+    height: 25px
+}
