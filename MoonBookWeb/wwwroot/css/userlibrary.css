@@ -82,3 +82,12 @@
     #RadioButtonGroup input[type=radio]:checked + label {
         border: 1px double black;
     }
+#Interval {
+    content: "";
+    background: none;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    user-select: none;
+}

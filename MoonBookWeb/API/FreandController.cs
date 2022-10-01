@@ -54,22 +54,29 @@ namespace MoonBookWeb.API
             //Get choose frend post
             else
             {
-                Guid Id = new Guid();
-                try
+                //Guid Id = new Guid();
+                //try
+                //{
+                //    Id = Guid.Parse(message);
+                //}
+                //catch
+                //{
+                //    HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                //    
+                //}
+                var user = _context.Users.Where(u => u.Login == message).FirstOrDefault();
+                if(user != null)
                 {
-                    Id = Guid.Parse(message);
+                    var comment = _context.Comments.Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u });
+                    var freandsPost = _context.Posts.Where(p => p.IdUser == user.Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comment, p => p.Post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
+                    var book = _context.Books.Where(b => b.idUser == user.Id);
+                    var freandFreands = _context.Subscriptions.Where(s => s.IdUser == user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User);
+                    return new { status = "Ok", message = freandsPost, user = _sessionLogin.user.Id, freand = user, book = book, freandFreands = freandFreands };
                 }
-                catch
+                else
                 {
-                    HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    return new { Status = "Error", message = "Invalid id format (GUID required)" };
+                    return new { Status = "Error", message = "IdUser dont find" };
                 }
-                var user = _context.Users.Find(Id);
-                var comment = _context.Comments.Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u });
-                var freandsPost = _context.Posts.Where(p => p.IdUser == Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comment, p => p.Post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
-                var book = _context.Books.Where(b => b.idUser == Id);
-                var freandFreands = _context.Subscriptions.Where(s => s.IdUser == Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User);
-                return new { status = "Ok", message = freandsPost, user = _sessionLogin.user.Id, freand = user, book = book, freandFreands = freandFreands };
             }
         }
         #endregion

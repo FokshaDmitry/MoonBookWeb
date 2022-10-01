@@ -82,10 +82,20 @@
                     }
                     @if(userlibrary == "Ok")
                     {
+                        <label style="margin-right: 1%;" for="Interval">
+                            <select id="Interval">
+                                <option value="1  " >1      </option>
+                                <option selected value="1.5" >1.5    </option>
+                                <option value="2  " >2      </option>
+                                <option value="2.5" >2.5    </option>
+                                <option value="3  " >3      </option>
+                            </select>
+                            <img style="width: 25px;" src="/icons/expand_FILL0_wght400_GRAD0_opsz48.png">
+                        </label>
                         <input id="TextColor" type="color"/>
-                        <label for="TextColor">Text Color</label>
+                        <label style="margin-right: 1%;" for="TextColor">Text Color</label>
                         <input id="BackgrountColor" type="color" value="antiquewhite" />
-                        <label for="BackgrountColor">Backgrount Color</label>
+                        <label style="margin-right: 1%;" for="BackgrountColor">Backgrount Color</label>
                         <div id="RadioButtonGroup">
                             <div class="RadioBotton">
                                 <input id="center" type="radio" name="position" value="1">
@@ -128,7 +138,9 @@
                             <li id="UserList">
                                 <div id="UserName">
                                     <p>@user.Name</p>
-                                    <img id="UserImg" src="/img/@user.PhotoName">
+                                    <a href="/User">
+                                        <img id="UserImg" src="/img/@user.PhotoName">
+                                    </a>
                                     <div id="OnlineUser"></div> </div>
                                 <ul class="UserMenu">
                                     <li>

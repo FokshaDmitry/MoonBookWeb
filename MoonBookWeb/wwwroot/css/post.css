@@ -45,6 +45,8 @@
     color: black;
     display: inline-block;
     vertical-align: middle;
+    margin-top: 1%;
+    line-height: 1.1;
 }
 
     #PostUserName i {

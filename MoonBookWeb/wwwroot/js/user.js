@@ -99,19 +99,20 @@ function showElementBooks(elem, j) {
 }
 //Show Online freands
 function showElementFreand(elem, j) {
-	fetch("/tmpl/onlineFrands.html")
-		.then(r => r.text())
-		.then(trTemplate => {
-			let appHtml = "";
-			for (let freand of j) {
-				var tmp = trTemplate
-				tmp = tmp.replaceAll("{{id}}", freand.id)
-					.replaceAll("{{PhotoName}}", (freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
-				appHtml += tmp;
-			}
-			elem.innerHTML = appHtml;
-			freandLoaded();
-		});
+	let appHtml = "";
+	for (let freand of j) {
+		var tmp = `<div class="idOnlineFreand" title="{{Name}} {{Surname}}">
+						<a href="../User/FreandPage?{{id}}"> <img id="OnlineFreandsPhoto" src="../img/{{PhotoName}}"/> </a>
+				   </div>`
+		tmp = tmp.replaceAll("{{id}}", freand.login)
+			.replaceAll("{{Name}}", freand.name)
+			.replaceAll("{{Surname}}", freand.surname)
+			.replaceAll("{{PhotoName}}", (freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
+		appHtml += tmp;
+	}
+	elem.innerHTML = appHtml;
+	freandLoaded();
+
 }
 // Add event book 
 async function bookLoaded() {
@@ -123,15 +124,4 @@ async function bookLoaded() {
 function Read(e) {
 	let idBook = e.currentTarget.getAttribute("id")
 	window.location.href = `/Books/UserLibrary?${idBook}`;
-}
-//Add event
-async function freandLoaded() {
-	for (let freand of document.querySelectorAll(".idOnlineFreand")) {
-		freand.onclick = View;
-	}
-}
-//Redirect on frend page
-function View(e) {
-	let idFreand = e.currentTarget.getAttribute("id")
-	window.location.href = `/User/FreandPage?${idFreand}`;
 }

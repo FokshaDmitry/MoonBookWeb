@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MoonBookWeb.Midelewere;
-using MoonBookWeb.Services;
-
-var builder = WebApplication.CreateBuilder(args);
+using MoonBookWeb.Services;var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

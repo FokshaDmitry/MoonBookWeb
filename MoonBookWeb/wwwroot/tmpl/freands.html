@@ -1,10 +1,12 @@
-﻿<div class="idFreand" id="{{id}}">
-    <div id="OnlineUser" style="position: absolute; margin: 1.4%; {{Online}}"></div>
-    <img id="FreandPhoto" src="/img/{{PhotoName}}">
+﻿<div class="idFreand" id="{{id}}" LoginUser="{{Login}}">
+    <div id="FreandPhoto">
+        <div id="OnlineUser" style="position: absolute; {{Online}}"></div>
+        <img src="/img/{{PhotoName}}">
+    </div>
     <p id="FreandName">
         <b>{{Name}} {{Surname}}</b>
     </p>
-    <button id="AddFreand">
-        <img src="/icons/{{SrcIcon}}" />
-    </button>
+    <div>
+        <img id="AddFreand" src="/icons/{{SrcIcon}}" />
+    </div>
 </div>

@@ -17,6 +17,13 @@ let addbook = document.querySelector("#AddBookLibrary");
 let size = document.getElementById("size");
 let BackgrountColor = document.getElementById("BackgrountColor");
 let TextColor = document.getElementById("TextColor");
+let Interval = document.getElementById("Interval");
+Interval.addEventListener("change", () => {
+	let textContent = document.querySelectorAll("#TextContent p")
+	for (let text of textContent) {
+		text.style.lineHeight = `${Interval.value}`;
+	}
+})
 BackgrountColor.addEventListener("change", () => {
 	let textContent = document.querySelector("#TextContent")
 	textContent.style.backgroundColor = BackgrountColor.value;

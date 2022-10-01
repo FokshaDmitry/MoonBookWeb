@@ -16,6 +16,14 @@ header {
 body p {
     color: black;
 }
+body a {
+    text-decoration: none;
+    color: black;
+}
+    body a:hover {
+        text-decoration: underline;
+        color: black;
+    }
 html {
   position: relative;
   min-height: 100%;

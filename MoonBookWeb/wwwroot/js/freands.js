@@ -42,6 +42,7 @@ function showElementFreand(elem, j) {
 			for (let freand of j) {
 				var tmp = trTemplate
 				tmp = tmp.replaceAll("{{id}}", freand.user.id)
+					.replaceAll("{{Login}}", freand.user.login)
 					.replaceAll("{{Name}}", freand.user.name)
 					.replaceAll("{{Surname}}", freand.user.surname)
 					.replaceAll("{{SrcIcon}}", (freand.sub.length == 0 ? "person_add_FILL0_wght400_GRAD0_opsz48.png" : "person_remove_FILL0_wght400_GRAD0_opsz48.png"))
@@ -85,7 +86,7 @@ async function freandLoaded() {
 	}
 }
 function Follow(e) {
-	let follow = e.currentTarget.childNodes[7].childNodes[1];
+	let follow = e.currentTarget.querySelector("#AddFreand")
 	let idFreand = e.currentTarget.getAttribute("id")
 	//follow/unfollow
 	if (e.target === follow) {
@@ -104,13 +105,12 @@ function Follow(e) {
 			}
 		})
 	}
-	//Show freand page
-	if (e.target !== follow) {
-		PageFreand(idFreand)
-	}
+	else {
+		PageFreand(e.currentTarget.getAttribute("LoginUser"))
+    }
 }
-function PageFreand(idFreand) {
-	fetch(`/api/freand/${idFreand}`, {
+function PageFreand(LoginFreand) {
+	fetch(`/api/freand/${LoginFreand}`, {
 		method: "GET",
 		body: null
 	}).then(r => r.json()).then(j => {
@@ -118,17 +118,17 @@ function PageFreand(idFreand) {
 			alert(j.message)
 		} else {
 			//Fread freands
-			var freandsHtml = `<div class="Freand" style="display: flex; margin: 1%; justify-content: flex-end; align-items: flex-end;" title="{{Name}} {{Surname}}" id="{{id}}">
-									<img id="FreandFreandsPhoto" src="/img/{{UserPhoto}}"/>
+			var freandsHtml = `<div class="Freand" style="display: flex; margin: 1%; justify-content: flex-end; align-items: flex-end;" title="{{Name}} {{Surname}}">
+									<a href="../User/FreandPage?{{id}}"> <img id="FreandFreandsPhoto" src="/img/{{UserPhoto}}"/> </a>
 									<div id="OnlineUser" style="position: absolute; {{Online}}"></div>
 								</div>`
 			//freand book
-			var bookHtml = `<div class="Book" title="{{Author}} &ldquo;{{Title}}&rdquo;" id="{{id}}">
-									<img id="UserBookImg" src="/img_post/{{CoverName}}"/>
+			var bookHtml = `<div class="Book" title="{{Author}} &ldquo;{{Title}}&rdquo;">
+									<a href="../Books/UserLibrary?{{id}}"> <img id="UserBookImg" src="/img_post/{{CoverName}}"/> </a>
 							</div>`;
 			//Freand info
 			var appHtml = `<div id="FreandPageInfo"> 
-									<img id="BackFreandsBlog" src = "/icons/arrow_back_FILL0_wght400_GRAD0_opsz48.png">
+									<div id="BackFreandsBlog"> <a href="../User/FreandPage"> <img src = "/icons/arrow_back_FILL0_wght400_GRAD0_opsz48.png"> </a></div>
 									<img id="FreandPagePhoto" src = "/img/{{PhotoName}}">
 									<p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p>
 									{{Freands}}
@@ -138,7 +138,7 @@ function PageFreand(idFreand) {
 			if (j.freandFreands !== null && j.freandFreands !== undefined && j.freandFreands !== "" && j.freandFreands.length > 0) {
 				for (let freand of j.freandFreands) {
 					tmpfreand += freandsHtml
-						.replaceAll("{{id}}", freand.id)
+						.replaceAll("{{id}}", freand.login)
 						.replaceAll("{{UserPhoto}}", (freand.photoName == null || freand.photoName == "" ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : freand.photoName))
 						.replaceAll("{{Name}}", freand.name)
 						.replaceAll("{{Surname}}", freand.surname)
@@ -163,39 +163,9 @@ function PageFreand(idFreand) {
 				.replace("{{Freands}}", (tmpfreand == "" ? "" : `<div> <p id="TitleFreand"><b>Freands</b></p> <freand id= "FreandFreands"> ${tmpfreand} </freand></div>`))
 				.replace("{{Books}}", (tmpbook == "" ? "" : `<books id="UserBooks"> ${tmpbook} </books>`))
 			//Freand posts
-			posts.showElement(post, j, appHtml, bookLoaded);
+			posts.showElement(post, j, appHtml);
 		}
 	})
-}
-// Add event book 
-async function bookLoaded() {
-	for (let book of document.querySelectorAll(".Book")) {
-		book.onclick = Read;
-	}
-	freabdsLoaded();
-	backLoaded();
-}
-async function backLoaded() {
-	document.querySelector("#BackFreandsBlog").onclick = function () {
-		window.location.href = `/User/FreandPage`;
-    };
-}
-
-// Add event Freand freands 
-async function freabdsLoaded() {
-	for (let freand of document.querySelectorAll(".Freand")) {
-		freand.onclick = FreandFreands;
-	}
-}
-//Redirect on My Library 
-function FreandFreands(e) {
-	let idFreand = e.currentTarget.getAttribute("id")
-	window.location.href = `/User/FreandPage?${idFreand}`;
-}
-//Redirect on My Library 
-function Read(e) {
-	let idBook = e.currentTarget.getAttribute("id")
-	window.location.href = `/Books/UserLibrary?${idBook}`;
 }
 //search fread
 search.addEventListener("click", () => {

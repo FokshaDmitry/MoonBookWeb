@@ -1,4 +1,49 @@
-﻿class Posts {
+﻿//function Post (props) {
+//	const [postHtml, setPostHtml] = React.useState([]);
+
+//	return <>
+//		<div>
+//			<div class="Post" id="">
+//				<div id="PostInfo">
+//					<img id="PostUserPhoto" src="/img/{{PhotoUser}}">
+//						<p id="PostUserName">
+//							<a href="../User/FreandPage?{{Login}}"><b>{{ Name }} {{ Surname }}</b></a><br>
+//								<i>{{ Date }}</i>
+//						</p>
+//						{{ PostDelete }}
+//						{{ PostUpdate }}
+//				</div>
+//				<div>
+//					<p id="PostTitle"><b>{{ Title }}</b></p>
+//					{{ PostImg }}
+//					<p class="PostText" id="PostText">{{ Text }}</p>
+//				</div>
+//				<comments id="Comment">{{ Comments }}</comments>
+//				<div id="PostComment">
+//					<button id="SendComment">
+//						<img id="SendCommentImg" src="/icons/send_FILL0_wght400_GRAD0_opsz48.png" />
+//					</button>
+//					<textarea id="TextComment" aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" name="BlokMessege" cols="4" wrap="soft"></textarea>
+//				</div>
+//				<div id="PostReactions">
+//					<button id="Sad">
+//						<img id="SadImg" src="/icons/mood_bad_FILL0_wght400_GRAD0_opsz48.png" />
+//						<num id="DisLike">{{ Dislike }}</num>
+//					</button>
+//					<button id="Smail">
+//						<img id="SmailImg" src="/icons/mood_FILL0_wght400_GRAD0_opsz48.png" />
+//						<num id="Like">{{ Like }}</num>
+//					</button>
+//				</div>
+//			</div>
+//		</div>
+//	</>
+//}
+//ReactDOM.render(
+//	<Post post= , appHtml="" />,
+//	document.querySelector("post"));
+
+class Posts {
 	constructor(API) {
 		this.API = API;
 		this.Reactions = this.Reactions.bind(this);
@@ -15,21 +60,22 @@
 			.then(j => {
 				if (j.status === "Ok") {
 					//show element
-					this.showElement(elem, j, "", null)
+					this.showElement(elem, j, "")
 				}
 				else {
 					throw "showTopics: Backend data invalid";
 				}
 			});
 	}
-	showElement(elem, j, appHtml, callback) {
+	showElement(elem, j, appHtml) {
 		fetch("/tmpl/post.html")
 			.then(r => r.text())
 			.then(trTemplate => {
 				//replace data posts
 				for (let post of j.message) {
 					var tmp = trTemplate;
-					tmp = tmp.replaceAll("{{Name}}", post.post.user.name)
+					tmp = tmp.replaceAll("{{Login}}", post.post.user.login)
+						.replaceAll("{{Name}}", post.post.user.name)
 						.replaceAll("{{Surname}}", post.post.user.surname)
 						.replaceAll("{{Date}}", post.post.post.date)
 						.replaceAll("{{Like}}", post.post.post.like)
@@ -44,8 +90,9 @@
 					let appHtmlComment = "";
 					if (j.user !== null && j.user !== "" && j.user !== undefined) {
 						for (let comment of post.comment) {
-							var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <p><b>{{Name}} {{Surname}}</b></p> <i>{{Date}}</i> </div> <div> <p style="color: black;">{{Text}}</p> </div> </div> {{DeleteComment}} </div>`;
-							tmpCom = tmpCom.replaceAll("{{Name}}", comment.user.name)
+							var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <a href="../User/FreandPage?{{Login}}"><b>{{Name}} {{Surname}}</b></a> <i>{{Date}}</i> </div> <div> <p style="color: black;">{{Text}}</p> </div> </div> {{DeleteComment}} </div>`;
+							tmpCom = tmpCom.replaceAll("{{Login}}", comment.user.login)
+								.replaceAll("{{Name}}", comment.user.name)
 								.replaceAll("{{Surname}}", comment.user.surname)
 								.replaceAll("{{Date}}", comment.comment.date)
 								.replaceAll("{{Id}}", comment.comment.id)
@@ -64,7 +111,6 @@
 				}
 				//add in element: <post><post/>
 				elem.innerHTML = appHtml;
-				if (callback !== null) callback();
 				this.postLoaded();
 			});
 	}
