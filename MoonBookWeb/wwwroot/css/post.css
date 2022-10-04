@@ -5,6 +5,7 @@
     height: 100%;
     width: 100%;
     border: 2px double black;
+    border-radius: 20px;
 }
 
 #PostText {
@@ -149,3 +150,6 @@
         color: black;
         margin: 0;
     }
+        #CommentInfo i {
+            font-size: 7pt;
+        }

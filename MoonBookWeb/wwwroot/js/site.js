@@ -1,9 +1,9 @@
-﻿//function Post (props) {
-//	const [post, setPost] = React.useState([]);
+﻿//function Post(props) {
+//	const [Post, setPost] = React.useState([]);
 //	const [appHtml, setAppHtml] = React.useState([props.appHtml]);
 //	const Dislike = React.useRef();
 //	const Like = React.useRef();
-//	React.UseEffect(()=>{
+//	React.UseEffect(() => {
 //		fetch(props.API,
 //			{
 //				method: "GET",
@@ -19,56 +19,56 @@
 //					throw "showTopics: Backend data invalid";
 //				}
 //			});
-//	},[])
-//	const Reaction = (NewReact, idPost) =>{
+//	}, [])
+//	const Reaction = (NewReact, idPost) => {
 //		const formData = new FormData();
-//			formData.append("Reaction", NewReact);
-//			formData.append("IdPost", idPost);
-//			fetch("/api/post", {
-//				method: "PUT",
-//				body: formData
-//			}).then(r => r.json()).then(j => {
-//				if (j.status == "Error") {
-//					throw "Post.Reactions: reacnion invalid";
-//				} else {
-//					Dislike.current.value = j.reactDislike;
-//					Like.current.value = j.reactLike;
-//				}
-//			})
+//		formData.append("Reaction", NewReact);
+//		formData.append("IdPost", idPost);
+//		fetch("/api/post", {
+//			method: "PUT",
+//			body: formData
+//		}).then(r => r.json()).then(j => {
+//			if (j.status == "Error") {
+//				throw "Post.Reactions: reacnion invalid";
+//			} else {
+//				Dislike.current.value = j.reactDislike;
+//				Like.current.value = j.reactLike;
+//			}
+//		})
 //	}
 //	return <>
 //		{appHtml !== ""}
-//		<div> {Post.map( post => 
-//		<div class="Post" id="{post.message.post.post.id}">
+//		<div> {Post.map(post =>
+//			<div class="Post" id="{post.message.post.post.id}">
 //				<div id="PostInfo">
-//					<img id="PostUserPhoto" src="/img/{(post.message.post.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : post.message.post.user.photoName)}">
-//						<p id="PostUserName">
-//							<a href="../User/FreandPage?{post.message.post.user.login}"><b>{ post.message.post.user.name } { post.message.post.user.surname }</b></a><br>
-//								<i>{post.message.post.post.date}</i>
-//						</p>
-//						{(post.message.post.user.id !== post.user ? "" : `<img id="PostDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`)}
-//						{(post.message.post.user.id !== post.user ? "" : `<img id="PostUpdate" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>`)}
+//					<img id="PostUserPhoto" src="/img/{(post.message.post.user.photoName == null ? " android_contacts_FILL0_wght400_GRAD0_opsz48.png" : post.message.post.user.photoName)}">
+//					<p id="PostUserName">
+//						<a href="../User/FreandPage?{post.message.post.user.login}"><b>{post.message.post.user.name} {post.message.post.user.surname}</b></a><br>
+//							<i>{post.message.post.post.date}</i>
+//					</p>
+//					{(post.message.post.user.id !== post.user ? "" : `<img id="PostDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`)}
+//					{(post.message.post.user.id !== post.user ? "" : `<img id="PostUpdate" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>`)}
 //				</div>
 //				<div>
 //					<p id="PostTitle"><b>{post.message.post.post.title}</b></p>
 //					{(post.message.post.post.image == null ? "" : `<img id="PostImg" src="/img_post/${post.message.post.post.image}" />`)}
 //					<p class="PostText" id="PostText">{post.message.post.post.text}</p>
 //				</div>
-//				<comments id="Comment"> {post.message.comment.map(comment => 
-//					<div class="CommentUser" id="{comment.comment.id}"> 
-//						<div> 
-//							<img id="PhotoComment" src="/img/{(comment.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.user.photoName)}"/> 
-//						</div> 
-//						<div style="width: 100%;"> 
-//							<div id="CommentInfo"> 
-//								<a href="../User/FreandPage?{comment.user.login}"><b>{comment.user.name} {comment.user.surname}</b></a> 
-//								<i>{comment.comment.date}</i> 
-//							</div> 
-//							<div> 
-//								<p style="color: black;">{comment.comment.text}</p> 
-//							</div> 
-//						</div> 
-//						{(comment.comment.idUser !== post.user ? "" : `<img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`)} 
+//				<comments id="Comment"> {post.message.comment.map(comment =>
+//					<div class="CommentUser" id="{comment.comment.id}">
+//						<div>
+//							<img id="PhotoComment" src="/img/{(comment.user.photoName == null ? " android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.user.photoName)}"/>
+//						</div>
+//						<div style="width: 100%;">
+//							<div id="CommentInfo">
+//								<a href="../User/FreandPage?{comment.user.login}"><b>{comment.user.name} {comment.user.surname}</b></a>
+//								<i>{comment.comment.date}</i>
+//							</div>
+//							<div>
+//								<p style="color: black;">{comment.comment.text}</p>
+//							</div>
+//						</div>
+//						{(comment.comment.idUser !== post.user ? "" : `<img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`)}
 //					</div>)}
 //				</comments>
 //				<div id="PostComment">
@@ -86,14 +86,11 @@
 //						<img id="SmailImg" src="/icons/mood_FILL0_wght400_GRAD0_opsz48.png" />
 //						<num ref="Like" id="Like">{post.message.post.post.like}</num>
 //					</button>
-//				</div>
-//			</div>)}	
+//				</div>)}
+//			</div>
 //		</div>
 //	</>
 //}
-//ReactDOM.render(
-//	<Post post= , appHtml="" />,
-//	document.querySelector("post"));
 
 class Posts {
 	constructor(API) {

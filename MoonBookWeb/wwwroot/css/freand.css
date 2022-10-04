@@ -39,6 +39,7 @@
     display: block;
     width: 250px;
     border: 2px double black;
+    border-radius: 10px;
 }
 
 #FreandList {
@@ -49,7 +50,8 @@
     margin: 1%;
     background-color: #08206c;
     width: 250px;
-    height: 25px
+    height: 25px;
+    border-radius: 7px;
 }
 #FreandFreands {
     margin: 1%;
@@ -57,6 +59,7 @@
     border: 2px double black;
     display: flex;
     flex-wrap: wrap;
+    border-radius: 10px;
 }
 #FreandFreandsPhoto {
     border: 2px double black;

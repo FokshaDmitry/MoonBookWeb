@@ -2,25 +2,30 @@
     var err = ViewData["errlog"] as String[];
     var user = ViewData["AuthUser"] as User;
 }
-@if(user == null)
-{
-    <div>
-        <form action="/Login/Login" method="post" enctype="application/x-www-form-urlencoded">
-        <p>Login:    <p/><input type="text"  name="Login"/>
-            @if(!String.IsNullOrEmpty(err?[9])) @err[9]
-            @if(!String.IsNullOrEmpty(err?[11])) @err[11]
-        <p>Password: <p/><input type="password" name="Password" />
-            @if(!String.IsNullOrEmpty(err?[10])) @err[10]
-            @if(!String.IsNullOrEmpty(err?[12])) @err[12] 
-            <br/>
-        <button>Login</button>
-        </form>
-        <button onclick="location='/Login/Registration'">Rigistration</button>
-
-    </div>
-}
-else
-{
-    <h1>@user.Name @user.Surname</h1>
-}
-
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+<div class="Login">
+    <img class="Logo" src="/icons/M.png" />
+    @if(user == null)
+    {
+        <div class="Form">
+            <form action="/Login/Login" method="post" enctype="application/x-www-form-urlencoded">
+            <p>Login:    <p/><input type="text"  name="Login"/>
+                @if(!String.IsNullOrEmpty(err?[9])) @err[9]
+                @if(!String.IsNullOrEmpty(err?[11])) @err[11]
+            <p>Password: <p/><input type="password" name="Password" />
+                @if(!String.IsNullOrEmpty(err?[10])) @err[10]
+                @if(!String.IsNullOrEmpty(err?[12])) @err[12] 
+                <br/>
+                <div class="Buttons">
+                    <button type="submit">Login</button>
+                    <button type="button" onclick="location='/Login/Registration'">Rigistration</button>
+                </div>
+            </form>
+    
+        </div>
+    }
+    else
+    {
+        <h1>@user.Name @user.Surname</h1>
+    }
+</div>

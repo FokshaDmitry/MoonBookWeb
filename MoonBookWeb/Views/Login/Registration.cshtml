@@ -1,25 +1,48 @@
 ﻿@{
     var err = ViewData["err"] as String[];
 }
-<h1>
-    Registration User
-</h1>
-<form action="/Login/RegUser" method="post" enctype="multipart/form-data">
-   <p>Name:             <p/> <input type="text" name="Name" />
-       @if (!String.IsNullOrEmpty(err?[1])) @err[1]
-   <p>Surname:          <p/> <input type="text" name="Surname" /> 
-       @if (!String.IsNullOrEmpty(err?[2])) @err[2]
-   <p>Date of Bith:     <p/> <input type="date" name="DateOfBith"/>
-       @if (!String.IsNullOrEmpty(err?[3])) @err[3]
-   <p>Login:            <p/> <input type="text" name="Login" /> 
-       @if (!String.IsNullOrEmpty(err?[4])) @err[4]
-   <p>Email:            <p/> <input type="email" name="Email" /> 
-       @if (!String.IsNullOrEmpty(err?[5])) @err[5]
-   <p>Password:         <p/> <input type="password" name="Password" /> 
-       @if (!String.IsNullOrEmpty(err?[6])) @err[6]
-   <p>Confirm password: <p/> <input type="password" name="ConfirmPass" /> 
-       @if (!String.IsNullOrEmpty(err?[7])) @err[7]
-   <p>Avatar:           <p/> <input type="file" name="Avatar"/> <br /> 
-       @if (!String.IsNullOrEmpty(err?[8])) @err[8]
-   <button>Registration </button>
-</form>
+<link rel="stylesheet" href="~/css/registration.css" asp-append-version="true" />
+<div class="Regestration">
+    <h1 class="Title">
+        Registration User
+    </h1>
+    <div class="Form">
+        <form action="/Login/RegUser" method="post" enctype="multipart/form-data">
+            <input id="Avatar" type="file" name="Avatar" /> <br />
+            <label id="AvatarImg" for="Avatar">
+                <img src="/icons/android_contacts_FILL0_wght400_GRAD0_opsz48.png" />
+            </label>
+            @if (!String.IsNullOrEmpty(err?[8]))
+                @err[8]
+       <p>Name:             <p/> <input type="text" name="Name" />
+           @if (!String.IsNullOrEmpty(err?[1])) @err[1]
+       <p>Surname:          <p/> <input type="text" name="Surname" /> 
+           @if (!String.IsNullOrEmpty(err?[2])) @err[2]
+       <p>Date of Bith:     <p/> <input type="date" name="DateOfBith"/>
+           @if (!String.IsNullOrEmpty(err?[3])) @err[3]
+       <p>Login:            <p/> <input type="text" name="Login" /> 
+           @if (!String.IsNullOrEmpty(err?[4])) @err[4]
+       <p>Email:            <p/> <input type="email" name="Email" /> 
+           @if (!String.IsNullOrEmpty(err?[5])) @err[5]
+       <p>Password:         <p/> <input type="password" name="Password" /> 
+           @if (!String.IsNullOrEmpty(err?[6])) @err[6]
+        <p>Confirm password: <p /> <input type="password" name="ConfirmPass" /> 
+           @if (!String.IsNullOrEmpty(err?[7])) @err[7]
+
+       <br />
+       <button>Registration </button>
+    </form>
+    </div>
+</div>
+    <script>
+        var avatar = document.getElementById("Avatar");
+        var avatarImg = document.querySelector("#AvatarImg img");
+        avatar.addEventListener("change", () => {
+            let f = avatar.files[0];
+            if (f) {
+                avatarImg.src = URL.createObjectURL(f);
+                localStorage.setItem('myImage', avatarImg.src);
+            }
+            avatarImg.src = localStorage.getItem('myImage')
+        })
+    </script>

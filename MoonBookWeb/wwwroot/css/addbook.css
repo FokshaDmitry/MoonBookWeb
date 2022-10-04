@@ -1,0 +1,15 @@
+﻿.Title {
+    color: black;
+}
+.AddBook {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.CoverImg img {
+    border: 2px double black;
+    cursor: pointer;
+    width: 120px;
+    height: 200px;
+}

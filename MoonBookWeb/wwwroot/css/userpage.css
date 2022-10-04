@@ -24,6 +24,7 @@
     width: 100%;
     margin-bottom: 20px;
     height: 100px;
+    overflow: overlay;
 }
 
 .Book {
@@ -79,6 +80,7 @@
     width: 100%;
     margin-bottom: 20px;
     height: auto;
+    border-radius: 20px;
 }
 
 #Text {
@@ -86,6 +88,7 @@
     height: auto;
     border: 3px double gray;
     border-radius: 25px;
+    margin-top: 1%;
 }
 
 #ImagePost {
@@ -116,10 +119,12 @@
     margin: 1%;
     display: flex;
     flex-wrap: wrap;
+    border-radius: 10px;
 }
 #TitleFreand {
     margin: 1%;
     background-color: #08206c;
     width: 250px;
-    height: 25px
+    height: 25px;
+    border-radius: 7px;
 }

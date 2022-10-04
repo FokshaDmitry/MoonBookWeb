@@ -1,0 +1,29 @@
+﻿.Title{
+    color:black;
+}
+.Regestration {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+.Form{
+
+}
+    .Form button {
+        margin-top: 10%;
+    }
+#Avatar {
+    display: none;
+}
+#AvatarImg {
+    margin-left: 5%;
+}
+    #AvatarImg img {
+        border: 2px double black;
+        width: 150px;
+        height: 150px;
+        border-radius: 80px;
+        cursor: pointer;
+    }
