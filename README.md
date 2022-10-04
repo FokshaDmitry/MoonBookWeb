@@ -26,3 +26,8 @@
 <b>Freand page and his post.</b>
 
 ![image](https://user-images.githubusercontent.com/99391531/193824000-e94a7aef-73c2-4ca6-b4e6-8e30fe165557.png)
+
+<b>Add Book. You can add the book yourself or using .epup file</b>
+
+![image](https://user-images.githubusercontent.com/99391531/193824337-16d7e899-4f45-495f-9b02-f806917f00b7.png)
+
