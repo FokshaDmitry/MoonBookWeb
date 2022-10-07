@@ -43,15 +43,15 @@ body {
     font-family: Arial, sans-serif;
     font-size: 10pt;
 }
-.UserMenu a {
-    display: block; 
-    padding: 5px; 
-    text-decoration: none; 
-    color: #666; 
-    border: 1px solid #ccc;
-    background-color: #f0f0f0; 
-    border-bottom: none;
-}
+    .UserMenu a {
+        display: block;
+        padding: 5px;
+        text-decoration: none;
+        color: #666;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        background-color: #313574;
+    }
 #search_user_text{
     height: 25px;
 }
@@ -116,4 +116,5 @@ body {
     display: flex;
     justify-content: center;
     padding: 30px;
+    border-radius: 20px;
 }

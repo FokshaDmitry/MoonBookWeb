@@ -3,7 +3,15 @@
     max-height: 215px;
     overflow: overlay;
 }
-
+#TextColor {
+    margin-right: 1%;
+}
+#BackgrountColor {
+    margin-right: 1%;
+}
+#size {
+    margin-right: 1%;
+}
 #AddBookLibrary {
     background-color: transparent;
     border: none;
@@ -17,7 +25,8 @@
     margin: 1%;
     background-color: #08206c;
     width: 250px;
-    height: 25px
+    height: 25px;
+    border-radius: 7px;
 }
 
 #UserLibrary book {
@@ -34,6 +43,7 @@
     align-items: center;
     border: 2px double black;
     display: flex;
+    border-radius: 10px;
 }
 
     .BookItem img {
