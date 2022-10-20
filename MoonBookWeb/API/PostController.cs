@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MoonBookWeb.Models;
 using MoonBookWeb.Services;
 
 namespace MoonBookWeb.API
@@ -20,8 +21,16 @@ namespace MoonBookWeb.API
         [HttpGet]
         public object Get()
         {
-            var comment = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new {Comment = c, User = u});
-            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Where(p => p.Delete == Guid.Empty).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comment, p => p.post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
+            var comments = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u });
+            foreach (var comment in comments)
+            {
+                if (comment.Comment.Answer != Guid.Empty)
+                {
+                    var user = _context.Users.Find(comment.Comment.Answer);
+                    comment.Comment.Text = $"<a href='../User/FreandPage?{user?.Login}'>{user?.Name} {user?.Surname}</a>, {comment.Comment.Text}";
+                }
+            }
+            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Where(p => p.Delete == Guid.Empty).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comments, p => p.post.Id, c => c.Comment.idPost, (p, c) => new { Post = p, Comment = c });
             return new { status = "Ok", message = post, user = _sessionLogin.user.Id };
         }
         #endregion
@@ -75,26 +84,64 @@ namespace MoonBookWeb.API
             _context.SaveChanges();
             return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Like, reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Dislike };
         }
-        //Add comment
-        [HttpPut("{Comment}")]
-        public object Comment([FromForm] Comments comment)
+        //Update Post
+        [HttpPut("{Id}")]
+        public object Update(string Id, [FromBody] string text)
         {
-            if (comment != null)
+            if (string.IsNullOrEmpty(Id))
             {
-                comment.Id = Guid.NewGuid();
-                comment.idUser = _sessionLogin.user.Id;
-                comment.Date = DateTime.Now;
-                comment.Delete = Guid.Empty;
-                _context.Comments.Add(comment);
-                _context.SaveChanges();
+                return new { status = "Error", message = "Post dont found" };
             }
-            var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
-            return new { status = "Ok", message = responce };
+            Guid id = new Guid();
+            try
+            {
+                id = Guid.Parse(Id);
+            }
+            catch
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new { Status = "Error", message = "Invalid id format (GUID required)" };
+            }
+            var post = _context.Posts.Find(id);
+            if (post == null)
+            {
+                return new { status = "Error", message = "Post dont found" };
+            }
+            post.Text = text;
+            _context.SaveChanges();
+            return new { status = "Ok" };
+        }
+        //Update Comment
+        [HttpPut("comment/{Id}")]
+        public object UpdateComment(string Id, [FromBody] string text)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                return new { status = "Error", message = "Comment dont found" };
+            }
+            Guid id = new Guid();
+            try
+            {
+                id = Guid.Parse(Id);
+            }
+            catch
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new { Status = "Error", message = "Invalid id format (GUID required)" };
+            }
+            var comment = _context.Comments.Find(id);
+            if (comment == null)
+            {
+                return new { status = "Error", message = "Commrnt dont found" };
+            }
+            comment.Text = text;
+            _context.SaveChanges();
+            return new { status = "Ok" };
         }
         #endregion
 
         #region Post
-        //Vallidation and add current user
+        //Vallidation and add Post current user
         [HttpPost]
         public object Post([FromForm] Models.PostUserModel postUser)
         {
@@ -143,31 +190,35 @@ namespace MoonBookWeb.API
             }
 
         }
-        [HttpPost("{Id}")]
-        public object Update(string Id, [FromBody] string text)
+        //Add comment
+        [HttpPost("comment")]
+        public object Comment([FromForm] AddComentModel commentModel)
         {
-            if(string.IsNullOrEmpty(Id))
+            
+            if (commentModel != null)
             {
-                return new { status = "Error", message = "Post dont found" };
+                var AnswerUser = _context.Users.Where(u => u.Login == commentModel.Answer).FirstOrDefault();
+                Comments comment = new Comments();
+                comment.Id = Guid.NewGuid();
+                comment.idUser = _sessionLogin.user.Id;
+                comment.Date = DateTime.Now;
+                comment.Delete = Guid.Empty;
+                comment.Text = commentModel.Text;
+                comment.idPost = commentModel.idPost;
+                comment.Answer = AnswerUser == null ? Guid.Empty : AnswerUser.Id; 
+                _context.Comments.Add(comment);
+                _context.SaveChanges();
+                var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
+                if(responce?.comment.Answer != Guid.Empty)
+                {
+                    responce.comment.Text = $"<a href='../User/FreandPage?{AnswerUser?.Login}'>{AnswerUser?.Name} {AnswerUser?.Surname}</a>, {responce.comment.Text}";
+                }
+                return new { status = "Ok", message = responce };
             }
-            Guid id = new Guid();
-            try
+            else
             {
-                 id = Guid.Parse(Id);
+                return new { status = "Ok", message = "Bad Request" };
             }
-            catch
-            {
-                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                return new { Status = "Error", message = "Invalid id format (GUID required)" };
-            }
-            var post = _context.Posts.Find(id);
-            if (post == null)
-            {
-                return new { status = "Error", message = "Post dont found" };
-            }
-            post.Text = text;
-            _context.SaveChanges();
-            return new { status = "Ok" };
         }
         #endregion
 
@@ -200,6 +251,33 @@ namespace MoonBookWeb.API
                     post.Delete = delete.Id;
                     _context.Posts.Update(post);
                     //Add delete post into DeleteList
+                    _context.DeleteList.Add(delete);
+                    _context.SaveChanges();
+                    return new { status = "Ok", message = "Ok" };
+                }
+                return new { status = "Error", message = "Post dont found" };
+            }
+            return new { status = "Error", message = "Id is empty" };
+        }
+        //delete comment current user
+        [HttpDelete("comment/{id}")]
+        public object DeleteComment(string id)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                var Id = Guid.Parse(id);
+                var comment = _context.Comments.Find(Id);
+                if (comment != null)
+                {
+                    var delete = new DeleteList();
+                    delete.Id = Guid.NewGuid();
+                    delete.idUser = _sessionLogin.user.Id;
+                    delete.Date = DateTime.Now;
+                    delete.idElement = comment.Id;
+                    //Add id on deletelist
+                    comment.Delete = delete.Id;
+                    _context.Comments.Update(comment);
+                    //Add delete comment into DeleteList
                     _context.DeleteList.Add(delete);
                     _context.SaveChanges();
                     return new { status = "Ok", message = "Ok" };

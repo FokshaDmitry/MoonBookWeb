@@ -10,6 +10,7 @@
 
 #PostText {
     color: black;
+    margin-left: 1%;
 }
 #TextComment {
     margin-left: 1%;
@@ -59,6 +60,7 @@
     color: black;
     display: block;
     font-size: 25px;
+    margin-left: 1%;
 }
 
 #PostImg {
@@ -131,7 +133,32 @@
     height: 14px;
     cursor: pointer;
 }
-
+#EditComment {
+    float: right;
+    width: 14px;
+    margin: 5px;
+    height: 14px;
+    cursor: pointer;
+}
+#AnswerComment {
+    float: right;
+    width: 14px;
+    margin: 5px;
+    height: 14px;
+    cursor: pointer;
+}
+#CommentAnswerVeiw {
+    display: flex;
+    width: 100%;
+    height: auto;
+    visibility:hidden;
+}
+#CloseAnswer {
+    margin-left: auto;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
 #PhotoComment {
     border: 2px double black;
     vertical-align: top;

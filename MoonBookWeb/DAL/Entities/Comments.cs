@@ -11,6 +11,7 @@ namespace MoonBookWeb
     {
         public Guid Id { get; set; }
         public string? Text { get; set; }
+        public Guid Answer { get; set; }
         public DateTime Date { get; set; }
         public Guid idUser { get; set; }
         public Guid idPost { get; set; }

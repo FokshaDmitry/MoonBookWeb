@@ -18,28 +18,24 @@ let size = document.getElementById("size");
 let BackgrountColor = document.getElementById("BackgrountColor");
 let TextColor = document.getElementById("TextColor");
 let Interval = document.getElementById("Interval");
+
 Interval.addEventListener("change", () => {
-	let textContent = document.querySelectorAll("#TextContent p")
-	for (let text of textContent) {
-		text.style.lineHeight = `${Interval.value}`;
-	}
+	document.querySelectorAll("#TextContent").style.lineHeight = `${Interval.value}`;
 })
+
 BackgrountColor.addEventListener("change", () => {
 	let textContent = document.querySelector("#TextContent")
 	textContent.style.backgroundColor = BackgrountColor.value;
 })
+
 TextColor.addEventListener("change", () => {
-	let textContent = document.querySelectorAll("#TextContent p")
-	for (let text of textContent) {
-		text.style.color = TextColor.value;
-	}
+	document.querySelector("#TextContent").style.color = TextColor.value;
 })
+
 size.addEventListener("change", () => {
-	let textContent = document.querySelectorAll("#TextContent p")
-	for (let text of textContent) {
-		text.style.fontSize = `${size.value}px`;
-	}
+	document.querySelectorAll("#TextContent").style.fontSize = `${size.value}px`;
 })
+
 async function loadPosition() {
 	for (let radio of document.querySelectorAll("#RadioButtonGroup input[type=radio]")) {
 		radio.onclick = Position;
@@ -47,27 +43,18 @@ async function loadPosition() {
 }
 //Text Orintations
 function Position(e) {
-	let textContent = document.querySelectorAll("#TextContent p")
 	if (e.target.value == 1) {
-		for (let text of textContent) {
-			text.style.textAlign = `center`;
-		}
+		document.querySelector("#TextContent").style.textAlign = `center`;
 	}
 	if (e.target.value == 2) {
-		for (let text of textContent) {
-			text.style.textAlign = `right`;
-		}
+		document.querySelector("#TextContent").style.textAlign = `right`;
 	}
 	if (e.target.value == 3) {
-		for (let text of textContent) {
-			text.style.textAlign = `left`;
-		}
+		document.querySelector("#TextContent").style.textAlign = `left`;
 	}
 	if (e.target.value == 4) {
-		for (let text of textContent) {
-			text.style.textAlign = `justify`;
-		}
-    }
+		document.querySelector("#TextContent").style.textAlign = `justify`;
+	}
 }
 
 addbook.addEventListener("click", () => {
@@ -86,6 +73,7 @@ addbook.addEventListener("click", () => {
 			}
 		});
 })
+
 function loadElement(elem, Query) {
 	fetch(`/api/book`,
 		{
@@ -102,6 +90,7 @@ function loadElement(elem, Query) {
 			}
 		});
 }
+
 function showElementBooks(elem, j) {
 	fetch("/tmpl/bookitem.html")
 		.then(r => r.text())
