@@ -111,7 +111,6 @@ function showElementFreand(elem, j) {
 		appHtml += tmp;
 	}
 	elem.innerHTML = appHtml;
-	freandLoaded();
 
 }
 // Add event book 

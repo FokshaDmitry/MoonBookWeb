@@ -45,16 +45,35 @@
 					let appHtmlComment = "";
 					if (j.user !== null && j.user !== "" && j.user !== undefined) {
 						for (let comment of post.comment) {
-							var tmpCom = `<div class="CommentUser" id="{{Id}}"> <div> <img id="PhotoComment" src="/img/{{PhotoName}}"/> </div> <div style="width: 100%;"> <div id="CommentInfo"> <a id="CommentAuthor" href="../User/FreandPage?{{Login}}"><b>{{Name}} {{Surname}}</b></a> <i>{{Date}}</i> </div> <div> <p class="CommentText" style="color: black;">{{Text}}</p> </div> </div> <img id="AnswerComment" src="../icons/subdirectory_arrow_right_FILL0_wght400_GRAD0_opsz48.png"/> {{EditComment}} {{DeleteComment}} </div>`;
-							tmpCom = tmpCom.replaceAll("{{Login}}", comment.user.login)
-								.replaceAll("{{Name}}", comment.user.name)
-								.replaceAll("{{Surname}}", comment.user.surname)
-								.replaceAll("{{Date}}", comment.comment.date)
-								.replaceAll("{{Id}}", comment.comment.id)
-								.replaceAll("{{PhotoName}}", (comment.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.user.photoName))
-								.replaceAll("{{Text}}", (comment.comment.text == null ? "" : comment.comment.text))
-								.replaceAll("{{DeleteComment}}", (comment.comment.idUser !== j.user ? "" : `<img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`))
-								.replaceAll("{{EditComment}}", (comment.comment.idUser !== j.user ? "" : `<img id="EditComment" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>`))
+							var tmpCom = `<div class="CommentUser" id="{{Id}}"> 
+											<div>
+												<img id="PhotoComment" src="/img/{{PhotoName}}"/>
+											</div>
+											<div style="width: 100%;">
+												<div id="CommentInfo">
+													<a id="CommentAuthor" href="../User/FreandPage?{{Login}}">
+														<b>{{Name}} {{Surname}}</b>
+													</a>
+													<i>{{Date}}</i>
+											</div>
+											<div>
+												<p class="CommentText" style="color: black;">{{Answer}} {{Text}}</p>
+											</div>
+											</div>
+											<img id="AnswerComment" src="../icons/subdirectory_arrow_right_FILL0_wght400_GRAD0_opsz48.png"/>
+											{{EditComment}}
+											{{DeleteComment}}
+										  </div>`;
+							tmpCom = tmpCom.replaceAll("{{Login}}", comment.comment.user.login)
+								.replaceAll("{{Name}}", comment.comment.user.name)
+								.replaceAll("{{Surname}}", comment.comment.user.surname)
+								.replaceAll("{{Date}}", comment.comment.comment.date)
+								.replaceAll("{{Id}}", comment.comment.comment.id)
+								.replaceAll("{{PhotoName}}", (comment.comment.user.photoName === null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.comment.user.photoName))
+								.replaceAll("{{Text}}", (comment.comment.comment.text === null ? "" : comment.comment.comment.text))
+								.replaceAll("{{DeleteComment}}", (comment.comment.comment.idUser !== j.user ? "" : `<img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`))
+								.replaceAll("{{EditComment}}", (comment.comment.comment.idUser !== j.user ? "" : `<img id="EditComment" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>`))
+								.replaceAll("{{Answer}}", (comment.userAnswer.length === 0 ? "" : `<a href="../User/FreandPage?${comment.userAnswer[0].login}">${comment.userAnswer[0].name} ${comment.userAnswer[0].surname}</a>, `))
 							appHtmlComment += tmpCom;
 						}
 						tmp = tmp.replace("{{Comments}}", appHtmlComment);
@@ -127,14 +146,14 @@
 										 <div>
 										 	<img id="PhotoComment" src="/img/{{PhotoName}}"/>
 										 </div>
-										 <div>
+										 <div style="width:100%;">
 										 	<div id="CommentInfo">
 										 		<p>
 										 			<b>{{Name}} {{Surname}}</b>
 										 		</p> <i>{{Date}}</i>
 										 	</div>
 										 	<div>
-										 		<p class="CommentText">{{Text}}</p>
+										 		<p class="CommentText">{{Answer}} {{Text}}</p>
 										 	</div>
 										 </div>
 										 <img id="AnswerComment" src="../icons/subdirectory_arrow_right_FILL0_wght400_GRAD0_opsz48.png"/>
@@ -147,6 +166,7 @@
 							.replaceAll("{{Id}}", j.message.comment.id)
 							.replaceAll("{{PhotoName}}", (j.message.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.message.user.photoName))
 							.replaceAll("{{Text}}", (j.message.comment.text == null ? "" : j.message.comment.text))
+							.replaceAll("{{Answer}}", (j.answer === null ? "" : `<a href="../User/FreandPage?${j.answer.login}">${j.answer.name} ${j.answer.surname}</a>, `))
 						comment.innerHTML += tmpCom;
 						TextComment.value = "";
 					}
@@ -270,7 +290,6 @@
 			commentAnswer.style.visibility = "visible";
 			commentAnswer.querySelector("a").setAttribute("href", e.target.previousElementSibling.querySelector("#CommentAuthor").getAttribute("href"))
 			textComment.focus();
-			textComment.value = e.target.closest("#CommentAuthor").textContent;
 		}
 		if (e.target.id === "CloseAnswer") {
 			let commentAnswer = e.currentTarget.querySelector("#CommentAnswerVeiw");
