@@ -9,7 +9,7 @@
 
 <b>User Page. Available after registration.</b>
 
-![image](https://user-images.githubusercontent.com/99391531/193822884-e74d1535-c2a5-40c4-b55b-6b12e785c542.png)
+![image](https://user-images.githubusercontent.com/99391531/197336314-4fa0af2b-2c2f-4e78-9668-c751ac9ba25b.png)
 
 <b>User frends. All current posts of added friends are displayed on the starting position.</b>
 
@@ -22,6 +22,10 @@
 <b>Literature reading interface.</b>
 
 ![image](https://user-images.githubusercontent.com/99391531/193823790-d7188ead-b977-4cd4-916a-e4c2fc253d6e.png)
+
+<b>Comments on post</b>
+
+![image](https://user-images.githubusercontent.com/99391531/197336373-376af693-b425-4268-b54b-4b70d75d9658.png)
 
 <b>Freand page and his post.</b>
 
