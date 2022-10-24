@@ -245,7 +245,8 @@
 		//Edit Comment
 		if (e.target.id === "EditComment") {
 			const post = e.target.closest(".CommentUser");
-			let text = post.querySelector(".CommentText");
+			let textTmpA = post.querySelector(".CommentText a");
+			let text = post.querySelector(".CommentText")
 			let idComment = post.getAttribute("id");
 			if (text.getAttribute("contenteditable")) {  // alredy begin edit
 				e.target.style.color = "orange";
@@ -262,14 +263,13 @@
 							headers: {
 								"Content-Type": "application/json"
 							},
-							body: JSON.stringify(text.innerText)
+							body: JSON.stringify(textTmpA === null ? text.innerText : text.innerText.replaceAll(textTmpA.innerText + ", ", ""))
 						}).then(r => r.json())
 							.then(j => {
-								console.log(j);
-								if (j.status == "Error") {
+								if (j.status === "Error") {
 									alert(j.message);
-									p.innerText = p.savedContent;
-								}
+									text.innerText = text.savedContent;
+								} 
 							});
 
 					}

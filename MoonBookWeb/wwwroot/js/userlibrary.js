@@ -20,20 +20,22 @@ let TextColor = document.getElementById("TextColor");
 let Interval = document.getElementById("Interval");
 
 Interval.addEventListener("change", () => {
-	document.querySelectorAll("#TextContent").style.lineHeight = `${Interval.value}`;
+	document.querySelector("#TextContent").style.lineHeight = `${Interval.value}`;
 })
 
 BackgrountColor.addEventListener("change", () => {
-	let textContent = document.querySelector("#TextContent")
+	let textContent = document.querySelector("#BackgrountColorText")
 	textContent.style.backgroundColor = BackgrountColor.value;
 })
 
 TextColor.addEventListener("change", () => {
-	document.querySelector("#TextContent").style.color = TextColor.value;
+	for (let color of document.querySelectorAll("#TextContent p")){
+		color.style.color = TextColor.value;
+    }
 })
 
 size.addEventListener("change", () => {
-	document.querySelectorAll("#TextContent").style.fontSize = `${size.value}px`;
+	document.querySelector("#TextContent").style.fontSize = `${size.value}px`;
 })
 
 async function loadPosition() {
