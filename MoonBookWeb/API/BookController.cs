@@ -39,10 +39,10 @@ namespace MoonBookWeb.API
             catch
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                return new { Status = "Error", message = "Invalid id format (GUID required)" };
+                return new { status = "Error", message = "Invalid id format (GUID required)" };
             }
             var book = _context.Books.Find(id);
-            var follow = _context.SubBooks.Where(s => s.idUser == _sessionLogin.user.Id).Select(s => s.idBook).Contains(book.Id);
+            var follow = _context.SubBooks.Where(s => s.idUser == _sessionLogin.user.Id).Select(s => s.idBook).Contains(book?.Id);
             if (book == null)
             {
                 return new { status = "Error", message = "Book don't find" };

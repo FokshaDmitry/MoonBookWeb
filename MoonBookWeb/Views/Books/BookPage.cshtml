@@ -1,0 +1,33 @@
+﻿<link rel="stylesheet" href="~/css/bookpage.css" asp-append-version="true" />
+<div class="BookPage">
+    <div class="BookInfo">
+        <div class="BookView">
+            <img class="CoverBook" id="CoverBook" />
+            <button id="Read">
+                <img src="/icons/auto_stories_FILL0_wght400_GRAD0_opsz48.png"/>
+                Read
+                </button>
+            <button id="Follow"> </button>
+        </div>
+        <div class="Info">
+            <h2 class="Title" id="Title" style="color: black;"></h2>
+            <p id="Author">Author: </p>
+            <p id="Genry">Genry: </p>
+            <p id="Date">Date: </p>
+        </div>
+    </div>
+    <div class="BookComments">
+        <div style="border: 2px double black; width: 65%; border-radius: 20px; margin: 1%;">
+            <div class="SendText">
+                <textarea id="TextComment" class="BookTextComment" aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" cols="4" wrap="soft"></textarea>
+                <button class="Post" id="Send">
+                    <img src="/icons/send_FILL0_wght400_GRAD0_opsz48.png">
+                </button>
+                <div class="Comments">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/bookpage.js"></script>

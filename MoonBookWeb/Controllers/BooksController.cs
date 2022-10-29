@@ -22,7 +22,7 @@ namespace MoonBookWeb.Controllers
 
         public IActionResult Index()
         {
-            String err = HttpContext.Session.GetString("AddBookErr");
+            String err = HttpContext.Session.GetString("AddBookErr")!;
             if (_sessionLogin.user != null)
             {
                 ViewData["AuthUser"] = _sessionLogin?.user;
@@ -41,6 +41,17 @@ namespace MoonBookWeb.Controllers
                 return View();
             }
             return Redirect("/Login/Index");
+        }
+        public IActionResult BookPage()
+        {
+            //if (_sessionLogin.user != null)
+            //{
+            //    ViewData["UserLibrary"] = "Ok";
+            //    ViewData["AuthUser"] = _sessionLogin?.user;
+            //}
+            //return Redirect("/Login/Index");
+            return View();
+
         }
         //Add book with ebub file. Parse file and return info
         [HttpPut]
@@ -73,7 +84,7 @@ namespace MoonBookWeb.Controllers
             {
                 String CoverName = "";
                 
-                byte[] covertmp = JsonSerializer.Deserialize<byte[]>(HttpContext.Session.GetString("CoverImg"));
+                byte[] covertmp = JsonSerializer.Deserialize<byte[]>(HttpContext.Session.GetString("CoverImg")!)!;
 
                 if (covertmp != null)
                 {

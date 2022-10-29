@@ -84,5 +84,5 @@ async function bookLoaded() {
 }
 function Read(e) {
 	let idBook = e.currentTarget.getAttribute("id")
-	window.location.href = `/Books/UserLibrary?${idBook}`;
+	window.location.href = `/Books/BookPage?${idBook}`;
 }

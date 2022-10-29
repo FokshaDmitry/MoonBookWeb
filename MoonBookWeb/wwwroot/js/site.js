@@ -130,7 +130,7 @@
 			if (TextComment.value !== "") {
 				const formData = new FormData();
 				formData.append("Text", TextComment.value);
-				formData.append("idPost", idPost);
+				formData.append("id", idPost);
 				formData.append("Answer", answer)
 				fetch("/api/post/comment", {
 					method: "POST",

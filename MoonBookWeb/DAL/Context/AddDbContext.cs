@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MoonBookWeb.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace MoonBookWeb
         public DbSet<Books> Books { get; set; }
         public DbSet<SubBook> SubBooks { get; set; }
         public DbSet<DeleteList> DeleteList { get; set; }
+        public DbSet<CommentsBook> CommentsBooks { get; set; }
         public AddDbContext(DbContextOptions<AddDbContext> options) : base(options)
         {
             //include or create

@@ -189,15 +189,15 @@ namespace MoonBookWeb.API
             
             if (commentModel != null)
             {
-                var AnswerUser = _context.Users.Where(u => u.Login == commentModel.Answer).FirstOrDefault();
+                var AnswerUser = _context.Users.Where(u => u.Login == commentModel.Answer).Select(u => u.Id).FirstOrDefault();
                 Comments comment = new Comments();
                 comment.Id = Guid.NewGuid();
                 comment.idUser = _sessionLogin.user.Id;
                 comment.Date = DateTime.Now;
                 comment.Delete = Guid.Empty;
                 comment.Text = commentModel.Text;
-                comment.idPost = commentModel.idPost;
-                comment.Answer = AnswerUser == null ? Guid.Empty : AnswerUser.Id; 
+                comment.idPost = commentModel.id;
+                comment.Answer = AnswerUser == null ? Guid.Empty : AnswerUser; 
                 _context.Comments.Add(comment);
                 _context.SaveChanges();
                 var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
