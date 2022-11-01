@@ -62,7 +62,7 @@ function searchFreands(searchText) {
 			body: null
         }).then(r => r.json()).then(j => {
 				if (j.status == "Ok") {
-					showElement(freand, j.message)
+					showElementFreand(freand, j.message)
 				}
 				else {
 					alert(j.message);

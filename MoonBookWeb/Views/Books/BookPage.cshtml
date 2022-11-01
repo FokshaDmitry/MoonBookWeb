@@ -1,4 +1,5 @@
 ﻿<link rel="stylesheet" href="~/css/bookpage.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/comment.css" asp-append-version="true" />
 <div class="BookPage">
     <div class="BookInfo">
         <div class="BookView">
@@ -19,13 +20,20 @@
     <div class="BookComments">
         <div style="border: 2px double black; width: 65%; border-radius: 20px; margin: 1%;">
             <div class="SendText">
-                <textarea id="TextComment" class="BookTextComment" aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" cols="4" wrap="soft"></textarea>
-                <button class="Post" id="Send">
-                    <img src="/icons/send_FILL0_wght400_GRAD0_opsz48.png">
-                </button>
-                <div class="Comments">
-
+                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <div id="CommentAnswerVeiw">
+                        <img id="AnswerComment" src="../icons/subdirectory_arrow_right_FILL0_wght400_GRAD0_opsz48.png" />
+                        <a id="AnserUser"><p></p></a>
+                        <img id="CloseAnswer" src="../icons/close_FILL0_wght400_GRAD0_opsz48.png" />
+                    </div>
+                    <textarea id="TextComment" class="BookTextComment" aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" cols="4" wrap="soft"></textarea>
+                    <button class="Post" id="Send">
+                        <img src="/icons/send_FILL0_wght400_GRAD0_opsz48.png">
+                    </button>
                 </div>
+                <comment>
+
+                </comment>
             </div>
         </div>
     </div>

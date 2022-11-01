@@ -132,7 +132,7 @@
 				formData.append("Text", TextComment.value);
 				formData.append("id", idPost);
 				formData.append("Answer", answer)
-				fetch("/api/post/comment", {
+				fetch("/api/comment", {
 					method: "POST",
 					body: formData
 				}).then(r => r.json()).then(j => {
@@ -148,9 +148,10 @@
 										 </div>
 										 <div style="width:100%;">
 										 	<div id="CommentInfo">
-										 		<p>
-										 			<b>{{Name}} {{Surname}}</b>
-										 		</p> <i>{{Date}}</i>
+										 		<a id="CommentAuthor" href="../User/FreandPage?{{Login}}">
+													<b>{{Name}} {{Surname}}</b>
+												</a> 
+												<i>{{Date}}</i>
 										 	</div>
 										 	<div>
 										 		<p class="CommentText">{{Answer}} {{Text}}</p>
@@ -160,7 +161,8 @@
 										 <img id="EditComment" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>
 										 <img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>
 									  </div>`;
-						tmpCom = tmpCom.replaceAll("{{Name}}", j.message.user.name)
+						tmpCom = tmpCom.replaceAll("{{Login}}", j.message.user.login)
+							.replaceAll("{{Name}}", j.message.user.name)
 							.replaceAll("{{Surname}}", j.message.user.surname)
 							.replaceAll("{{Date}}", j.message.comment.date)
 							.replaceAll("{{Id}}", j.message.comment.id)
@@ -191,7 +193,7 @@
 		if (e.target.id === "CommentDelete") {
 			let Comment = e.target.closest(".CommentUser");
 			let idComment = Comment.getAttribute('id');
-			fetch(`/api/post/comment/${idComment}`, {
+			fetch(`/api/comment/${idComment}`, {
 				method: "DELETE",
 				body: null
 			}).then(r => r.json()).then(j => {
@@ -257,8 +259,7 @@
 					// if change
 					if (confirm("Save change?")) {
 						// if yes, send for server
-
-						fetch(`/api/post/comment/${idComment}`, {
+						fetch(`/api/comment/${idComment}`, {
 							method: "PUT",
 							headers: {
 								"Content-Type": "application/json"
@@ -271,7 +272,6 @@
 									text.innerText = text.savedContent;
 								} 
 							});
-
 					}
 				}
 			}

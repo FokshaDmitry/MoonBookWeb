@@ -63,6 +63,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
+    margin: 1%;
 }
 .Post img {
     width: 30px;

@@ -44,13 +44,12 @@ namespace MoonBookWeb.Controllers
         }
         public IActionResult BookPage()
         {
-            //if (_sessionLogin.user != null)
-            //{
-            //    ViewData["UserLibrary"] = "Ok";
-            //    ViewData["AuthUser"] = _sessionLogin?.user;
-            //}
-            //return Redirect("/Login/Index");
-            return View();
+            if (_sessionLogin.user != null)
+            {
+                ViewData["AuthUser"] = _sessionLogin?.user;
+                return View();
+            }
+            return Redirect("/Login/Index");
 
         }
         //Add book with ebub file. Parse file and return info
