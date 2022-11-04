@@ -18,14 +18,28 @@ let size = document.getElementById("size");
 let BackgrountColor = document.getElementById("BackgrountColor");
 let TextColor = document.getElementById("TextColor");
 let Interval = document.getElementById("Interval");
+let textContent = document.getElementById("TextContent");
 
+textContent.addEventListener("mouseup", (e) => {
+	let text = window.getSelection().toString();
+	let dialog = document.getElementById("Dialog")
+	if (text !== "") {
+		dialog.style.visibility = "visible";
+		dialog.style.top = `${e.layerY}px`
+		dialog.style.left = `${e.layerX}px`
+		dialog.querySelector("#TextComment").focus();
+	}
+	else {
+		dialog.style.visibility = "hidden";
+    }
+})
 Interval.addEventListener("change", () => {
-	document.querySelector("#TextContent").style.lineHeight = `${Interval.value}`;
+	textContent.style.lineHeight = `${Interval.value}`;
 })
 
 BackgrountColor.addEventListener("change", () => {
-	let textContent = document.querySelector("#BackgrountColorText")
-	textContent.style.backgroundColor = BackgrountColor.value;
+	let textBackgrount = document.querySelector("#BackgrountColorText")
+	textBackgrount.style.backgroundColor = BackgrountColor.value;
 })
 
 TextColor.addEventListener("change", () => {
@@ -35,7 +49,7 @@ TextColor.addEventListener("change", () => {
 })
 
 size.addEventListener("change", () => {
-	document.querySelector("#TextContent").style.fontSize = `${size.value}px`;
+	textContent.style.fontSize = `${size.value}px`;
 })
 
 async function loadPosition() {
@@ -46,16 +60,16 @@ async function loadPosition() {
 //Text Orintations
 function Position(e) {
 	if (e.target.value == 1) {
-		document.querySelector("#TextContent").style.textAlign = `center`;
+		textContent.style.textAlign = `center`;
 	}
 	if (e.target.value == 2) {
-		document.querySelector("#TextContent").style.textAlign = `right`;
+		textContent.style.textAlign = `right`;
 	}
 	if (e.target.value == 3) {
-		document.querySelector("#TextContent").style.textAlign = `left`;
+		textContent.style.textAlign = `left`;
 	}
 	if (e.target.value == 4) {
-		document.querySelector("#TextContent").style.textAlign = `justify`;
+		textContent.style.textAlign = `justify`;
 	}
 }
 
@@ -136,7 +150,6 @@ function ReadBook(idBook) {
 			throw `Book.ReadBook: ${j.status}`;
 		} else {
 			idReadBook = j.message.id;
-			let TextContent = document.getElementById("TextContent");
 			let appHtml = "";
 			addbook.removeAttribute('hidden')
 			let addbookimg = document.getElementById("AddBookLibraryImg")
@@ -144,13 +157,14 @@ function ReadBook(idBook) {
 
 				appHtml += `<p>${p}</p>`;
 			}
-			TextContent.innerHTML = appHtml
+			textContent.innerHTML = appHtml
 			if (j.follow) {
 				addbookimg.src = "../icons/bookmark_remove_FILL0_wght400_GRAD0_opsz48.png"
 			}
 			else {
 				addbookimg.src = "../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"
-            }
+			}
+			
 		}
 	})
 }

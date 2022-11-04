@@ -15,6 +15,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-top: 20px;
 }
     .BookView button {
         width: 200px;
@@ -27,8 +28,9 @@
             width: 25px;
             margin-left: -25px;
         }
-.Info{
-    width:100%;
+.Info {
+    width: 100%;
+    margin-top: 50px;
 }
 .CoverBook {
     border: 2px double black;
@@ -44,10 +46,11 @@
 }
 .BookTextComment {
     width: 100%;
-    height: auto;
     border: 3px double gray;
     border-radius: 25px;
     margin-top: 1%;
+    min-height: 55px;
+    background-color: white;
 }
 .SendText {
     width: 100%;
@@ -70,4 +73,70 @@
 }
 .Comments{
     width:100%;
+}
+.CountGrade {
+    display: flex;
+    margin-top: 5px;
+}
+    .CountGrade img {
+        width: 25px;
+    }
+.SubBook {
+    display: flex;
+    align-items: center;
+}
+    .SubBook img {
+        width: 30px;
+    }
+    .SubBook p {
+        margin: 0;
+    }
+/*======================Star Rating========================*/
+.rating-area {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+    .rating-area:not(:checked) > input {
+        display: none;
+    }
+
+    .rating-area:not(:checked) > label {
+        float: right;
+        width: 42px;
+        padding: 0;
+        cursor: pointer;
+        font-size: 32px;
+        line-height: 32px;
+        color: lightgrey;
+        text-shadow: 1px 1px #bbb;
+    }
+
+        .rating-area:not(:checked) > label:before {
+            content: '★';
+        }
+
+    .rating-area > input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px #c60;
+    }
+
+    .rating-area:not(:checked) > label:hover,
+    .rating-area:not(:checked) > label:hover ~ label {
+        color: gold;
+    }
+
+    .rating-area > input:checked + label:hover,
+    .rating-area > input:checked + label:hover ~ label,
+    .rating-area > input:checked ~ label:hover,
+    .rating-area > input:checked ~ label:hover ~ label,
+    .rating-area > label:hover ~ input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px goldenrod;
+    }
+
+.rate-area > label:active {
+    position: relative;
 }

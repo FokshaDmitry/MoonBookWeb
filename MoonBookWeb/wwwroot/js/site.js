@@ -127,9 +127,9 @@
 				answer = "";
             }
 			let TextComment = e.currentTarget.querySelector("#TextComment");
-			if (TextComment.value !== "") {
+			if (TextComment.textContent !== "") {
 				const formData = new FormData();
-				formData.append("Text", TextComment.value);
+				formData.append("Text", TextComment.innerText);
 				formData.append("id", idPost);
 				formData.append("Answer", answer)
 				fetch("/api/comment", {
@@ -170,7 +170,7 @@
 							.replaceAll("{{Text}}", (j.message.comment.text == null ? "" : j.message.comment.text))
 							.replaceAll("{{Answer}}", (j.answer === null ? "" : `<a href="../User/FreandPage?${j.answer.login}">${j.answer.name} ${j.answer.surname}</a>, `))
 						comment.innerHTML += tmpCom;
-						TextComment.value = "";
+						TextComment.textContent = "";
 					}
 				})
             }

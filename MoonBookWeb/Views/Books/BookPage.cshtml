@@ -3,7 +3,7 @@
 <div class="BookPage">
     <div class="BookInfo">
         <div class="BookView">
-            <img class="CoverBook" id="CoverBook" />
+            <img class="CoverBook" id="CoverBook" src="/img_post/local_library_FILL0_wght500_GRAD0_opsz48.png"/>
             <button id="Read">
                 <img src="/icons/auto_stories_FILL0_wght400_GRAD0_opsz48.png"/>
                 Read
@@ -15,6 +15,23 @@
             <p id="Author">Author: </p>
             <p id="Genry">Genry: </p>
             <p id="Date">Date: </p>
+            <div class="rating-area" id="Rating">
+                <p id="CountGrade" class="CountGrade"><img src="/icons/android_contacts_FILL0_wght400_GRAD0_opsz48.png" /> <num></num>  </p>
+                <input type="radio" id="star-5" name="rating" value="5">
+                <label for="star-5" title="Grade «5»"></label>
+                <input type="radio" id="star-4" name="rating" value="4">
+                <label for="star-4" title="Grade «4»"></label>
+                <input type="radio" id="star-3" name="rating" value="3">
+                <label for="star-3" title="Grade «3»"></label>
+                <input type="radio" id="star-2" name="rating" value="2">
+                <label for="star-2" title="Grade «2»"></label>
+                <input type="radio" id="star-1" name="rating" value="1">
+                <label for="star-1" title="Grade «1»"></label>
+            </div>
+            <div class="SubBook" id="SubBook">
+                <img title="Subscribers" src="/img_post/local_library_FILL0_wght500_GRAD0_opsz48.png" />
+                <p title="Subscribers">0</p>
+            </div>
         </div>
     </div>
     <div class="BookComments">
@@ -26,7 +43,7 @@
                         <a id="AnserUser"><p></p></a>
                         <img id="CloseAnswer" src="../icons/close_FILL0_wght400_GRAD0_opsz48.png" />
                     </div>
-                    <textarea id="TextComment" class="BookTextComment" aria-disabled="false" spellcheck="true" autocomplete="on" autocorrect="on" autocapitalize="on" contenteditable="true" cols="4" wrap="soft"></textarea>
+                    <div id="TextComment" class="BookTextComment" contenteditable="true"></div>
                     <button class="Post" id="Send">
                         <img src="/icons/send_FILL0_wght400_GRAD0_opsz48.png">
                     </button>

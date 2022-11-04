@@ -64,10 +64,11 @@ namespace MoonBookWeb.API
             }
             if (_context.SubBooks.Where(s => s.idUser == _sessionLogin.user.Id).Select(s => s.idBook).Contains(id))
             {
-                var sub = _context.SubBooks.FirstOrDefault(s => s.idBook == id);
-                _context.SubBooks.Remove(sub!);
+                var subuser = _context.SubBooks.FirstOrDefault(s => s.idBook == id);
+                _context.SubBooks.Remove(subuser!);
                 _context.SaveChanges();
-                return new { status = "Ok", message = false };
+                var sub = _context.SubBooks.Where(r => r.idBook == id).Count();
+                return new { status = "Ok", message = false, sub = sub };
             }
             else
             {
@@ -78,7 +79,8 @@ namespace MoonBookWeb.API
                 }
                 _context.SubBooks.Add(new SubBook { Id = Guid.NewGuid(), idBook = book.Id, idUser = _sessionLogin.user.Id });
                 _context.SaveChanges();
-                return new { status = "Ok", message = true };
+                var sub = _context.SubBooks.Where(r => r.idBook == id).Count();
+                return new { status = "Ok", message = true, sub = sub };
             }
         }
         [HttpPut]

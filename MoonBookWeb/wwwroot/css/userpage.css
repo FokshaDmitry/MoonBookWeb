@@ -5,6 +5,7 @@
     height: auto;
     display: flex;
     align-items: flex-start;
+    border-radius: 20px;
 }
 
 #ImagePostFile {

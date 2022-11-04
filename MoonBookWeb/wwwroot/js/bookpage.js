@@ -6,6 +6,7 @@
 	if (link != '') {
 		bookpageLoaded(link);
 		loadElement(comment);
+		loadRating();
 	}
 	else {
 		alert("Book don't found")
@@ -31,6 +32,8 @@ function bookpageLoaded(link) {
 			document.getElementById("Date").textContent += j.message.date
 			document.getElementById("CoverBook").setAttribute("src", `../img_post/${j.message.coverName}`)
 			document.getElementById("Follow").innerHTML = j.follow ? `<img src="../icons/bookmark_remove_FILL0_wght400_GRAD0_opsz48.png"> Remove Library` : `<img src="../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"> Add Library`
+			document.querySelector("num").textContent = j.grades
+			document.querySelector("#SubBook p").textContent = j.sub;
         }
     })
 }
@@ -95,7 +98,7 @@ function Comment(e) {
 	if (e.target.id === "CommentDelete") {
 		let Comment = e.target.closest(".CommentUser");
 		let idComment = Comment.getAttribute('id');
-		fetch(`/api/post/comment/${idComment}`, {
+		fetch(`/api/comment/${idComment}`, {
 			method: "DELETE",
 			body: null
 		}).then(r => r.json()).then(j => {
@@ -172,7 +175,8 @@ follow.addEventListener("click", () => {
 				throw `addBook: ${j.status}`;
 			}
 			else {
-				document.getElementById("Follow").innerHTML = j.message ? `<img src="../icons/bookmark_remove_FILL0_wght400_GRAD0_opsz48.png"> Remove Library` : `<img src="../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"> Add Library`
+				document.getElementById("Follow").innerHTML = j.message ? `<img src="../icons/bookmark_remove_FILL0_wght400_GRAD0_opsz48.png"> Remove Library` : `<img src="../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"> Add Library`;
+				document.querySelector("#SubBook p").textContent = j.sub;
 			}
 		});
 })
@@ -185,9 +189,9 @@ send.addEventListener("click", () => {
 	} catch (e) {
 		answer = "";
 	}
-	if (Text.value != "") {
+	if (Text.textContent != "") {
 		const formData = new FormData();
-		formData.append("Text", Text.value);
+		formData.append("Text", Text.innerText);
 		formData.append("id", link);
 		formData.append("Answer", answer)
 		fetch("/api/comment", {
@@ -197,26 +201,27 @@ send.addEventListener("click", () => {
 			if (j.status == "Error") {
 				alert(j.message);
 			} else {
-				Text.value = "";
+				Text.textContent = "";
 				commentAnswer.style.visibility = "hidden";
 				var tmpCom = `<div class="CommentUser" id="{{Id}}"> 
-										 <div>
-										 	<img id="PhotoComment" src="/img/{{PhotoName}}"/>
-										 </div>
-										 <div style="width:100%;">
-										 	<div id="CommentInfo">
-										 		<p>
-										 			<b>{{Name}} {{Surname}}</b>
-										 		</p> <i>{{Date}}</i>
-										 	</div>
-										 	<div>
-										 		<p class="CommentText">{{Answer}} {{Text}}</p>
-										 	</div>
-										 </div>
-										 <img id="AnswerComment" src="../icons/subdirectory_arrow_right_FILL0_wght400_GRAD0_opsz48.png"/>
-										 <img id="EditComment" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>
-										 <img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>
-									  </div>`;
+									<div>
+										<img id="PhotoComment" src="/img/{{PhotoName}}"/>
+									</div>
+									<div style="width:100%;">
+										<div id="CommentInfo">
+											<p>
+												<b>{{Name}} {{Surname}}</b>
+											</p> 
+										<i>{{Date}}</i>
+										</div>
+										<div>
+											<p class="CommentText">{{Answer}} {{Text}}</p>
+										</div>
+									</div>
+									<img id="AnswerComment" src="../icons/subdirectory_arrow_right_FILL0_wght400_GRAD0_opsz48.png"/>
+									<img id="EditComment" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>
+									<img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>
+								</div>`;
 				tmpCom = tmpCom.replaceAll("{{Name}}", j.message.user.name)
 					.replaceAll("{{Surname}}", j.message.user.surname)
 					.replaceAll("{{Date}}", j.message.comment.date)
@@ -229,3 +234,24 @@ send.addEventListener("click", () => {
 		})
     }
 })
+async function loadRating() {
+	for (let radio of document.querySelectorAll("#Rating input[type=radio]")) {
+		radio.onclick = Rating;
+	}
+}
+//Text Orintations
+function Rating(e) {
+	const formData = new FormData();
+	formData.append("Grade", e.target.value);
+	fetch(`/api/bookpage/${link}`, {
+		method: "POST",
+		body: formData
+	}).then(r => r.json())
+		.then(j => {
+			if (j.status === "Error") {
+				alert(`BookPage.PostGrade: ${j.message}`)
+			} else {
+				document.querySelector("num").textContent = j.message
+			}
+		});
+}
