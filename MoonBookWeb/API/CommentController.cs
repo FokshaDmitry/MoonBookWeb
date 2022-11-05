@@ -50,6 +50,8 @@ namespace MoonBookWeb.API
                 comment.Text = commentModel.Text;
                 comment.idPost = commentModel.id;
                 comment.Answer = AnswerUser == null ? Guid.Empty : AnswerUser.Id;
+                comment.Link = "";
+                comment.Quote = "";
                 _context.Comments.Add(comment);
                 _context.SaveChanges();
                 var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
@@ -57,7 +59,45 @@ namespace MoonBookWeb.API
             }
             else
             {
+                return new { status = "Error", message = "Bad Request" };
+            }
+        }
+        [HttpPost("book")]
+        public object Quote([FromForm] QuoteModel quoteModel)
+        {
+            if(quoteModel != null)
+            {
+                if(quoteModel.Id != Guid.Empty)
+                {
+                    Comments comment = new Comments();
+                    comment.Id = Guid.NewGuid();
+                    comment.idUser = _sessionLogin.user.Id;
+                    comment.Date = DateTime.Now;
+                    comment.idPost = quoteModel.Id;
+                    comment.Text = quoteModel.Text;
+                    try
+                    {
+                        comment.Quote = quoteModel?.Quote?.Substring(0, 30) + "...";
+                    }
+                    catch
+                    {
+                        comment.Quote = quoteModel?.Quote;
+                    }
+                    comment.Link = $"../Books/UserLibrary?{quoteModel?.Id}&search={quoteModel?.Search}";
+                    comment.Answer = Guid.Empty;
+                    comment.Delete = Guid.Empty;
+                    _context.Comments.Add(comment);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    return new { status = "Error", message = "Id don't found" };
+                }
                 return new { status = "Ok", message = "Bad Request" };
+            }
+            else
+            {
+                return new { status = "Error", message = "Bad Request" };
             }
         }
         //Update Comment

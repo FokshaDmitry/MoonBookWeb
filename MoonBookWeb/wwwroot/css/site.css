@@ -2,21 +2,18 @@
     width: 13px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
     background-color: #adb5bd;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 20px;
 }
 
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 html {
   font-size: 14px;
 }
@@ -71,18 +68,6 @@ body {
         border-bottom: none;
         background-color: #313574;
     }
-#search_user_text{
-    height: 25px;
-}
-#search_user {
-    background-color: transparent;
-    width: 30px;
-    border-color: transparent;
-    margin-right: 2%;
-    height: 25px;
-    align-items:center;
-    justify-content:center;
-}
 
 #Name:hover {
     cursor: pointer;

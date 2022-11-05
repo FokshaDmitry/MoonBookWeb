@@ -91,6 +91,13 @@
     .SubBook p {
         margin: 0;
     }
+.Quote img {
+    width: 15px;
+}
+.Quote a {
+    font-style: italic;
+    color: #242424;
+}
 /*======================Star Rating========================*/
 .rating-area {
     overflow: hidden;

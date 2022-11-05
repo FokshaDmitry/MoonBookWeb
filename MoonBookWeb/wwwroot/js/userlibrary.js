@@ -19,11 +19,44 @@ let BackgrountColor = document.getElementById("BackgrountColor");
 let TextColor = document.getElementById("TextColor");
 let Interval = document.getElementById("Interval");
 let textContent = document.getElementById("TextContent");
-
+let textComment = document.getElementById("TextComment");
+let send = document.getElementById("SendCommentImg");
+let quote = "";
+let dialog;
+let searchP;
+send.addEventListener("click", () => {
+	if (textComment !== "" && quote !== "" && link !== "") {
+		const formData = new FormData();
+		formData.append("Id", link);
+		formData.append("Quote", quote);
+		formData.append("Text", textComment.textContent);
+		formData.append("Search", searchP);
+		fetch(`/api/comment/book`, {
+			method: "POST",
+			body: formData
+		}).then(r => r.json())
+			.then(j => {
+				if (j.status === "Error") {
+					alert(`Comment.Quote: ${j.message}`)
+				} else {
+					dialog.style.visibility = "hidden";
+					quote = ""
+				}
+			});
+    }
+})
+textContent.addEventListener("mousedown", (e) => {
+	let massP = document.querySelectorAll("#TextContent p")
+	for (var i = 0; i < massP.length; i++) {
+		if (massP[i] === e.target) {
+			searchP = i;
+        }
+    }
+})
 textContent.addEventListener("mouseup", (e) => {
-	let text = window.getSelection().toString();
-	let dialog = document.getElementById("Dialog")
-	if (text !== "") {
+	quote = window.getSelection().toString();
+	dialog = document.getElementById("Dialog")
+	if (quote !== "") {
 		dialog.style.visibility = "visible";
 		dialog.style.top = `${e.layerY}px`
 		dialog.style.left = `${e.layerX}px`
@@ -31,6 +64,7 @@ textContent.addEventListener("mouseup", (e) => {
 	}
 	else {
 		dialog.style.visibility = "hidden";
+		quote = ""
     }
 })
 Interval.addEventListener("change", () => {
@@ -129,19 +163,17 @@ function bookLoaded() {
 		book.onclick = Read;
 	}
 	if (link !== "") {
-		link = link.search.replace('?', "");
+		let linkurl = link.search.replace('?', "").split('&');
 		//if link not empty, show choose user
-		if (link !== '') {
-			ReadBook(link);
-			link = "";
-		}
+		ReadBook(linkurl[0], link.searchParams.get('search'));
+		link = "";
     }
 }
 function Read(e) {
 	let idBook = e.currentTarget.getAttribute("id");
 	ReadBook(idBook)
 }
-function ReadBook(idBook) {
+function ReadBook(idBook, search) {
 	fetch(`/api/book/${idBook}`, {
 		method: "GET",
 		body: null
@@ -164,7 +196,10 @@ function ReadBook(idBook) {
 			else {
 				addbookimg.src = "../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"
 			}
-			
+			link = j.message.id;
+			if (search != "") {
+				window.scrollTo(0, document.querySelectorAll("#TextContent p")[search].offsetTop);
+            }
 		}
 	})
 }

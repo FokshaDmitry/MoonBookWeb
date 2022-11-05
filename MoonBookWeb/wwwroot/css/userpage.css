@@ -28,7 +28,12 @@
     overflow: overlay;
     border-radius: 20px;
 }
-
+    #UserBooks::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    #UserBooks::-webkit-scrollbar {
+        height: 6px;
+    }
 .Book {
     margin-left: 2px;
 }
@@ -37,6 +42,7 @@
     height: 95px;
     width: 60px;
     cursor: pointer;
+    border-radius: 8px;
 }
 
 #OnlineFreandsPhoto {
@@ -122,7 +128,15 @@
     display: flex;
     flex-wrap: wrap;
     border-radius: 10px;
+    max-height: 215px;
+    overflow: overlay;
 }
+    #OnlineFreands::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    #OnlineFreands#UserBooks::-webkit-scrollbar {
+        width: 8px;
+    }
 #TitleFreand {
     margin: 1%;
     background-color: #08206c;

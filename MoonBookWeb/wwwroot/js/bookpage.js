@@ -54,7 +54,7 @@ function loadElement(elem) {
 function showElement(elem, j) {
 	let appHtmlComment = "";
 	for (let comment of j.message) {
-		var tmpCom = `<div class="CommentUser" id="{{Id}}"> 
+		var tmpCom = `<div class="CommentUser" id="{{Id}}">
 							<div>
 								<img id="PhotoComment" src="/img/{{PhotoName}}"/>
 							</div>
@@ -64,6 +64,10 @@ function showElement(elem, j) {
 										<b>{{Name}} {{Surname}}</b>
 									</a>
 									<i>{{Date}}</i>
+							<div id="Quote" class="Quote">
+								{{LinkImg}}
+								<a href="{{Link}}">{{Quote}}</a>
+							</div>
 							</div>
 							<div>
 								<p class="CommentText" style="color: black;">{{Answer}} {{Text}}</p>
@@ -78,6 +82,9 @@ function showElement(elem, j) {
 			.replaceAll("{{Surname}}", comment.comment.user.surname)
 			.replaceAll("{{Date}}", comment.comment.comment.date)
 			.replaceAll("{{Id}}", comment.comment.comment.id)
+			.replaceAll("{{Quote}}", comment.comment.comment.quote === null ? "" : comment.comment.comment.quote)
+			.replaceAll("{{LinkImg}}", comment.comment.comment.link === "" || comment.comment.comment.link === null ? "" : `<img src="../icons/subdirectory_arrow_right_FILL0_wght400_GRAD0_opsz48.png"/>`)
+			.replaceAll("{{Link}}", comment.comment.comment.link)
 			.replaceAll("{{PhotoName}}", (comment.comment.user.photoName === null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : comment.comment.user.photoName))
 			.replaceAll("{{Text}}", (comment.comment.comment.text === null ? "" : comment.comment.comment.text))
 			.replaceAll("{{DeleteComment}}", (comment.comment.comment.idUser !== j.user ? "" : `<img id="CommentDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`))
