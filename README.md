@@ -29,6 +29,8 @@
 
 <b>Quoting</b>
 
+![image](https://user-images.githubusercontent.com/99391531/200920734-070ab409-fdf2-4df1-b722-4f4b87ec8839.png)  
+  
 <b>Comments on post</b>
 
 ![image](https://user-images.githubusercontent.com/99391531/197336373-376af693-b425-4268-b54b-4b70d75d9658.png)
