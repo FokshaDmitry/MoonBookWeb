@@ -9,9 +9,20 @@
     margin: 2%;
     width: 150px
 }
-
+.Star {
+    display: flex;
+    justify-content: center;
+}
+    .Star img {
+        height: 25px;
+        width: 25px;
+    }
+    .Star p {
+        margin: 0;
+    }
 #Genry {
     margin-right: 1%;
+    border-radius: 20px;
 }
 
 #CoverName {
@@ -23,6 +34,7 @@
     color: black;
     display: flex;
     justify-content: center;
+    margin: 0;
 }
 
 #Title {
@@ -36,6 +48,7 @@
 
 #SearchAllBook {
     height: 25px;
+    border-radius: 20px;
 }
 
 #SearchBook {
@@ -46,4 +59,8 @@
     height: 25px;
     align-items: center;
     justify-content: center;
+}
+label {
+    margin-right: 1%;
+    margin-left: 0.5%;
 }

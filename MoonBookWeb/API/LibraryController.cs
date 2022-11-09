@@ -28,21 +28,25 @@ namespace MoonBookWeb.API
             return new { status = "Ok", message = books };
         }
         //Get All books
-        [HttpPost("{Books}")]
+        [HttpPost]
         public object Put([FromForm]Models.FilterBookModel filterBook)
         {
-            var books = _context.Books.Where(b => b.Delete == Guid.Empty);
+            var books = _context.Books.Where(b => b.Delete == Guid.Empty).ToList().GroupJoin(_context.BookRatings, b => b.Id, br => br.IdBook, (b, br) => new { Book = b, Rating = br });
             if (!String.IsNullOrEmpty(filterBook.Genry)) 
             {
-                books = books.Where(b => b.Genry == filterBook.Genry);
+                books = books.Where(b => b.Book.Genry == filterBook.Genry);
             }
             if(filterBook.Date)
             {
-                books = books.OrderByDescending(b => b.Date);
+                books = books.OrderByDescending(b => b.Book.Date);
             }
             if(filterBook.Alphabet)
             {
-                books = books.OrderByDescending(b => b.Title);
+                books = books.OrderByDescending(b => b.Book.Title);
+            }
+            if(filterBook.Rating)
+            {
+                books = books.OrderByDescending(b => b.Rating.Sum(r => r.Grade) / b.Rating.Count());
             }
             return new { status = "Ok", message = books };
         }

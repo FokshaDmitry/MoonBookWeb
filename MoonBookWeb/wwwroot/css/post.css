@@ -11,6 +11,7 @@
 #PostText {
     color: black;
     margin-left: 1%;
+    margin-top: 2%;
 }
 #PostDelete {
     float: right;

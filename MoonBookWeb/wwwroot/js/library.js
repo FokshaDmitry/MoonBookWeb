@@ -9,8 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 let Search = document.getElementById("SearchBook");
 let Genry = document.getElementById("Genry");
+let Rating = document.getElementById("Rating");
 let Date = document.getElementById("DateBook");
 let Alphabet = document.getElementById("AlpBook");
+Rating.addEventListener("change", () => {
+	loadElement(library);
+})
 Genry.addEventListener("change", () => {
 	loadElement(library);
 })
@@ -47,7 +51,8 @@ function loadElement(elem) {
 	formData.append("Genry", (document.getElementById("Genry").value == "Choose Genry" ? "" : document.getElementById("Genry").value))
 	formData.append("Date", document.getElementById("DateBook").checked)
 	formData.append("Alphabet", document.getElementById("AlpBook").checked)
-	fetch(`/api/library/books`,{
+	formData.append("Rating", document.getElementById("Rating").checked)
+	fetch(`/api/library`, {
 			method: "POST",
 			body: formData
 		}).then(r => r.json())
@@ -67,10 +72,11 @@ function showElement(elem, j) {
 			let appHtml = "";
 			for (let book of j) {
 				var tmp = trTemplate
-				tmp = tmp.replaceAll("{{id}}", book.id)
-					.replaceAll("{{Title}}", book.title)
-					.replaceAll("{{Author}}", book.author)
-					.replaceAll("{{CoverName}}", (book.coverName == null || book.coverName == "" ? "import_contacts_FILL0_wght400_GRAD0_opsz48.png" : book.coverName))
+				tmp = tmp.replaceAll("{{id}}", book.book.id)
+					.replaceAll("{{Title}}", book.book.title)
+					.replaceAll("{{Author}}", book.book.author)
+					.replaceAll("{{CoverName}}", (book.book.coverName == null || book.book.coverName == "" ? "import_contacts_FILL0_wght400_GRAD0_opsz48.png" : book.book.coverName))
+					.replaceAll("{{Star}}", (book.rating.length !== 0 ? ((book.rating.map(b => b.grade).reduce((x, y) => x + y, 0)) / book.rating.length).toFixed(1) : 0));
 				appHtml += tmp;
 			}
 			elem.innerHTML = appHtml;

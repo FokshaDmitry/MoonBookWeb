@@ -34,6 +34,7 @@ function bookpageLoaded(link) {
 			document.getElementById("Follow").innerHTML = j.follow ? `<img src="../icons/bookmark_remove_FILL0_wght400_GRAD0_opsz48.png"> Remove Library` : `<img src="../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"> Add Library`
 			document.querySelector("num").textContent = j.grades
 			document.querySelector("#SubBook p").textContent = j.sub;
+			document.getElementById("UserRating").textContent = j.rating.length !== 0 ? ((j.rating.map(b => b.grade).reduce((x, y) => x + y, 0)) / j.rating.length).toFixed(1) : 0
         }
     })
 }
@@ -258,7 +259,8 @@ function Rating(e) {
 			if (j.status === "Error") {
 				alert(`BookPage.PostGrade: ${j.message}`)
 			} else {
-				document.querySelector("num").textContent = j.message
+				document.querySelector("num").textContent = j.message.length
+				document.getElementById("UserRating").textContent = ((j.message.map(b => b.grade).reduce((x, y) => x + y, 0)) / j.message.length).toFixed(1)
 			}
 		});
 }

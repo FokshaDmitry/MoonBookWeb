@@ -197,7 +197,7 @@ function ReadBook(idBook, search) {
 				addbookimg.src = "../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"
 			}
 			link = j.message.id;
-			if (search != "") {
+			if (search !== "") {
 				window.scrollTo(0, document.querySelectorAll("#TextContent p")[search].offsetTop);
             }
 		}

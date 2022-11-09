@@ -41,7 +41,8 @@ namespace MoonBookWeb.API
             }
             var grades = _context.BookRatings.Where(r => r.IdBook == id).Count();
             var sub = _context.SubBooks.Where(r => r.idBook == id).Count();
-            return new { status = "Ok", message = book, follow = follow, grades = grades, sub = sub }; ;
+            var rating = _context.BookRatings.Where(br => br.IdBook == id);
+            return new { status = "Ok", message = book, follow = follow, grades = grades, sub = sub, rating = rating }; ;
         }
         [HttpPost("{Id}")]
         public object PostGrade(string Id, [FromForm]int Grade)
@@ -73,7 +74,7 @@ namespace MoonBookWeb.API
                 _context.BookRatings.Update(grade);
                 _context.SaveChanges();
             }
-            var grades = _context.BookRatings.Where(r => r.IdBook == id).Count();
+            var grades = _context.BookRatings.Where(r => r.IdBook == id);
             return new { status = "Ok", message = grades };
         }
     }
