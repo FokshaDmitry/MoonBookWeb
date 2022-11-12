@@ -17,8 +17,14 @@
 html {
   font-size: 14px;
 }
+.Title {
+    font-family: math;
+    font-size: 17pt;
+    margin-right: 1%;
+    letter-spacing: 0.5px;
+}
 body {
-    background-color: #171a4e;
+    background-color: #1b1b22;
 }
 @media (min-width: 768px) {
   html {
@@ -26,7 +32,7 @@ body {
   }
 }
 header {
-    background-color: #3a3d74;
+    background-color: #30323c;
     color: black;
 }
 body p {
@@ -37,8 +43,7 @@ body a {
     color: black;
 }
     body a:hover {
-        text-decoration: underline;
-        color: black;
+        color: #17171c;
     }
 html {
   position: relative;
@@ -63,10 +68,9 @@ body {
         display: block;
         padding: 5px;
         text-decoration: none;
-        color: #666;
         border: 1px solid #ccc;
         border-bottom: none;
-        background-color: #313574;
+        background-color: #30323c;
     }
 
 #Name:hover {
@@ -113,7 +117,7 @@ body {
 
 /*=================== Blog ===============*/
 #BlogPage {
-    background-color: #313574;
+    background-color: #212331;
     align-items: center;
     width: 100%;
     height: auto;

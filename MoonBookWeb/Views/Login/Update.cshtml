@@ -12,24 +12,25 @@
         <label id="AvatarImg" for="Avatar">
             <img src="/img/@user?.PhotoName" />
         </label>
-            @if (!String.IsNullOrEmpty(err?[8]))
-                @err[8]
 
-       <p>Name:             <p/> <input type="text" name="Name" value="@user?.Name" />
-           @if (!String.IsNullOrEmpty(err?[1])) @err[1]
-       <p>Surname:          <p/> <input type="text" name="Surname" value="@user?.Surname" /> 
-           @if (!String.IsNullOrEmpty(err?[2])) @err[2]
-       <p>Status:          <p/> <textarea name="Status" value="@user?.Status" style="width: 250px"></textarea>
-       <p>Date of Bith:     <p/> <input type="date" name="DateOfBith" value="@user?.DateOfBith.Date.ToString("u")"/>
-           @if (!String.IsNullOrEmpty(err?[3])) @err[3]
-       <p>Login:            <p/> <input type="text" name="Login" value="@user?.Login"/> 
-           @if (!String.IsNullOrEmpty(err?[4])) @err[4]
-       <p>Email:            <p/> <input type="email" name="Email" value="@user?.Email"/> 
-           @if (!String.IsNullOrEmpty(err?[5])) @err[5]
-       <p>Password:         <p/> <input type="password" name="Password" /> 
-           @if (!String.IsNullOrEmpty(err?[6])) @err[6]
-       <p>Confirm password: <p/> <input type="password" name="ConfirmPass" /> 
-           @if (!String.IsNullOrEmpty(err?[7])) @err[7]
+       <p>Name:             </p> <input type="text" name="Name" value="@user?.Name" /> <br/>
+          <p class="Error"> @if (!String.IsNullOrEmpty(err?[1])) @err[1] </p>
+       <p>Surname:          </p> <input type="text" name="Surname" value="@user?.Surname" /> <br/>
+          <p class="Error"> @if (!String.IsNullOrEmpty(err?[2])) @err[2] </p>
+       <p>Status:      </p> <div class="Status" name="Status" contenteditable="true" value="@user?.Status" ></div> <br/>
+       <p>Date of Bith:     </p> <input type="date" name="DateOfBith" value="@user?.DateOfBith.Date.ToString("u")"/> <br/>
+          <p class="Error"> @if (!String.IsNullOrEmpty(err?[3])) @err[3] </p>
+       <p>Login:            </p> <input type="text" name="Login" value="@user?.Login"/> <br/>
+         <p class="Error">  
+             @if (!String.IsNullOrEmpty(err?[4])) @err[4]
+             else if (!String.IsNullOrEmpty(err?[8])) @err[8]
+         </p>
+       <p>Email:            </p> <input type="email" name="Email" value="@user?.Email"/> <br/>
+          <p class="Error"> @if (!String.IsNullOrEmpty(err?[5])) @err[5] </p>
+       <p>Password:         </p> <input type="password" name="Password" /> <br/>
+          <p class="Error"> @if (!String.IsNullOrEmpty(err?[6])) @err[6] </p>
+       <p>Confirm password: </p> <input type="password" name="ConfirmPass" /> <br/>
+          <p class="Error"> @if (!String.IsNullOrEmpty(err?[7])) @err[7] </p>
             <br />
        <button>Edit</button>
     </form>

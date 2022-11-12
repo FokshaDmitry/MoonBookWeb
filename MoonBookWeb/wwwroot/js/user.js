@@ -93,7 +93,7 @@ function showElementBooks(elem, j) {
 					.replaceAll("{{Title}}", book.title)
 				appHtml += tmp;
 			}
-			elem.innerHTML = appHtml;
+			elem.innerHTML += appHtml;
 			bookLoaded();
 		});
 }

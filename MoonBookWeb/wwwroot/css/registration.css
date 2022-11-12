@@ -1,4 +1,4 @@
-﻿.Title{
+﻿.TitleRegistration{
     color:black;
 }
 .Regestration {
@@ -27,3 +27,18 @@
         border-radius: 80px;
         cursor: pointer;
     }
+.Error {
+    color: #8e0707;
+    margin: 0;
+    font-size: 8pt;
+    margin-left: 10%;
+}
+input{
+    border-radius: 20px;
+}
+button {
+    border-radius: 20px;
+}
+p {
+    margin-top: 10px;
+}

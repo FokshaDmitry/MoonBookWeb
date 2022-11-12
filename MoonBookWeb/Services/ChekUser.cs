@@ -52,7 +52,7 @@
         public string[] ChekAddBook(Models.AddBookModel book)
         {
             //Vallidation Book
-            var err = new String[5];
+            var err = new String[6];
             if (book == null)
             {
                 err[0] = "Error querty";
@@ -65,13 +65,17 @@
             {
                 err[2] = "Write Title";
             }
-            if (String.IsNullOrEmpty(book.Genry))
+            if (book.Genry == "Choose Genry")
             {
-                err[3] = "Choose Genre";
+                err[3] = "Choose Genry";
+            }
+            if (String.IsNullOrEmpty(book.Annotation))
+            {
+                err[4] = "Write Anotation";
             }
             if (String.IsNullOrEmpty(book.TextContent))
             {
-                err[4] = "Write Anotation";
+                err[5] = "Write Anotation";
             }
             return err;
         }

@@ -14,7 +14,7 @@
         {
             <img id="UserPhoto" src="/icons/android_contacts_FILL0_wght400_GRAD0_opsz48.png">
         }
-        <p>@user?.Status</p>
+        <p class="Status">@user?.Status</p>
         <p id="TitleFreand"><b>Online Freands</b></p>
         <online id="OnlineFreands"></online>
     </div>
@@ -23,7 +23,10 @@
           <h1 id="UName">@user?.Name @user?.Surname</h1>
         </div>
         <books id="UserBooks">
+            <a href ="/Books">
+                <img class="AddBook" src="/icons/add_FILL0_wght500_GRAD0_opsz48.png"/>
 
+            </a>
         </books>
         <div id="SendPost">
             <textarea id="Text" contenteditable="true"></textarea>

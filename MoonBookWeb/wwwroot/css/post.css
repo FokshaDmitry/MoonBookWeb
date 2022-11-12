@@ -94,6 +94,7 @@
     border: 3px double gray;
     border-radius: 25px;
     background-color: white;
+    margin-right: 1%;
 }
 #PostReactions {
     width: 100%;

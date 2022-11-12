@@ -119,7 +119,9 @@ function PageFreand(LoginFreand) {
 		} else {
 			//Fread freands
 			var freandsHtml = `<div class="Freand" style="display: flex; margin: 1%; justify-content: flex-end; align-items: flex-end;" title="{{Name}} {{Surname}}">
-									<a href="../User/FreandPage?{{id}}"> <img id="FreandFreandsPhoto" src="/img/{{UserPhoto}}"/> </a>
+									<a href="../User/FreandPage?{{id}}"> 
+										<img id="FreandFreandsPhoto" src="/img/{{UserPhoto}}"/> 
+									</a>
 									<div id="OnlineUser" style="position: absolute; {{Online}}"></div>
 								</div>`
 			//freand book
@@ -131,6 +133,7 @@ function PageFreand(LoginFreand) {
 									<div id="BackFreandsBlog"> <a href="../User/FreandPage"> <img src = "/icons/arrow_back_FILL0_wght400_GRAD0_opsz48.png"> </a></div>
 									<img id="FreandPagePhoto" src = "/img/{{PhotoName}}">
 									<p id="FreandPageNeme"><b>{{Name}} {{Surname}}</b></p>
+									<p class="Status">{{Status}}</p>
 									{{Freands}}
 									{{Books}}
 							   </div>`;
@@ -159,6 +162,7 @@ function PageFreand(LoginFreand) {
 			appHtml = appHtml
 				.replace("{{Name}}", j.freand.name)
 				.replace("{{Surname}}", j.freand.surname)
+				.replaceAll("{{Status}}", j.freand.status)
 				.replace("{{PhotoName}}", (j.freand.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : j.freand.photoName))
 				.replace("{{Freands}}", (tmpfreand == "" ? "" : `<div> <p id="TitleFreand"><b>Freands</b></p> <freand id= "FreandFreands"> ${tmpfreand} </freand></div>`))
 				.replace("{{Books}}", (tmpbook == "" ? "" : `<books id="UserBooks"> ${tmpbook} </books>`))

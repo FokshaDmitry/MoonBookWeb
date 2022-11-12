@@ -1,4 +1,11 @@
 ﻿/*=================== Freand ===============*/
+.post {
+    border-radius: 20px;
+    width: 100%;
+    margin: 5%;
+    display: block;
+    background-color: #212331;
+}
 #search_user_text {
     height: 25px;
     border-radius: 20px;
@@ -64,7 +71,7 @@
 
 #TitleFreand {
     margin: 1%;
-    background-color: #08206c;
+    background-color: #30323c;
     width: 250px;
     height: 25px;
     border-radius: 7px;
@@ -133,4 +140,9 @@
 #BackFreandsBlog img{
     width: 35px;
     cursor: pointer;
+}
+.Status {
+    width: 200px;
+    text-align: center;
+    word-break: break-all;
 }

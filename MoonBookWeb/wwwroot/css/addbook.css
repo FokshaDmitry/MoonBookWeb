@@ -1,4 +1,4 @@
-﻿.Title {
+﻿.TitleAddBook {
     color: black;
 }
 .AddBook {
@@ -7,9 +7,53 @@
     flex-direction: column;
     align-items: center;
 }
+.Buttons {
+    margin-top: 10%;
+    display: flex;
+    align-items: center;
+}
+    .Buttons img {
+        width: 50px;
+        cursor: pointer;
+        margin-bottom: 15%;
+    }
+    .Buttons input {
+        display: none;
+    }
 .CoverImg img {
     border: 2px double black;
     cursor: pointer;
     width: 120px;
     height: 200px;
+    border-radius: 20px;
+}
+.Annotation {
+    background-color: white;
+    border-radius: 20px;
+    width: 300px;
+    min-height: 100px;
+}
+.ContentText {
+    background-color: white;
+    border-radius: 20px;
+    width: 300px;
+    min-height: 100px;
+}
+input {
+    border-radius: 20px;
+}
+.Error {
+    color: #8e0707;
+    margin: 0;
+    font-size: 8pt;
+    margin-left: 10%;
+}
+p {
+    margin-top: 10px;
+}
+button {
+    border-radius: 20px;
+}
+select {
+    border-radius: 20px;
 }

@@ -1,5 +1,5 @@
 ﻿#UserPage {
-    background-color: #313574;
+    background-color: #212331;
     align-items: center;
     width: 100%;
     height: auto;
@@ -21,10 +21,10 @@
 
 #UserBooks {
     border: 2px double black;
-    display: inline-flex;
     width: 100%;
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
-    height: 100px;
     overflow: overlay;
     border-radius: 20px;
 }
@@ -37,7 +37,14 @@
 .Book {
     margin-left: 2px;
 }
-
+.AddBook {
+    height: 95px;
+    width: 60px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 2px double black;
+    margin-left: 5px;
+}
 #UserBookImg {
     height: 95px;
     width: 60px;
@@ -67,7 +74,9 @@
 
 #UserAvatar {
     margin: 2%;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #UserInformations {
@@ -139,8 +148,13 @@
     }
 #TitleFreand {
     margin: 1%;
-    background-color: #08206c;
+    background-color: #30323c;
     width: 250px;
     height: 25px;
     border-radius: 7px;
+}
+.Status {
+    width: 250px;
+    text-align: center;
+    word-break: break-all;
 }

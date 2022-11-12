@@ -15,6 +15,18 @@
     width: 150px;
     height: 150px;
     border-radius: 80px;
-    margin-bottom: 5%;
+    margin-bottom: 4%;
     margin-top: 3%;
+}
+.Error {
+    color: #8e0707;
+    margin: 0;
+    font-size: 8pt;
+    margin-left: 10%;
+}
+input {
+    border-radius: 20px;
+}
+button {
+    border-radius: 20px;
 }

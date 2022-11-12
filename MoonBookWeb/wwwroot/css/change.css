@@ -6,9 +6,9 @@
     flex-direction: column;
     align-items: center;
 }
-.Change button{
-    margin-top: 10%;
-}
+    .Change button {
+        border-radius: 20px;
+    }
 #Avatar {
     display: none;
 }
@@ -24,3 +24,20 @@
         border-radius: 80px;
         cursor: pointer;
     }
+input {
+    border-radius: 20px;
+}
+.Status {
+    background-color: white;
+    border-radius: 20px;
+    min-height: 80px;
+}
+.Error {
+    color: #8e0707;
+    margin: 0;
+    font-size: 8pt;
+    margin-left: 10%;
+}
+p {
+    margin-top: 10px;
+}

@@ -3,18 +3,18 @@
 }
 <link rel="stylesheet" href="~/css/addbook.css" asp-append-version="true" />
 <div class="AddBook">
-    <h1 class="Title"> Add Book</h1>
+    <h1 class="TitleAddBook"> Add Book</h1>
     <div class="Form">
         <form action="/Books/AddBook" method="post" enctype="multipart/form-data">
            <input type="file" id="Cover" style="display: none;" accept="img/*" multiple/>       
            <label class="CoverImg" for="Cover">
               <img id="CoverImg" src="/icons/add_FILL0_wght500_GRAD0_opsz48.png"/>
            </label>
-           <p>Tiyle:           <p/> <input id="Title" type="text" name="Title" />
-               @if (!String.IsNullOrEmpty(err?[1])) @err[1]
-           <p>Author:          <p/> <input id="Author" type="text" name="Author" /> 
-               @if (!String.IsNullOrEmpty(err?[2])) @err[2]
-           <p>Genry:     <p/> <select name="Genry">
+           <p>Tiyle:           </p> <input id="Title" type="text" name="Title" />
+              <p class="Error"> @if (!String.IsNullOrEmpty(err?[1])) @err[1] </p>
+           <p>Author:          </p> <input id="Author" type="text" name="Author" /> 
+              <p class="Error"> @if (!String.IsNullOrEmpty(err?[2])) @err[2] </p>
+           <p>Genry:     </p> <select name="Genry">
                                 <option selected="selected">Choose Genry</option>
                                 <option value="Prose">Prose</option>
                                 <option value="Poetry">Poetry</option>
@@ -47,14 +47,18 @@
                                 <option value="Postmodernism">Postmodernism</option>
                                 <option value="Metamodernism">Metamodernism</option>
                               </select>
-               @if (!String.IsNullOrEmpty(err?[3])) @err[3]
-           <p>Annotation:            <p/> <textarea name="Annotation" ></textarea> 
-               @if (!String.IsNullOrEmpty(err?[4])) @err[4]
-           <p>Text:            <p/> <textarea id="ContentText" name="TextContent" ></textarea> 
-           <div>
+                <p class="Error"> @if (!String.IsNullOrEmpty(err?[3])) @err[3] </p>
+                <p>Annotation:            </p> <div class="Annotation" name="Annotation" contenteditable="true" ></div>
+                       <p class="Error"> @if (!String.IsNullOrEmpty(err?[4])) @err[4] </p>
+                <p>Text:     </p> <div class="ContentText" id="ContentText" contenteditable="true" name="TextContent"></div>
+                <p class="Error"> @if (!String.IsNullOrEmpty(err?[4])) @err[5] </p>
+                <div class="Buttons">
                 <button type="submit" id="AddBook">Add Book </button>
                 <input type="file" id="EpubFile" accept="epub/*" />
-           </div>
+                <label for="EpubFile">
+                    <img src="/icons/favpng_e-book-symbol.png" />
+                </label>
+                </div>
         </form>
     </div>
     <script src="/js/book.js" ></script>

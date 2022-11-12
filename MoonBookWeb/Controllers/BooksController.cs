@@ -26,7 +26,7 @@ namespace MoonBookWeb.Controllers
             if (_sessionLogin.user != null)
             {
                 ViewData["AuthUser"] = _sessionLogin?.user;
-                ViewData["errlog"] = err?.Split(';');
+                ViewData["ErrorBook"] = err?.Split(';');
                 HttpContext.Session.Remove("AddBookErr");
                 return View();
             }

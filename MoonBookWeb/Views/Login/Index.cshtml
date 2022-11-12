@@ -9,12 +9,16 @@
     {
         <div class="Form">
             <form action="/Login/Login" method="post" enctype="application/x-www-form-urlencoded">
-            <p>Login:    <p/><input type="text"  name="Login"/>
-                @if(!String.IsNullOrEmpty(err?[9])) @err[9]
-                @if(!String.IsNullOrEmpty(err?[11])) @err[11]
-            <p>Password: <p/><input type="password" name="Password" />
-                @if(!String.IsNullOrEmpty(err?[10])) @err[10]
-                @if(!String.IsNullOrEmpty(err?[12])) @err[12] 
+                <p>Login:    </p><input type="text" name="Login" /> <br>
+                <p class="Error">
+                    @if (!String.IsNullOrEmpty(err?[9]))@err[9]
+                    else if (!String.IsNullOrEmpty(err?[11]))@err[11]
+                </p>
+                <p style="margin-top: 8%;">Password: </p> <input type="password" name="Password" /><br>
+                <p class="Error">
+                    @if (!String.IsNullOrEmpty(err?[10])) @err[10]
+                    else if (!String.IsNullOrEmpty(err?[12])) @err[12]
+                </p>  
                 <br/>
                 <div class="Buttons">
                     <button type="submit">Login</button>

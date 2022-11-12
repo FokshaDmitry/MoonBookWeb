@@ -2,7 +2,7 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    background-color: #313574;
+    background-color: #212331;
     border-radius: 20px;
 }
 .BookInfo{
@@ -96,7 +96,7 @@
 }
 .Quote a {
     font-style: italic;
-    color: #242424;
+    color: #050404;
 }
 /*======================Star Rating========================*/
 .rating-area {

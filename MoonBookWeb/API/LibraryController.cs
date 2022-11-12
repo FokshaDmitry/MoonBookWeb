@@ -20,10 +20,10 @@ namespace MoonBookWeb.API
                 return new { status = "Ok", message = "Search is empty" };
             }
             Search = Search.ToLower().Replace(" ", "");
-            var books = _context.Books.Where(b => b.Title!.ToLower().Replace(" ", "") == Search);
-            if(books.Count() == 0)
+            var books = _context.Books.Where(b => b.Title!.ToLower().Replace(" ", "") == Search).ToList().GroupJoin(_context.BookRatings, b => b.Id, br => br.IdBook, (b, br) => new { Book = b, Rating = br });
+            if (books.Count() == 0)
             {
-                books = _context.Books.Where(b => b.Author!.ToLower().Replace(" ", "") == Search);
+                books = _context.Books.Where(b => b.Author!.ToLower().Replace(" ", "") == Search).ToList().GroupJoin(_context.BookRatings, b => b.Id, br => br.IdBook, (b, br) => new { Book = b, Rating = br });
             }
             return new { status = "Ok", message = books };
         }
