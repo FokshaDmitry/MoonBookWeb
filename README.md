@@ -1,37 +1,45 @@
 # MoonBookWeb
 <b>Login</b>
 
-![image](https://user-images.githubusercontent.com/99391531/193822367-8ed0e0d6-044e-45b1-b4ce-0aaa41f1a540.png)
+![image](https://user-images.githubusercontent.com/99391531/201481243-30fd9727-0eb4-4786-8cfc-6b89ab797ba5.png)
 
 <b>Registration</b>
 
-![image](https://user-images.githubusercontent.com/99391531/193822513-bec82cd5-fb73-4cdd-a1f3-357b38b7c3a2.png)
+![image](https://user-images.githubusercontent.com/99391531/201481265-b61df8cb-6a31-427f-b6ad-e7c403848af5.png)
 
 <b>User Page. Available after registration.</b>
 
-![image](https://user-images.githubusercontent.com/99391531/197336314-4fa0af2b-2c2f-4e78-9668-c751ac9ba25b.png)
+![image](https://user-images.githubusercontent.com/99391531/201481328-05fd5f90-83b3-4d68-af5e-429092af136d.png)
 
 <b>User frends. All current posts of added friends are displayed on the starting position.</b>
 
-![image](https://user-images.githubusercontent.com/99391531/193823164-53de4bdc-6762-4375-b68c-1015b9ae5448.png)
-
-<b>Library of all books added by users and search filter.</b>
-
-![image](https://user-images.githubusercontent.com/99391531/192140661-4715a1c0-47e2-4dc7-82dd-b3e4cdc69b20.png)
-
-<b>Literature reading interface.</b>
-
-![image](https://user-images.githubusercontent.com/99391531/193823790-d7188ead-b977-4cd4-916a-e4c2fc253d6e.png)
-
-<b>Comments on post</b>
-
-![image](https://user-images.githubusercontent.com/99391531/197336373-376af693-b425-4268-b54b-4b70d75d9658.png)
+![image](https://user-images.githubusercontent.com/99391531/201481346-062073d5-7293-4e1c-b2df-9760167c80c1.png)
 
 <b>Freand page and his post.</b>
 
-![image](https://user-images.githubusercontent.com/99391531/193824000-e94a7aef-73c2-4ca6-b4e6-8e30fe165557.png)
+![image](https://user-images.githubusercontent.com/99391531/201481425-90039208-8a5f-4b42-994b-9fcacb561766.png)
+
+<b>Library of all books added by users and search filter.</b>
+
+![image](https://user-images.githubusercontent.com/99391531/201481453-2390dd8e-3287-4443-ae5d-beaa447aa68d.png)
+
+<b>Book Page, Book Info, Book Coments, Book Quote<p>
+
+![image](https://user-images.githubusercontent.com/99391531/201481646-053d1d9a-d646-4216-aa1b-ef022bc48d04.png)
+
+<b>Literature reading interface.</b>
+
+![image](https://user-images.githubusercontent.com/99391531/201481684-8bf5d9cf-6dec-4136-9eb0-c858bf17bd5c.png)
+
+<b>Quoting</b>
+
+![image](https://user-images.githubusercontent.com/99391531/201481713-5d9ca038-8cc2-4437-ad64-41c4b0e070e6.png)  
+  
+<b>Comments on post</b>
+
+![image](https://user-images.githubusercontent.com/99391531/201481838-25d6a8f4-44bf-4384-9966-59efec9221b2.png)
 
 <b>Add Book. You can add the book yourself or using .epup file</b>
 
-![image](https://user-images.githubusercontent.com/99391531/193824337-16d7e899-4f45-495f-9b02-f806917f00b7.png)
+![image](https://user-images.githubusercontent.com/99391531/201481930-bbd872d3-709f-498a-888b-136119f8195d.png)
 
