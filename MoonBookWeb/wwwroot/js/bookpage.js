@@ -2,7 +2,7 @@
 	comment = document.querySelector("comment");
 	if (!comment) throw "Forum  script: APP not found";
 	link = new URL(window.location.href).search.replace('?', "");
-	//if link not empty, show choose user
+	//if link not empty, book dont't found
 	if (link != '') {
 		bookpageLoaded(link);
 		loadElement(comment);
@@ -18,6 +18,7 @@ let read = document.getElementById("Read");
 let follow = document.getElementById("Follow");
 let send = document.getElementById("Send");
 let commentAnswer = document.querySelector("#CommentAnswerVeiw");
+//Book Loaded
 function bookpageLoaded(link) {
 	fetch(`/api/BookPage/${link}`, {
 		method: "GET",
@@ -38,6 +39,7 @@ function bookpageLoaded(link) {
         }
     })
 }
+//Loaded Comments
 function loadElement(elem) {
 	fetch(`/api/comment/${link}`, {
 		method: "GET",
@@ -52,6 +54,7 @@ function loadElement(elem) {
 			}
 		});
 }
+//Show book comments
 function showElement(elem, j) {
 	let appHtmlComment = "";
 	for (let comment of j.message) {
@@ -96,13 +99,14 @@ function showElement(elem, j) {
 	elem.innerHTML = appHtmlComment;
 	commentLoaded();
 }
+//Add event
 async function commentLoaded() {
 	for (let comment of document.querySelectorAll(".CommentUser")) {
 		comment.onclick = Comment;
 	}
 }
 function Comment(e) {
-	//Delete coment current post
+	//Delete comment current post
 	if (e.target.id === "CommentDelete") {
 		let Comment = e.target.closest(".CommentUser");
 		let idComment = Comment.getAttribute('id');
@@ -168,9 +172,11 @@ document.getElementById("CloseAnswer").addEventListener("click", () => {
 	commentAnswer.style.visibility = "hidden"
 	commentAnswer.querySelector("p").textContent = "";
 })
+//redirect on user library
 read.addEventListener("click", () => {
 	window.location.href = `/Books/UserLibrary?${link}`;
 })
+//Follow current book
 follow.addEventListener("click", () => {
 	fetch(`/api/book/${link}`,
 		{
@@ -188,6 +194,7 @@ follow.addEventListener("click", () => {
 			}
 		});
 })
+//send comment book 
 send.addEventListener("click", () => {
 	let Text = document.getElementById("TextComment");
 	let answer;
@@ -242,12 +249,13 @@ send.addEventListener("click", () => {
 		})
     }
 })
+//Add event for rating
 async function loadRating() {
 	for (let radio of document.querySelectorAll("#Rating input[type=radio]")) {
 		radio.onclick = Rating;
 	}
 }
-//Text Orintations
+//Book rating
 function Rating(e) {
 	const formData = new FormData();
 	formData.append("Grade", e.target.value);
