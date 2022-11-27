@@ -18,6 +18,7 @@ namespace MoonBookWeb.API
             _sessionLogin = sessionLogin;
             _context = context;
         }
+        //Get Comment for post
         [HttpGet("{Id}")]
         public object GetComment(string Id)
         {
@@ -34,7 +35,7 @@ namespace MoonBookWeb.API
             var comment = _context.Comments.Where(cb => cb.Delete == Guid.Empty).Where(cb => cb.idPost == id).Join(_context.Users, cb => cb.idUser, u => u.Id, (cb, u) => new { Comment = cb, User = u }).ToList().GroupJoin(_context.Users, c => c.Comment.Answer, u => u.Id, (c, u) => new { Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date); ;
             return new { status = "Ok", message = comment, user = _sessionLogin.user.Id };
         }
-        //Add comment
+        //Add comment for post
         [HttpPost]
         public object Comment([FromForm] AddComentModel commentModel)
         {
@@ -62,8 +63,9 @@ namespace MoonBookWeb.API
                 return new { status = "Error", message = "Bad Request" };
             }
         }
+        //Add comment for book
         [HttpPost("book")]
-        public object Quote([FromForm] QuoteModel quoteModel)
+        public object Quote([FromForm] QuoteModel quoteModel) //Model for book comment
         {
             if(quoteModel != null)
             {
@@ -75,11 +77,11 @@ namespace MoonBookWeb.API
                     comment.Date = DateTime.Now;
                     comment.idPost = quoteModel.Id;
                     comment.Text = quoteModel.Text;
-                    try
+                    try 
                     {
                         comment.Quote = quoteModel?.Quote?.Substring(0, 30) + "...";
                     }
-                    catch
+                    catch // if Quote has more then 30 letters
                     {
                         comment.Quote = quoteModel?.Quote;
                     }
