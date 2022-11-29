@@ -18,7 +18,7 @@ namespace MoonBookWeb.API
             _context = context;
             _sessionLogin = sessionLogin;
         }
-
+        //Get book for Id
         [HttpGet("{Id}")]
         public object GetBook(string Id)
         {
@@ -44,6 +44,7 @@ namespace MoonBookWeb.API
             var rating = _context.BookRatings.Where(br => br.IdBook == id);
             return new { status = "Ok", message = book, follow = follow, grades = grades, sub = sub, rating = rating }; ;
         }
+        //Add Grade for book
         [HttpPost("{Id}")]
         public object PostGrade(string Id, [FromForm]int Grade)
         {
