@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	post = document.querySelector("post");
 	if (!post) throw "Forum  script: APP not found";
 	post.innerHTML = `<img style="width: 150px; position: absolute; margin-left: 20%;" src ="../icons/oie_L36bLHLNsDH2.gif"/>`
-	posts = new Posts("/api/freand/Post");
+	posts = new Posts("/api/post/freand");
 	posts.loadElement(post);
 	//get path
 	link = new URL(window.location.href);
@@ -110,7 +110,7 @@ function Follow(e) {
     }
 }
 function PageFreand(LoginFreand) {
-	fetch(`/api/freand/${LoginFreand}`, {
+	fetch(`/api/post/${LoginFreand}`, {
 		method: "GET",
 		body: null
 	}).then(r => r.json()).then(j => {

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using MoonBookWeb.Models;
 using MoonBookWeb.Services;
+using System.Linq;
 
 namespace MoonBookWeb.API
 {
@@ -18,12 +20,67 @@ namespace MoonBookWeb.API
         }
         #region Get
         //Find post current User
-        [HttpGet]
-        public object Get()
+        [HttpGet("{Message}")]
+        public object Get(string message)
         {
+            if (String.IsNullOrEmpty(message))
+            {
+                return new { status = "Error", message = "User is empty" };
+            }
             var comments = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u }).ToList().GroupJoin(_context.Users, c=> c.Comment.Answer, u => u.Id, (c, u) => new {Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date);
-            var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id).Where(p => p.Delete == Guid.Empty).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comments, p => p.post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c });
-            return new { status = "Ok", message = post, user = _sessionLogin.user.Id };
+            if (message == "user")
+            {
+                var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id)
+                                     .Where(p => p.Delete == Guid.Empty).ToList()
+                                     .Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u })
+                                     .OrderByDescending(p => p.post.Date)
+                                     .GroupJoin(comments, p => p.post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c })
+                                     .GroupJoin(_context.Reactions, p => p.Post.post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
+                return new { status = "Ok", message = post, user = _sessionLogin.user.Id };
+
+            }
+            if (message == "home")
+            {
+                var post = _context.Posts.Where(p => p.Delete == Guid.Empty).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comments, p => p.post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
+                if (_sessionLogin.user == null)
+                {
+                    return new { status = "Ok", message = post };
+                }
+                else
+                {
+                    return new { status = "Ok", message = post, user = _sessionLogin.user.Id };
+                }
+            }
+            //Get all post of all freands
+            if (message == "freand")
+            {
+                var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
+                if (freands != null)
+                {
+                    var postFreand = _context.Posts.ToList().Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u }).OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.Post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
+                    if (postFreand != null)
+                    {
+                        return new { status = "Ok", message = postFreand, user = _sessionLogin.user.Id };
+                    }
+                }
+                return new { status = "Error", message = "Dont find Posts" };
+            }
+            //Get choose frend post
+            else
+            {
+                var user = _context.Users.Where(u => u.Login == message).FirstOrDefault();
+                if (user != null)
+                {
+                    var freandsPost = _context.Posts.Where(p => p.IdUser == user.Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.Post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
+                    var book = _context.Books.Where(b => b.idUser == user.Id);
+                    var freandFreands = _context.Subscriptions.Where(s => s.IdUser == user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User);
+                    return new { status = "Ok", message = freandsPost, user = _sessionLogin.user.Id, freand = user, book = book, freandFreands = freandFreands };
+                }
+                else
+                {
+                    return new { Status = "Error", message = "IdUser dont find" };
+                }
+            }
         }
         #endregion
 
@@ -32,49 +89,38 @@ namespace MoonBookWeb.API
         [HttpPut]
         public object Reaction([FromForm] Reactions reactions)
         {
-            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p }).FirstOrDefault();
+            //var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p }).FirstOrDefault();
+            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).FirstOrDefault();
             if (qerty != null)
             {
-                if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 1)
+                if (qerty.Reaction == reactions.Reaction && qerty.Reaction == 1)
                 {
-                    qerty.Post.Like--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Remove(qerty.Ract);
+                    qerty.Reaction = 0;
+                    _context.Reactions.Update(qerty);
                 }
-                else if (qerty.Ract.Reaction == reactions.Reaction && qerty.Ract.Reaction == 2)
+                else if (qerty.Reaction == reactions.Reaction && qerty.Reaction == 2)
                 {
-                    qerty.Post.Dislike--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Remove(qerty.Ract);
+                    qerty.Reaction = 0;
+                    _context.Reactions.Update(qerty);
                 }
-                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 1)
+                else if (qerty.Reaction != reactions.Reaction && reactions.Reaction == 1)
                 {
-                    qerty.Ract.Reaction = 1;
-                    qerty.Post.Like++;
-                    if (qerty.Post.Dislike != 0) qerty.Post.Dislike--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Update(qerty.Ract);
+                    qerty.Reaction = 1;
+                    _context.Reactions.Update(qerty);
                 }
-                else if (qerty.Ract.Reaction != reactions.Reaction && reactions.Reaction == 2)
+                else if (qerty.Reaction != reactions.Reaction && reactions.Reaction == 2)
                 {
-                    qerty.Ract.Reaction = 2;
-                    qerty.Post.Dislike++;
-                    if (qerty.Post.Like != 0) qerty.Post.Like--;
-                    _context.Posts.Update(qerty.Post);
-                    _context.Reactions.Update(qerty.Ract);
+                    qerty.Reaction = 2;
+                    _context.Reactions.Update(qerty);
                 }
             }
             else
             {
-                var q = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault();
-                if (reactions.Reaction == 1) q.Like++;
-                else q.Dislike++;
-
-                _context.Posts.Update(q);
                 _context.Reactions.Add(new Reactions { Id = Guid.NewGuid(), IdPost = reactions.IdPost, IdUser = _sessionLogin.user.Id, Reaction = reactions.Reaction });
             }
             _context.SaveChanges();
-            return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Like, reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).FirstOrDefault().Dislike };
+            return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).Join(_context.Reactions, p => p.Id, r => r.IdPost, (p, r) => new {Post = p, React = r}).Select(r => r.React.Reaction).Where(r => r == 1).Count(), 
+                                        reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).Join(_context.Reactions, p => p.Id, r => r.IdPost, (p, r) => new { Post = p, React = r }).Select(r => r.React.Reaction).Where(r => r == 2).Count() };
         }
         //Update Post
         [HttpPut("{Id}")]
@@ -137,8 +183,6 @@ namespace MoonBookWeb.API
                     posts.Id = Guid.NewGuid();
                     posts.Date = DateTime.Now;
                     posts.IdUser = _sessionLogin.user.Id;
-                    posts.Like = 0;
-                    posts.Dislike = 0;
                     posts.Delete = Guid.Empty;
                     _context.Posts.Add(posts);
                     _context.SaveChanges();

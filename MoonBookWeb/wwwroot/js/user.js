@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (!post) throw "Forum  script: APP not found";
 	post.innerHTML = `<img style="width: 150px; position: absolute; margin-left: 20%;" src ="../icons/oie_L36bLHLNsDH2.gif"/>`
 	//Add current user post
-	var posts = new Posts("/api/post");
+	var posts = new Posts("/api/post/user");
 	posts.loadElement(post);
 	//online Freands
 	const online = document.querySelector("online");

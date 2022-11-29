@@ -29,47 +29,6 @@ namespace MoonBookWeb.API
             }
             return new {status = "Ok", message = "You don't have freands" };
         }
-        //Get freands posts
-        [HttpGet("{Message}")]
-        public object Posts(string message)
-        {
-            if (String.IsNullOrEmpty(message))
-            {
-                return new { status = "Error", message = "User is empty" };
-            }
-            //Get all post of all freands
-            if (message == "Post")
-            {
-                var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
-                if (freands != null)
-                {
-                    var comments = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u }).ToList().GroupJoin(_context.Users, c => c.Comment.Answer, u => u.Id, (c, u) => new { Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date);
-                    var postFreand = _context.Posts.ToList().Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u }).OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c });
-                    if (postFreand != null)
-                    {
-                        return new { status = "Ok", message = postFreand, user = _sessionLogin.user.Id };
-                    }
-                }
-                return new { status = "Error", message = "Dont find Posts" };
-            }
-            //Get choose frend post
-            else
-            {
-                var user = _context.Users.Where(u => u.Login == message).FirstOrDefault();
-                if(user != null)
-                {
-                    var comments = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u }).ToList().GroupJoin(_context.Users, c => c.Comment.Answer, u => u.Id, (c, u) => new { Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date);
-                    var freandsPost = _context.Posts.Where(p => p.IdUser == user.Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c });
-                    var book = _context.Books.Where(b => b.idUser == user.Id);
-                    var freandFreands = _context.Subscriptions.Where(s => s.IdUser == user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User);
-                    return new { status = "Ok", message = freandsPost, user = _sessionLogin.user.Id, freand = user, book = book, freandFreands = freandFreands };
-                }
-                else
-                {
-                    return new { Status = "Error", message = "IdUser dont find" };
-                }
-            }
-        }
         #endregion
 
         #region Put

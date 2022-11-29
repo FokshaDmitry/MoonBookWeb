@@ -29,22 +29,22 @@
 				//replace data posts
 				for (let post of j.message) {
 					var tmp = trTemplate;
-					tmp = tmp.replaceAll("{{Login}}", post.post.user.login)
-						.replaceAll("{{Name}}", post.post.user.name)
-						.replaceAll("{{Surname}}", post.post.user.surname)
-						.replaceAll("{{Date}}", post.post.post.date)
-						.replaceAll("{{Like}}", post.post.post.like)
-						.replaceAll("{{Dislike}}", post.post.post.dislike)
-						.replaceAll("{{Id}}", post.post.post.id)
-						.replaceAll("{{PhotoUser}}", (post.post.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : post.post.user.photoName))
-						.replaceAll("{{PostImg}}", (post.post.post.image == null ? "" : `<img id="PostImg" src="/img_post/${post.post.post.image}" />`))
-						.replaceAll("{{Text}}", (post.post.post.text == null ? "" : post.post.post.text))
-						.replaceAll("{{Title}}", (post.post.post.title == null ? "" : post.post.post.title))
-						.replaceAll("{{PostDelete}}", (post.post.user.id !== j.user ? "" : `<img id="PostDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`))
-						.replaceAll("{{PostUpdate}}", (post.post.user.id !== j.user ? "" : `<img id="PostUpdate" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>`))
+					tmp = tmp.replaceAll("{{Login}}", post.post.post.user.login)
+						.replaceAll("{{Name}}", post.post.post.user.name)
+						.replaceAll("{{Surname}}", post.post.post.user.surname)
+						.replaceAll("{{Date}}", post.post.post.post.date)
+						.replaceAll("{{Like}}", post.like)
+						.replaceAll("{{Dislike}}", post.dislike)
+						.replaceAll("{{Id}}", post.post.post.post.id)
+						.replaceAll("{{PhotoUser}}", (post.post.post.user.photoName == null ? "android_contacts_FILL0_wght400_GRAD0_opsz48.png" : post.post.post.user.photoName))
+						.replaceAll("{{PostImg}}", (post.post.post.post.image == null ? "" : `<img id="PostImg" src="/img_post/${post.post.post.post.image}" />`))
+						.replaceAll("{{Text}}", (post.post.post.post.text == null ? "" : post.post.post.post.text))
+						.replaceAll("{{Title}}", (post.post.post.post.title == null ? "" : post.post.post.post.title))
+						.replaceAll("{{PostDelete}}", (post.post.post.user.id !== j.user ? "" : `<img id="PostDelete" src="../icons/delete_FILL0_wght400_GRAD0_opsz48.png"/>`))
+						.replaceAll("{{PostUpdate}}", (post.post.post.user.id !== j.user ? "" : `<img id="PostUpdate" src="../icons/drive_file_rename_outline_FILL0_wght400_GRAD0_opsz48.png"/>`))
 					let appHtmlComment = "";
 					if (j.user !== null && j.user !== "" && j.user !== undefined) {
-						for (let comment of post.comment) {
+						for (let comment of post.post.comment) {
 							var tmpCom = `<div class="CommentUser" id="{{Id}}"> 
 											<div>
 												<img id="PhotoComment" src="/img/{{PhotoName}}"/>
