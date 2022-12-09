@@ -24,6 +24,7 @@ let send = document.getElementById("SendCommentImg");
 let quote = "";
 let dialog;
 let searchP;
+//Send Quote
 send.addEventListener("click", () => {
 	if (textComment !== "" && quote !== "" && link !== "") {
 		const formData = new FormData();
@@ -45,6 +46,7 @@ send.addEventListener("click", () => {
 			});
     }
 })
+//Set position <p> select element
 textContent.addEventListener("mousedown", (e) => {
 	let massP = document.querySelectorAll("#TextContent p")
 	for (var i = 0; i < massP.length; i++) {
@@ -53,6 +55,7 @@ textContent.addEventListener("mousedown", (e) => {
         }
     }
 })
+//Show quoting dialog
 textContent.addEventListener("mouseup", (e) => {
 	quote = window.getSelection().toString();
 	dialog = document.getElementById("Dialog")
@@ -67,6 +70,7 @@ textContent.addEventListener("mouseup", (e) => {
 		quote = ""
     }
 })
+//Text settings
 Interval.addEventListener("change", () => {
 	textContent.style.lineHeight = `${Interval.value}`;
 })
@@ -106,7 +110,7 @@ function Position(e) {
 		textContent.style.textAlign = `justify`;
 	}
 }
-
+//Add book to user library
 addbook.addEventListener("click", () => {
 	fetch(`/api/book/${idReadBook}`,
 		{
@@ -140,7 +144,7 @@ function loadElement(elem, Query) {
 			}
 		});
 }
-
+//Show books
 function showElementBooks(elem, j) {
 	fetch("/tmpl/bookitem.html")
 		.then(r => r.text())
@@ -169,10 +173,12 @@ function bookLoaded() {
 		link = "";
     }
 }
+//Add event
 function Read(e) {
 	let idBook = e.currentTarget.getAttribute("id");
 	ReadBook(idBook)
 }
+//Choose book
 function ReadBook(idBook, search) {
 	fetch(`/api/book/${idBook}`, {
 		method: "GET",
@@ -197,9 +203,10 @@ function ReadBook(idBook, search) {
 				addbookimg.src = "../icons/bookmark_add_FILL0_wght400_GRAD0_opsz48.png"
 			}
 			link = j.message.id;
+			//Quote position
 			if (search !== "") {
 				window.scrollTo(0, document.querySelectorAll("#TextContent p")[search].offsetTop);
-            }
+                        }
 		}
 	})
 }
