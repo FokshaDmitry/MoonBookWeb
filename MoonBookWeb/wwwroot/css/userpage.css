@@ -26,7 +26,7 @@
     align-items: center;
     margin-bottom: 20px;
     overflow: overlay;
-    border-radius: 20px;
+    border-radius: 10px;
 }
     #UserBooks::-webkit-scrollbar-track {
         background-color: transparent;
@@ -43,7 +43,7 @@
     cursor: pointer;
     border-radius: 8px;
     border: 2px double black;
-    margin-left: 5px;
+    margin-left: -2px;
 }
 #UserBookImg {
     height: 95px;
@@ -104,8 +104,7 @@
     width: 100%;
     height: auto;
     border: 3px double gray;
-    border-radius: 25px;
-    margin-top: 1%;
+    border-radius: 15px;
 }
 
 #ImagePost {

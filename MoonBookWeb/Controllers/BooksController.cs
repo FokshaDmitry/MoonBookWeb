@@ -70,7 +70,7 @@ namespace MoonBookWeb.Controllers
         }
         //Add Book Page
         [HttpPost]
-        public IActionResult AddBook([FromForm]AddBookModel book)
+        public async Task<IActionResult> AddBook([FromForm]AddBookModel book)
         {
             
             var err = _chekUser.ChekAddBook(book);
@@ -96,10 +96,7 @@ namespace MoonBookWeb.Controllers
                     if (book?.CoverImage != null)
                     {
                         CoverName = Guid.NewGuid().ToString() + Path.GetExtension(book.CoverImage.FileName);
-                        book.CoverImage.CopyToAsync(
-                            new FileStream(
-                                "./wwwroot/img_post/" + CoverName,
-                                FileMode.Create));
+                        await book.CoverImage.CopyToAsync(new FileStream( "./wwwroot/img_post/" + CoverName, FileMode.Create));
                     }
                 }
                 HttpContext.Session.Remove("CoverImg");
@@ -113,9 +110,9 @@ namespace MoonBookWeb.Controllers
                 books.Date = DateTime.Now;
                 books.Genry = book?.Genry;
                 //Create post about add book
-                _context.Posts.Add(new Posts { Id = Guid.NewGuid(), Date = DateTime.Now, Title = books.Title, Image = CoverName, IdUser = _sessionLogin.user.Id });
-                _context.Books.Add(books);
-                _context.SaveChanges();
+                await _context.Posts.AddAsync(new Posts { Id = Guid.NewGuid(), Date = DateTime.Now, Title = books.Title, Image = CoverName, IdUser = _sessionLogin.user.Id });
+                await _context.Books.AddAsync(books);
+                await _context.SaveChangesAsync();
                 return Redirect("/User/Index");
             }
             HttpContext.Session.SetString("AddBookErr", String.Join(";", err));

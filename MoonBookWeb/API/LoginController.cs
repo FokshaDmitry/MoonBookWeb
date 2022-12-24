@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MoonBookWeb.Services;
 
 namespace MoonBookWeb.API
@@ -18,7 +19,7 @@ namespace MoonBookWeb.API
         }
         //Login and return user
         [HttpGet]
-        public object Get(string login, string password)
+        public async Task<object> Get(string login, string password)
         {
             if (string.IsNullOrEmpty(login))
             {
@@ -30,7 +31,7 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = 409;
                 return "Conflict: password required";
             }
-            User user = _context.Users.Where(u => u.Login == login).FirstOrDefault();
+            var user =  _context.Users.Where(u => u.Login == login).AsNoTracking().FirstOrDefault();
 
             if (user == null)
             {

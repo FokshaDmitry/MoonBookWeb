@@ -2,9 +2,10 @@
 .post {
     border-radius: 20px;
     width: 100%;
-    margin: 5%;
+    margin: 25px;
     display: block;
     background-color: #212331;
+    padding: 10px;
 }
 #search_user_text {
     height: 25px;
@@ -34,6 +35,7 @@
     width: 100%;
     margin-bottom: 20px;
     height: 100px;
+    border-radius: 10px;
 }
 #UserBookImg {
     height: 95px;

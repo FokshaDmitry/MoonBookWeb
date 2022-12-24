@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using MoonBookWeb.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MoonBookWeb.Services;
-using System.Linq;
 
 namespace MoonBookWeb.API
 {
@@ -21,17 +18,17 @@ namespace MoonBookWeb.API
         #region Get
         //Find post current User
         [HttpGet("{Message}")]
-        public object Get(string message)
+        public async Task<object> Get(string message)
         {
             if (String.IsNullOrEmpty(message))
             {
                 return new { status = "Error", message = "User is empty" };
             }
-            var comments = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u }).ToList().GroupJoin(_context.Users, c=> c.Comment.Answer, u => u.Id, (c, u) => new {Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date);
+            var comments = _context.Comments.Where(c => c.Delete == Guid.Empty).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { Comment = c, User = u }).AsNoTracking().ToList().GroupJoin(_context.Users, c=> c.Comment.Answer, u => u.Id, (c, u) => new {Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date);
             if (message == "user")
             {
                 var post = _context.Posts.Where(p => p.IdUser == _sessionLogin.user.Id)
-                                     .Where(p => p.Delete == Guid.Empty).ToList()
+                                     .Where(p => p.Delete == Guid.Empty).AsNoTracking().ToList()
                                      .Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u })
                                      .OrderByDescending(p => p.post.Date)
                                      .GroupJoin(comments, p => p.post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c })
@@ -41,7 +38,7 @@ namespace MoonBookWeb.API
             }
             if (message == "home")
             {
-                var post = _context.Posts.Where(p => p.Delete == Guid.Empty).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).OrderByDescending(p => p.post.Date).GroupJoin(comments, p => p.post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
+                var post = _context.Posts.Where(p => p.Delete == Guid.Empty).Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { post = p, user = u }).AsNoTracking().ToList().OrderByDescending(p => p.post.Date).GroupJoin(comments, p => p.post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
                 if (_sessionLogin.user == null)
                 {
                     return new { status = "Ok", message = post };
@@ -54,10 +51,10 @@ namespace MoonBookWeb.API
             //Get all post of all freands
             if (message == "freand")
             {
-                var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User);
+                var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(s => s.User).AsNoTracking();
                 if (freands != null)
                 {
-                    var postFreand = _context.Posts.ToList().Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u }).OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.Post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
+                    var postFreand = _context.Posts.Join(freands, p => p.IdUser, u => u.Id, (p, u) => new { Post = p, User = u }).AsNoTracking().ToList().OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.Post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
                     if (postFreand != null)
                     {
                         return new { status = "Ok", message = postFreand, user = _sessionLogin.user.Id };
@@ -68,12 +65,12 @@ namespace MoonBookWeb.API
             //Get choose frend post
             else
             {
-                var user = _context.Users.Where(u => u.Login == message).FirstOrDefault();
+                var user = await _context.Users.Where(u => u.Login == message).AsNoTracking().FirstOrDefaultAsync();
                 if (user != null)
                 {
-                    var freandsPost = _context.Posts.Where(p => p.IdUser == user.Id).ToList().Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.Post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
-                    var book = _context.Books.Where(b => b.idUser == user.Id);
-                    var freandFreands = _context.Subscriptions.Where(s => s.IdUser == user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User);
+                    var freandsPost = _context.Posts.Where(p => p.IdUser == user.Id).Join(_context.Users, p => p.IdUser, u => u.Id, (p, u) => new { User = u, Post = p }).AsNoTracking().ToList().OrderByDescending(u => u.Post.Date).GroupJoin(comments, p => p.Post.Id, c => c.Comment.Comment.idPost, (p, c) => new { Post = p, Comment = c }).GroupJoin(_context.Reactions, p => p.Post.Post.Id, r => r.IdPost, (p, r) => new { post = p, Like = r.Where(l => l.Reaction == 1).Count(), Dislike = r.Where(l => l.Reaction == 2).Count() });
+                    var book = _context.Books.Where(b => b.idUser == user.Id).AsNoTracking();
+                    var freandFreands = _context.Subscriptions.Where(s => s.IdUser == user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).Select(u => u.User).AsNoTracking();
                     return new { status = "Ok", message = freandsPost, user = _sessionLogin.user.Id, freand = user, book = book, freandFreands = freandFreands };
                 }
                 else
@@ -87,10 +84,10 @@ namespace MoonBookWeb.API
         #region Put
         //Add/Delete/Change reaction
         [HttpPut]
-        public object Reaction([FromForm] Reactions reactions)
+        public async Task<object> Reaction([FromForm] Reactions reactions)
         {
             //var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).Join(_context.Posts, r => r.IdPost, p => p.Id, (r, p) => new { Ract = r, Post = p }).FirstOrDefault();
-            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).FirstOrDefault();
+            var qerty = _context.Reactions.Where(r => r.IdPost == reactions.IdPost).Where(r => r.IdUser == _sessionLogin.user.Id).AsNoTracking().FirstOrDefault();
             if (qerty != null)
             {
                 if (qerty.Reaction == reactions.Reaction && qerty.Reaction == 1)
@@ -118,13 +115,13 @@ namespace MoonBookWeb.API
             {
                 _context.Reactions.Add(new Reactions { Id = Guid.NewGuid(), IdPost = reactions.IdPost, IdUser = _sessionLogin.user.Id, Reaction = reactions.Reaction });
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return new { status = "Ok", reactLike = _context.Posts.Where(p => p.Id == reactions.IdPost).Join(_context.Reactions, p => p.Id, r => r.IdPost, (p, r) => new {Post = p, React = r}).Select(r => r.React.Reaction).Where(r => r == 1).Count(), 
                                         reactDislike = _context.Posts.Where(p => p.Id == reactions.IdPost).Join(_context.Reactions, p => p.Id, r => r.IdPost, (p, r) => new { Post = p, React = r }).Select(r => r.React.Reaction).Where(r => r == 2).Count() };
         }
         //Update Post
         [HttpPut("{Id}")]
-        public object Update(string Id, [FromBody] string text)
+        public async Task<object> Update(string Id, [FromBody] string text)
         {
             if (string.IsNullOrEmpty(Id))
             {
@@ -140,13 +137,13 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return new { Status = "Error", message = "Invalid id format (GUID required)" };
             }
-            var post = _context.Posts.Find(id);
+            var post = await _context.Posts.FindAsync(id);
             if (post == null)
             {
                 return new { status = "Error", message = "Post dont found" };
             }
             post.Text = text;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return new { status = "Ok" };
         }
         #endregion
@@ -154,7 +151,7 @@ namespace MoonBookWeb.API
         #region Post
         //Vallidation and add Post current user
         [HttpPost]
-        public object Post([FromForm] Models.PostUserModel postUser)
+        public async Task<object> Post([FromForm] Models.PostUserModel postUser)
         {
             if (_sessionLogin.user != null)
             {
@@ -176,7 +173,7 @@ namespace MoonBookWeb.API
 
                     isValid = true;
                     posts.Image = Guid.NewGuid().ToString() + Path.GetExtension(postUser.ImagePost.FileName);
-                    postUser.ImagePost.CopyToAsync(new FileStream("./wwwroot/img_post/" + posts.Image, FileMode.Create));
+                    await postUser.ImagePost.CopyToAsync(new FileStream("./wwwroot/img_post/" + posts.Image, FileMode.Create));
                 }
                 if (isValid)
                 {
@@ -184,8 +181,8 @@ namespace MoonBookWeb.API
                     posts.Date = DateTime.Now;
                     posts.IdUser = _sessionLogin.user.Id;
                     posts.Delete = Guid.Empty;
-                    _context.Posts.Add(posts);
-                    _context.SaveChanges();
+                    await _context.Posts.AddAsync(posts);
+                    await _context.SaveChangesAsync();
                     return new { status = "Ok", message = postUser.TextPost };
                 }
                 else
@@ -204,7 +201,7 @@ namespace MoonBookWeb.API
         #region Delete
         //Delete Post
         [HttpDelete("{id}")]
-        public object Delete(string id)
+        public async Task<object> Delete(string id)
         {
             if(!String.IsNullOrEmpty(id))
             {
@@ -218,7 +215,7 @@ namespace MoonBookWeb.API
                     HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                     return new { Status = "Error", message = "Invalid id format (GUID required)" };
                 }
-                var post = _context.Posts.Find(Id);
+                var post = await _context.Posts.FindAsync(Id);
                 if(post != null && post.IdUser == _sessionLogin.user.Id)
                 {
                     var delete = new DeleteList();
@@ -230,8 +227,8 @@ namespace MoonBookWeb.API
                     post.Delete = delete.Id;
                     _context.Posts.Update(post);
                     //Add delete post into DeleteList
-                    _context.DeleteList.Add(delete);
-                    _context.SaveChanges();
+                    await _context.DeleteList.AddAsync(delete);
+                    await _context.SaveChangesAsync();
                     return new { status = "Ok", message = "Ok" };
                 }
                 return new { status = "Error", message = "Post dont found" };

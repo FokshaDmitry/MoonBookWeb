@@ -6,11 +6,11 @@ namespace MoonBookWeb.Controllers
     public class LoginController : Controller
     {
         private readonly AddDbContext _context;
-        private readonly Services.Hesher _hesher;
+        private readonly Hesher _hesher;
         private readonly ISessionLogin _sessionLogin;
         private readonly ChekUser _chekUser;
         String[] err;
-        public LoginController(ChekUser chekUser, AddDbContext context, Services.Hesher hesher, ISessionLogin sessionLogin)
+        public LoginController(ChekUser chekUser, AddDbContext context, Hesher hesher, ISessionLogin sessionLogin)
         {
             _chekUser = chekUser;
             _context = context;
@@ -20,7 +20,7 @@ namespace MoonBookWeb.Controllers
 
         public IActionResult Index()
         {
-            String err = HttpContext.Session.GetString("RegError");
+            String err = HttpContext.Session.GetString("RegError")!;
             if (!String.IsNullOrEmpty(err))
             {
                 ViewData["ErrorLog"] = err;
@@ -35,7 +35,7 @@ namespace MoonBookWeb.Controllers
         }
         //Check login, password and find user
         [HttpPost]
-        public RedirectResult Login(String Login, String Password)
+        public async Task<RedirectResult> Login(String Login, String Password)
         {
             err = new String[13];
             if(String.IsNullOrEmpty(Login))
@@ -57,7 +57,7 @@ namespace MoonBookWeb.Controllers
                 if (user.Password == _hesher.Hesh(Password + user.PassSalt))
                 {
                     user.Online = true;
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     //Add user session and include middelwere
                     HttpContext.Session.SetString("UserId", user.Id.ToString());
                     return Redirect("/");
@@ -73,7 +73,7 @@ namespace MoonBookWeb.Controllers
         }
         //Validation and add database
         [HttpPost]
-        public IActionResult RegUser(Models.RegUserModel userModel)
+        public async Task<IActionResult> RegUser(Models.RegUserModel userModel)
         {
             err = _chekUser.Chek(userModel);
             bool isValid = true;
@@ -88,10 +88,7 @@ namespace MoonBookWeb.Controllers
                 {
                     //create avatar neme, path and save in folder
                     AvatarName = Guid.NewGuid().ToString() + Path.GetExtension(userModel.Avatar.FileName);
-                    userModel.Avatar.CopyToAsync(
-                        new FileStream(
-                            "./wwwroot/img/" + AvatarName,
-                            FileMode.Create));
+                    await userModel.Avatar.CopyToAsync(new FileStream("./wwwroot/img/" + AvatarName, FileMode.Create));
                 }
                 var user = new User();
                 user.PassSalt = _hesher.Hesh(DateTime.Now.ToString());                  //Create and hesh PassSalt
@@ -103,8 +100,8 @@ namespace MoonBookWeb.Controllers
                 user.Login = userModel?.Login;
                 user.RegMoment = DateTime.Now;
                 //Add User
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
                 return Redirect("/Login/Index");
             }
             
@@ -112,7 +109,7 @@ namespace MoonBookWeb.Controllers
             return Redirect("/Login/Registration");
         }
         //Edit data user
-        public IActionResult EditUser(Models.RegUserModel userModel)
+        public async Task<IActionResult> EditUser(Models.RegUserModel userModel)
         {
             var user = _sessionLogin?.user;
             if(user == null)
@@ -131,40 +128,37 @@ namespace MoonBookWeb.Controllers
             {
                 if (user?.Name != userModel.Name)
                 {
-                    user.Name = userModel?.Name;
+                    user!.Name = userModel?.Name;
                 }
                 if(user?.Surname != userModel?.Surname)
                 {
-                    user.Surname = userModel?.Surname;
+                    user!.Surname = userModel?.Surname;
                 }
                 if (user?.Status != userModel?.Status)
                 {
-                    user.Status = userModel?.Status;
+                    user!.Status = userModel?.Status;
                 }
                 if (user?.Email != userModel?.Email)
                 {
-                    user.Email = userModel?.Email;
+                    user!.Email = userModel?.Email;
                 }
                 if(user?.Login != userModel?.Login)
                 {
-                    user.Login = userModel?.Login;
+                    user!.Login = userModel?.Login;
                 }
                 if (userModel?.Avatar != null)
                 {
                     //Change Avatar
                     String AvatarName = Guid.NewGuid().ToString() + Path.GetExtension(userModel.Avatar.FileName);
-                    userModel.Avatar.CopyToAsync(
-                        new FileStream(
-                            "./wwwroot/img/" + AvatarName,
-                            FileMode.Create));
+                    await userModel.Avatar.CopyToAsync(new FileStream("./wwwroot/img/" + AvatarName, FileMode.Create));
                     System.IO.File.Delete("./wwwroot/img/" + user?.PhotoName);
-                    user.PhotoName = AvatarName;
+                    user!.PhotoName = AvatarName;
                 }
                 if(!String.IsNullOrEmpty(userModel?.Password) && userModel?.Password != user?.Password)
                 {
                     if(userModel?.ConfirmPass == userModel?.Password)
                     {
-                        user.PassSalt = _hesher.Hesh(DateTime.Now.ToString());
+                        user!.PassSalt = _hesher.Hesh(DateTime.Now.ToString());
                         user.Password = _hesher.Hesh(userModel?.Password + user.PassSalt);
                     }
                     else
@@ -176,27 +170,26 @@ namespace MoonBookWeb.Controllers
                 {
                     err[6] = "Create new password";
                 }
-                _context.Users.Update(user);
-                _context.SaveChanges();
+                _context.Users.Update(user!);
+                await _context.SaveChangesAsync();
                 return Redirect("/");
             }
             HttpContext.Session.SetString("RegError", String.Join(";", err));
             return Redirect("/Login/Update");
         }
         //Exit and change online
-        public IActionResult Exit()
+        public async Task<IActionResult> Exit()
         {
-            var user = _context.Users.Find(_sessionLogin.user.Id);
-            user.Online = false;
-            _context.Users.Update(user);
-            _context.SaveChanges();
+            var user = await _context.Users.FindAsync(_sessionLogin.user.Id);
+            user!.Online = false;
+            await _context.SaveChangesAsync();
             HttpContext.Session.Remove("UserId");
             return Redirect("/Login/Index");
         }
         //Update User
         public IActionResult Update()
         {
-            String err = HttpContext.Session.GetString("RegError");
+            String err = HttpContext.Session.GetString("RegError")!;
             if (err != null)
             {
                 ViewData["Error"] = err;
@@ -213,7 +206,7 @@ namespace MoonBookWeb.Controllers
         //Fegistration page
         public IActionResult Registration()
         {
-            String err = HttpContext.Session.GetString("RegError");
+            String err = HttpContext.Session.GetString("RegError")!;
             if (err != null)
             {
                 ViewData["Error"] = err;

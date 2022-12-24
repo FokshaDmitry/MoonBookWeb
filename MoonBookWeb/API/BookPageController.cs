@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MoonBookWeb.DAL.Entities;
 using MoonBookWeb.Models;
 using MoonBookWeb.Services;
@@ -20,7 +21,7 @@ namespace MoonBookWeb.API
         }
         //Get book for Id
         [HttpGet("{Id}")]
-        public object GetBook(string Id)
+        public async Task<object> GetBook(string Id)
         {
             Guid id = new Guid();
             try
@@ -32,7 +33,7 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return new { status = "Error", message = "Invalid id format (GUID required)" };
             }
-            var book = _context.Books.Find(id);
+            var book = await _context.Books.FindAsync(id);
             var follow = _context.SubBooks.Where(s => s.idUser == _sessionLogin.user.Id).Select(s => s.idBook).Contains(book?.Id);
             if (book == null)
             {
@@ -41,12 +42,12 @@ namespace MoonBookWeb.API
             }
             var grades = _context.BookRatings.Where(r => r.IdBook == id).Count();
             var sub = _context.SubBooks.Where(r => r.idBook == id).Count();
-            var rating = _context.BookRatings.Where(br => br.IdBook == id);
+            var rating = _context.BookRatings.Where(br => br.IdBook == id).AsNoTracking();
             return new { status = "Ok", message = book, follow = follow, grades = grades, sub = sub, rating = rating }; ;
         }
         //Add Grade for book
         [HttpPost("{Id}")]
-        public object PostGrade(string Id, [FromForm]int Grade)
+        public async Task<object> PostGrade(string Id, [FromForm]int Grade)
         {
             Guid id = new Guid();
             try
@@ -58,7 +59,7 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return new { status = "Error", message = "Invalid id format (GUID required)" };
             }
-            var grade = _context.BookRatings.Where(g => g.IdUser == _sessionLogin.user.Id).Where(g => g.IdBook == id).FirstOrDefault();
+            var grade = _context.BookRatings.Where(g => g.IdUser == _sessionLogin.user.Id).Where(g => g.IdBook == id).AsNoTracking().FirstOrDefault();
             if(grade == null)
             {
                 BookRating bookRating = new BookRating();
@@ -66,16 +67,16 @@ namespace MoonBookWeb.API
                 bookRating.Grade = Grade;
                 bookRating.IdUser = _sessionLogin.user.Id;
                 bookRating.IdBook = id;
-                _context.BookRatings.Add(bookRating);
-                _context.SaveChanges();
+                await _context.BookRatings.AddAsync(bookRating);
+                await _context.SaveChangesAsync();
             }
             else
             {
                 grade.Grade = Grade;
                 _context.BookRatings.Update(grade);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
-            var grades = _context.BookRatings.Where(r => r.IdBook == id);
+            var grades = _context.BookRatings.Where(r => r.IdBook == id).AsNoTracking();
             return new { status = "Ok", message = grades };
         }
     }

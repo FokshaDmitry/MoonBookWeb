@@ -32,17 +32,17 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return new { status = "Error", message = "Invalid id format (GUID required)" };
             }
-            var comment = _context.Comments.Where(cb => cb.Delete == Guid.Empty).Where(cb => cb.idPost == id).Join(_context.Users, cb => cb.idUser, u => u.Id, (cb, u) => new { Comment = cb, User = u }).ToList().GroupJoin(_context.Users, c => c.Comment.Answer, u => u.Id, (c, u) => new { Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date); ;
+            var comment = _context.Comments.Where(cb => cb.Delete == Guid.Empty).Where(cb => cb.idPost == id).Join(_context.Users, cb => cb.idUser, u => u.Id, (cb, u) => new { Comment = cb, User = u }).AsNoTracking().ToList().GroupJoin(_context.Users, c => c.Comment.Answer, u => u.Id, (c, u) => new { Comment = c, UserAnswer = u }).OrderBy(c => c.Comment.Comment.Date); ;
             return new { status = "Ok", message = comment, user = _sessionLogin.user.Id };
         }
         //Add comment for post
         [HttpPost]
-        public object Comment([FromForm] AddComentModel commentModel)
+        public async Task<object> Comment([FromForm] AddComentModel commentModel)
         {
 
             if (commentModel != null)
             {
-                var AnswerUser = _context.Users.Where(u => u.Login == commentModel.Answer).FirstOrDefault();
+                var AnswerUser = _context.Users.Where(u => u.Login == commentModel.Answer).AsNoTracking().FirstOrDefault();
                 Comments comment = new Comments();
                 comment.Id = Guid.NewGuid();
                 comment.idUser = _sessionLogin.user.Id;
@@ -53,9 +53,9 @@ namespace MoonBookWeb.API
                 comment.Answer = AnswerUser == null ? Guid.Empty : AnswerUser.Id;
                 comment.Link = "";
                 comment.Quote = "";
-                _context.Comments.Add(comment);
-                _context.SaveChanges();
-                var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).FirstOrDefault();
+                await _context.Comments.AddAsync(comment);
+                await _context.SaveChangesAsync();
+                var responce = _context.Comments.Where(c => c.Id == comment.Id).Join(_context.Users, c => c.idUser, u => u.Id, (c, u) => new { comment = c, user = u }).AsNoTracking().FirstOrDefault();
                 return new { status = "Ok", message = responce, answer = AnswerUser };
             }
             else
@@ -65,7 +65,7 @@ namespace MoonBookWeb.API
         }
         //Add comment for book
         [HttpPost("book")]
-        public object Quote([FromForm] QuoteModel quoteModel) //Model for book comment
+        public async Task<object> Quote([FromForm] QuoteModel quoteModel) //Model for book comment
         {
             if(quoteModel != null)
             {
@@ -88,8 +88,8 @@ namespace MoonBookWeb.API
                     comment.Link = $"../Books/UserLibrary?{quoteModel?.Id}&search={quoteModel?.Search}";
                     comment.Answer = Guid.Empty;
                     comment.Delete = Guid.Empty;
-                    _context.Comments.Add(comment);
-                    _context.SaveChanges();
+                    await _context.Comments.AddAsync(comment);
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace MoonBookWeb.API
         }
         //Update Comment
         [HttpPut("{Id}")]
-        public object UpdateComment(string Id, [FromBody] string text)
+        public async Task<object> UpdateComment(string Id, [FromBody] string text)
         {
             if (string.IsNullOrEmpty(Id))
             {
@@ -120,7 +120,7 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return new { Status = "Error", message = "Invalid id format (GUID required)" };
             }
-            var comment = _context.Comments.Find(id);
+            var comment = await _context.Comments.FindAsync(id);
             if (comment == null)
             {
                 return new { status = "Error", message = "Commrnt dont found" };
@@ -131,12 +131,12 @@ namespace MoonBookWeb.API
         }
         //delete comment current user
         [HttpDelete("{id}")]
-        public object DeleteComment(string id)
+        public async Task<object> DeleteComment(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
                 var Id = Guid.Parse(id);
-                var comment = _context.Comments.Find(Id);
+                var comment = await _context.Comments.FindAsync(Id);
                 if (comment != null)
                 {
                     var delete = new DeleteList();
@@ -146,10 +146,9 @@ namespace MoonBookWeb.API
                     delete.idElement = comment.Id;
                     //Add id on deletelist
                     comment.Delete = delete.Id;
-                    _context.Comments.Update(comment);
                     //Add delete comment into DeleteList
-                    _context.DeleteList.Add(delete);
-                    _context.SaveChanges();
+                    await _context.DeleteList.AddAsync(delete);
+                    await _context.SaveChangesAsync();
                     return new { status = "Ok", message = "Ok" };
                 }
                 return new { status = "Error", message = "Post dont found" };

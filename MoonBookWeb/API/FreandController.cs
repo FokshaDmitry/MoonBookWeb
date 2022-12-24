@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MoonBookWeb.Services;
 using System.Xml.Linq;
 
@@ -21,8 +22,8 @@ namespace MoonBookWeb.API
         [HttpGet]
         public object Get()
         {
-            var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id);
-            var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).ToList().Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).GroupJoin(sub, u => u.User.Id, s => s.IdFreand, (u, s) => new { User = u, Sub = s }).Select(u => u.User); 
+            var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).AsNoTracking();
+            var freands = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Join(_context.Users, s => s.IdFreand, u => u.Id, (s, u) => new { Sub = s, User = u }).AsNoTracking().ToList().GroupJoin(sub, u => u.User.Id, s => s.IdFreand, (u, s) => new { User = u, Sub = s }).Select(u => u.User); 
             if (freands.Any())
             {
                 return new {status = "Ok", message = freands };
@@ -34,13 +35,13 @@ namespace MoonBookWeb.API
         #region Put
         //Search freand of full name
         [HttpPut("{Name}")]
-        public object Search(string Name)
+        public async Task<object> Search(string Name)
         {
             if (!String.IsNullOrEmpty(Name))
             {
                 Name = Name.Replace(" ", "").ToLower();
-                var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id);
-                var users = _context.Users.Where(s => s.Name.ToLower() + s.Surname.ToLower() == Name).ToList().GroupJoin(sub, u => u.Id, s => s.IdFreand, (u, s) => new { User = u, Sub = s});
+                var sub = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).AsNoTracking();
+                var users = _context.Users.Where(s => s.Name.ToLower() + s.Surname.ToLower() == Name).AsNoTracking().ToList().GroupJoin(sub, u => u.Id, s => s.IdFreand, (u, s) => new { User = u, Sub = s});
                 if (users.Select(u => u.User).Count() > 0)
                 {
                     return new { status = "Ok", message = users};
@@ -57,7 +58,7 @@ namespace MoonBookWeb.API
         #region Post
         //Add or delete freand
         [HttpPost("{id}")]
-        public object Follow(string id)
+        public async Task<object> Follow(string id)
         {
             bool b = true;
             if (String.IsNullOrEmpty(id))
@@ -74,11 +75,11 @@ namespace MoonBookWeb.API
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return new { Status = "Error", message = "Invalid id format (GUID required)" };
             }
-            var user = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Where(s => s.IdFreand == Id).FirstOrDefault();
+            var user = _context.Subscriptions.Where(s => s.IdUser == _sessionLogin.user.Id).Where(s => s.IdFreand == Id).AsNoTracking().FirstOrDefault();
             if (user == null)
             {
                 //Add new sud current user
-                _context.Subscriptions.Add(new Subscriptions { Id = Guid.NewGuid(), IdFreand = Id, IdUser = _sessionLogin.user.Id });
+                await _context.Subscriptions.AddAsync(new Subscriptions { Id = Guid.NewGuid(), IdFreand = Id, IdUser = _sessionLogin.user.Id });
                 b = true;
             }
             //Delete freand
@@ -87,7 +88,7 @@ namespace MoonBookWeb.API
                 _context.Subscriptions.Remove(user);
                 b = false;
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return new { status = "Ok", message = b };
         }
         #endregion
