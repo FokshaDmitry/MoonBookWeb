@@ -9,7 +9,7 @@
 
 <b>User Page. Available after registration.</b>
 
-![image](https://user-images.githubusercontent.com/99391531/201481328-05fd5f90-83b3-4d68-af5e-429092af136d.png)
+![image](https://user-images.githubusercontent.com/99391531/209434811-9ee1336e-53f2-42d2-8731-8267873b0d08.png)
 
 <b>User frends. All current posts of added friends are displayed on the starting position.</b>
 
